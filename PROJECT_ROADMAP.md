@@ -2,9 +2,15 @@
 
 ## Project Overview
 
-An e-commerce website for selling ornaments.
+A full-stack e-commerce web application for selling ornaments.
 
-The project is built using Django and Django REST Framework with a JavaScript frontend initially. The frontend will later be migrated to React while keeping the same backend APIs.
+The backend is built with Django and Django REST Framework (DRF), exposing REST APIs that will be consumed by a frontend.
+
+Development Plan
+Phase 1: Django Templates + HTML, CSS, Bootstrap and JavaScript
+Phase 2: Replace the frontend with React while reusing the same DRF APIs
+
+This project is being developed using professional software development practices including Git version control, API-first architecture, modular Django apps, and incremental feature development.
 
 ---
 
@@ -52,7 +58,24 @@ The project is built using Django and Django REST Framework with a JavaScript fr
 
 # Folder Structure
 
-(To be updated as the project grows)
+ornament_store/
+│
+├── accounts/
+├── cart/
+├── config/
+├── core/
+├── media/
+├── orders/
+├── products/
+├── static/
+├── templates/
+├── venv/
+│
+├── manage.py
+├── requirements.txt
+├── PROJECT_ROADMAP.md
+└── .gitignore
+
 
 ---
 
@@ -129,11 +152,13 @@ POST /api/orders/
 
 # Milestones
 
-## Milestone 1
+## Milestone 1 - Project Setup
 
-- [x] Django Project Setup
+- [x] Django Project Created
+- [x] Virtual Environment
 - [x] Git Initialized
-- [x] Apps Created
+- [x] Project Structure
+- [x] Django Apps Created
 
 ## Milestone 2
 
