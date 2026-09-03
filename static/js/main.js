@@ -1,0 +1,1 @@
+console.log("Ornament Store frontend loaded.");

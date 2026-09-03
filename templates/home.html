@@ -1,0 +1,528 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+    Ornament | Timeless Elegance
+{% endblock %}
+
+{% block content %}
+
+<!-- ========================================
+     HERO SECTION
+======================================== -->
+
+<section class="hero-section">
+
+    <div class="container">
+
+        <div class="row align-items-center">
+
+            <!-- Hero Content -->
+            <div class="col-lg-6">
+
+                <p class="hero-eyebrow">
+                    TIMELESS • ELEGANT • YOURS
+                </p>
+
+                <h1 class="hero-title">
+                    Jewellery that tells
+                    <span>your story.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Discover thoughtfully crafted pieces designed
+                    to celebrate your most beautiful moments.
+                </p>
+
+                <div class="hero-actions">
+
+                    <a href="{% url 'shop' %}" class="btn luxury-btn">
+                        Explore Collection
+                    </a>
+
+                    <a
+                        href="{% url 'about' %}"
+                        class="hero-secondary-link"
+                    >
+                        Discover our story
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Hero Image -->
+            <div class="col-lg-6">
+
+                <div class="hero-image-wrapper">
+
+                    <img
+                        src="{% static 'images/hero-jewellery.jpg' %}"
+                        alt="Elegant jewellery collection"
+                        class="hero-image"
+                    >
+
+                    <div class="hero-image-caption">
+                        <span>THE COLLECTION</span>
+                        <strong>Elegance, redefined.</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================
+     FEATURED CATAGORIES
+======================================== -->
+
+<!-- Featured Categories -->
+<section class="categories-section">
+
+    <div class="container">
+
+        <!-- Section Heading -->
+        <div class="categories-heading text-center">
+
+            <span class="section-eyebrow">
+                EXPLORE
+            </span>
+
+            <h2 class="section-title">
+                Discover Your <span>Signature</span>
+            </h2>
+
+            <p class="section-description">
+                Explore our carefully curated collections,
+                designed to complement every occasion.
+            </p>
+
+        </div>
+
+
+        <!-- Category Cards -->
+        <div class="row g-4 categories-grid">
+
+            <!-- Rings -->
+            <div class="col-6 col-lg-3">
+
+                <a href="#" class="category-card">
+
+                    <div class="category-image-wrapper">
+
+                        <img
+                            src="{% static 'images/categories/rings.jpg' %}"
+                            alt="Rings"
+                            class="category-image"
+                        >
+
+                    </div>
+
+                    <div class="category-card-content">
+
+                        <h3>Rings</h3>
+
+                        <span>
+                            Explore collection
+                            <i class="bi bi-arrow-right"></i>
+                        </span>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+
+            <!-- Necklaces -->
+            <div class="col-6 col-lg-3">
+
+                <a href="#" class="category-card">
+
+                    <div class="category-image-wrapper">
+
+                        <img
+                            src="{% static 'images/categories/necklaces.jpg' %}"
+                            alt="Necklaces"
+                            class="category-image"
+                        >
+
+                    </div>
+
+                    <div class="category-card-content">
+
+                        <h3>Necklaces</h3>
+
+                        <span>
+                            Explore collection
+                            <i class="bi bi-arrow-right"></i>
+                        </span>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+
+            <!-- Earrings -->
+            <div class="col-6 col-lg-3">
+
+                <a href="#" class="category-card">
+
+                    <div class="category-image-wrapper">
+
+                        <img
+                            src="{% static 'images/categories/earrings.jpg' %}"
+                            alt="Earrings"
+                            class="category-image"
+                        >
+
+                    </div>
+
+                    <div class="category-card-content">
+
+                        <h3>Earrings</h3>
+
+                        <span>
+                            Explore collection
+                            <i class="bi bi-arrow-right"></i>
+                        </span>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+
+            <!-- Bracelets -->
+            <div class="col-6 col-lg-3">
+
+                <a href="#" class="category-card">
+
+                    <div class="category-image-wrapper">
+
+                        <img
+                            src="{% static 'images/categories/bracelets.jpg' %}"
+                            alt="Bracelets"
+                            class="category-image"
+                        >
+
+                    </div>
+
+                    <div class="category-card-content">
+
+                        <h3>Bracelets</h3>
+
+                        <span>
+                            Explore collection
+                            <i class="bi bi-arrow-right"></i>
+                        </span>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================
+     FEATURED PRODUCTS
+======================================== -->
+
+<!-- Featured Products -->
+<section class="featured-products-section">
+
+    <div class="container">
+
+        <!-- Section Heading -->
+        <div class="featured-products-heading">
+
+            <div>
+                <span class="section-eyebrow">
+                    OUR FAVOURITES
+                </span>
+
+                <h2 class="section-title">
+                    Pieces worth <span>falling for.</span>
+                </h2>
+            </div>
+
+            <a href="{% url 'shop' %}" class="featured-products-link">
+                View all products
+                <i class="bi bi-arrow-right"></i>
+            </a>
+
+        </div>
+
+
+       
+        <!-- Product Grid -->
+        <div
+            class="row g-4"
+            id="featuredProducts"
+        >
+            <!-- Products will be loaded dynamically -->
+        </div>
+    </div>
+
+</section>
+
+
+<!-- ========================================
+     BRAND STORY
+======================================== -->
+
+<!-- Brand Story -->
+<section class="brand-story-section">
+
+    <div class="container">
+
+        <div class="row align-items-center g-5">
+
+            <!-- Image -->
+            <div class="col-lg-6">
+
+                <div class="brand-story-image-wrapper">
+
+                    <img
+                        src="{% static 'images/brand-story.jpg' %}"
+                        alt="Elegant jewellery craftsmanship"
+                        class="brand-story-image"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Content -->
+            <div class="col-lg-6">
+
+                <div class="brand-story-content">
+
+                    <span class="section-eyebrow">
+                        OUR STORY
+                    </span>
+
+                    <h2 class="section-title">
+                        Crafted with intention.
+                        <span>Designed to be remembered.</span>
+                    </h2>
+
+                    <p>
+                        Every piece we create is a celebration of
+                        elegance, individuality, and timeless beauty.
+                        From delicate everyday pieces to unforgettable
+                        statement jewellery, our collection is designed
+                        to become part of your story.
+                    </p>
+
+                    <p>
+                        Thoughtfully selected materials, refined
+                        craftsmanship, and timeless design come together
+                        to create jewellery worth cherishing.
+                    </p>
+
+                    <a href="{% url 'about' %}" class="story-link">
+                        Discover our story
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================
+     WHY US
+======================================== -->
+
+
+<!-- Why Choose Us -->
+<section class="why-choose-section">
+
+    <div class="container">
+
+        <!-- Heading -->
+        <div class="why-choose-heading text-center">
+
+            <span class="section-eyebrow">
+                WHY CHOOSE US
+            </span>
+
+            <h2 class="section-title">
+                Thoughtful details.
+                <span>Timeless confidence.</span>
+            </h2>
+
+        </div>
+
+
+        <!-- Features -->
+        <div class="row g-4">
+
+            <!-- Feature 1 -->
+            <div class="col-6 col-lg-3">
+
+                <div class="trust-feature">
+
+                    <div class="trust-icon">
+                        <i class="bi bi-gem"></i>
+                    </div>
+
+                    <h3>
+                        Crafted with care
+                    </h3>
+
+                    <p>
+                        Every piece is thoughtfully selected
+                        with attention to detail and design.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Feature 2 -->
+            <div class="col-6 col-lg-3">
+
+                <div class="trust-feature">
+
+                    <div class="trust-icon">
+                        <i class="bi bi-stars"></i>
+                    </div>
+
+                    <h3>
+                        Authentic pieces
+                    </h3>
+
+                    <p>
+                        Discover jewellery chosen for its
+                        quality, elegance, and timeless appeal.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Feature 3 -->
+            <div class="col-6 col-lg-3">
+
+                <div class="trust-feature">
+
+                    <div class="trust-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+
+                    <h3>
+                        Secure payments
+                    </h3>
+
+                    <p>
+                        Shop with confidence through a
+                        safe and secure checkout experience.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Feature 4 -->
+            <div class="col-6 col-lg-3">
+
+                <div class="trust-feature">
+
+                    <div class="trust-icon">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+
+                    <h3>
+                        Delivered with care
+                    </h3>
+
+                    <p>
+                        Every order is carefully prepared
+                        and packaged for its journey to you.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================
+     WHY US
+======================================== -->
+
+<section class="final-cta-section">
+
+    <div class="container">
+
+        <div class="final-cta-content">
+
+            <span class="section-eyebrow">
+                FIND YOUR PIECE
+            </span>
+
+            <h2 class="final-cta-title">
+                Jewellery made for
+                <span>your moments.</span>
+            </h2>
+
+            <p>
+                Discover pieces designed to become
+                part of the moments you'll remember.
+            </p>
+
+            <a href="{% url 'shop' %}" class="luxury-btn">
+                Explore the collection
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+{% endblock %}
+
+{% block scripts %}
+
+<script
+    src="{% static 'js/home.js' %}"
+></script>
+
+{% endblock %}

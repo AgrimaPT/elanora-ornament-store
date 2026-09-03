@@ -4,250 +4,873 @@
 
 A full-stack e-commerce web application for selling ornaments.
 
-The backend is built with Django and Django REST Framework (DRF), exposing REST APIs that will be consumed by a frontend.
+The project follows an API-first architecture using Django and Django REST Framework (DRF). During Phase 1, the frontend will be built with Django Templates, HTML, CSS, Bootstrap, and JavaScript. In a later phase, the frontend will be migrated to React while reusing the same REST APIs.
 
-Development Plan
-Phase 1: Django Templates + HTML, CSS, Bootstrap and JavaScript
-Phase 2: Replace the frontend with React while reusing the same DRF APIs
-
-This project is being developed using professional software development practices including Git version control, API-first architecture, modular Django apps, and incremental feature development.
+The project is being developed following professional software engineering practices including Git version control, modular application architecture, API testing with Postman, clean code principles, incremental feature development, and learning concepts before using shortcuts.
 
 ---
 
-## Client
+# Project Objectives
 
-- Brand Name:
-- Owner:
-- Contact:
+* Build a production-style e-commerce application
+* Learn professional Django architecture
+* Master Django REST Framework
+* Learn JWT Authentication
+* Build reusable REST APIs
+* Integrate Razorpay payment gateway
+* Deploy on AWS with Nginx and Gunicorn
+* Build an AI-powered jewellery shopping assistant
+* Implement natural-language product search
+* Replace the Django frontend with React without changing the backend APIs
 
 ---
 
-## Tech Stack
+# Tech Stack
 
-### Backend
-- Python
-- Django
-- Django REST Framework
+## Backend
 
-### Frontend (Phase 1)
-- HTML
-- CSS
-- Bootstrap 5
-- JavaScript
+* Python 3.11+
+* Django 5
+* Django REST Framework
+* Simple JWT
 
-### Frontend (Phase 2)
-- React
+## Frontend — Phase 1
 
-### Database
-- SQLite (Development)
-- PostgreSQL (Production)
+* HTML5
+* CSS3
+* Bootstrap 5
+* JavaScript (ES6)
+* Django Templates
 
-### Deployment
-- AWS
-- Nginx
-- Gunicorn
+## Frontend — Phase 2
 
-### Payment Gateway
-- Razorpay
+* React
+* Axios
+* React Router
 
-### Version Control
-- Git
-- GitHub
+## Database
+
+### Development
+
+* SQLite
+
+### Production
+
+* PostgreSQL
+
+## Storage
+
+* Local Media
+* AWS S3 — Future
+
+## Deployment
+
+* AWS EC2
+* Gunicorn
+* Nginx
+* SSL — Let's Encrypt
+
+## Payments
+
+* Razorpay
+
+## Version Control
+
+* Git
+* GitHub
+
+## API Testing
+
+* Postman
+
+## AI — Future Phase
+
+* AI Jewellery Shopping Assistant
+* Natural Language Product Search
+* Product Recommendation Logic
+* LLM/API integration
 
 ---
 
 # Folder Structure
 
+```text
 ornament_store/
-│
+
 ├── accounts/
 ├── cart/
 ├── config/
 ├── core/
-├── media/
 ├── orders/
 ├── products/
+├── media/
 ├── static/
 ├── templates/
-├── venv/
-│
 ├── manage.py
 ├── requirements.txt
 ├── PROJECT_ROADMAP.md
 └── .gitignore
-
+```
 
 ---
 
-# Features
+# Project Architecture
 
-## Customer
+```text
+Client
+   ↓
+REST API
+   ↓
+Views
+   ↓
+Serializers
+   ↓
+Models
+   ↓
+Database
+```
 
-- [ ] Register
-- [ ] Login
-- [ ] Logout
-- [ ] Home
-- [ ] Shop
-- [ ] Product Details
-- [ ] Search
-- [ ] Categories
-- [ ] Cart
-- [ ] Checkout
-- [ ] Address Management
-- [ ] Order History
-- [ ] Order Tracking
-- [ ] Profile
-- [ ] Contact
+For Phase 1 frontend pages:
+
+```text
+Django Template
+      ↓
+JavaScript
+      ↓
+REST API
+      ↓
+Django REST Framework
+      ↓
+Database
+```
+
+For the future React frontend:
+
+```text
+React
+  ↓
+Axios
+  ↓
+REST API
+  ↓
+Django REST Framework
+  ↓
+Database
+```
+
+---
+
+# Development Phases
+
+## Phase 1 — Project Setup
+
+**Status: ✅ Completed**
+
+### Tasks
+
+* [x] Django Project
+* [x] Git
+* [x] Virtual Environment
+* [x] Django Apps
+* [x] Folder Structure
+* [x] Static Files
+* [x] Templates
+* [x] Media Configuration
+
+---
+
+# Phase 2 — Authentication
+
+**Status: 🟢 Core Authentication Completed**
+
+## Custom User
+
+* [x] Custom User Model
+* [x] Custom User Admin
+* [x] Email Login Design
+* [x] AUTH_USER_MODEL Configuration
+* [x] Database Migration
+
+## Registration
+
+* [x] Register Serializer
+* [x] Register API
+* [x] Password Hashing
+* [x] Custom Validation
+
+## JWT Authentication
+
+* [x] JWT Configuration
+* [x] JWT Testing
+* [x] Login Serializer
+* [x] Login API
+* [x] Access Token
+* [x] Refresh Token
+* [x] Refresh Access Token
+* [x] JWT Blacklist Setup
+* [x] Logout API
+
+## Profile
+
+* [x] Profile API
+* [x] Update Profile API
+* [x] Change Password API
+
+## Remaining Authentication
+
+* [ ] Forgot Password
+* [ ] Email Verification
+
+---
+
+# Phase 3 — Product Module
+
+**Status: 🟢 Core Product Module Completed**
+
+## Models
+
+* [x] Category Model
+* [x] Product Model
+* [x] Product Image Model
+* [x] Product Variant Model
+* [x] Product Inventory Model
 
 ## Admin
 
-- [ ] Dashboard
-- [ ] Product Management
-- [ ] Category Management
-- [ ] Order Management
-- [ ] Customer Management
-- [ ] Sales Reports
+* [x] Category Admin
+* [x] Product Admin
+* [x] Product Image Inline
+* [x] Product Variant Admin
+* [x] Inventory Admin
+
+## APIs
+
+* [x] Category API
+* [x] Product List API
+* [x] Product Detail API
+* [x] Search API
+* [x] Product Ordering / Sorting
+* [x] Product Variant API
+* [x] Inventory API
+
+## Filtering
+
+* [x] Category Filtering
+* [x] Minimum Price Filtering
+* [x] Maximum Price Filtering
+* [x] Combined Filtering
+* [x] Filter Validation
+
+## Pagination
+
+* [x] Product Pagination
+* [x] Page Number Pagination
+* [x] Pagination + Search
+* [x] Pagination + Filters
+* [x] Pagination Testing
 
 ---
 
-# Models
+# Phase 4 — Frontend UI
 
-## accounts
+**Status: 🟡 In Progress**
 
-- [ ] User
-- [ ] Address
+## Completed Pages
 
-## products
+* [x] Home
+* [x] Shop
+* [x] Product Details
 
-- [ ] Category
-- [ ] Product
-- [ ] ProductImage
+## Remaining Pages
 
-## cart
+* [ ] About
+* [ ] Contact
+* [ ] Login
+* [x] Register
+* [ ] Profile
+* [ ] Orders
+* [ ] Cart
+* [ ] Checkout
+* [ ] Error Pages
 
-- [ ] Cart
-- [ ] CartItem
+## Frontend Features Completed
 
-## orders
+### Shop
 
-- [ ] Order
-- [ ] OrderItem
-- [ ] Payment
+* [x] Dynamic Product Loading
+* [x] Dynamic Categories
+* [x] Category Filtering
+* [x] Product Search
+* [x] Price Filtering
+* [x] Product Sorting
+* [x] Dynamic Product Count
+* [x] Empty Product State
+* [x] Clear All Filters
+* [x] Responsive Layout
 
----
+### Product Details
 
-# API Endpoints
-
-(To be filled as APIs are built)
-
-Example
-
-GET /api/products/
-
-POST /api/cart/
-
-POST /api/orders/
-
----
-
-# Milestones
-
-## Milestone 1 - Project Setup
-
-- [x] Django Project Created
-- [x] Virtual Environment
-- [x] Git Initialized
-- [x] Project Structure
-- [x] Django Apps Created
-
-## Milestone 2
-
-- [ ] Custom User Model
-
-## Milestone 3
-
-- [ ] Product Models
-
-## Milestone 4
-
-- [ ] Authentication
-
-## Milestone 5
-
-- [ ] Product APIs
-
-## Milestone 6
-
-- [ ] Frontend UI
-
-## Milestone 7
-
-- [ ] Cart
-
-## Milestone 8
-
-- [ ] Checkout
-
-## Milestone 9
-
-- [ ] Razorpay
-
-## Milestone 10
-
-- [ ] Orders
-
-## Milestone 11
-
-- [ ] Deployment
-
-## Milestone 12
-
-- [ ] React Migration
+* [x] Dynamic Product Loading
+* [x] Product Information
+* [x] Product Image Gallery
+* [x] Image Thumbnails
+* [x] Thumbnail Switching
+* [x] Responsive Product Layout
+* [x] Quantity Selector
+* [x] Stock-Based Quantity Limit
+* [x] Out-of-Stock State
+* [x] Product Not Found State
+* [x] Luxury Product Styling
 
 ---
 
-# Git Commits
+# Phase 5 — Shopping Cart
 
-| Date | Commit | Notes |
-|------|--------|-------|
+**Status: ⏳ Not Started**
+
+## Backend
+
+* [ ] Cart Model
+* [ ] Cart Item Model
+* [ ] Cart Relationships
+* [ ] Cart Validation
+* [ ] Cart Price Handling
+
+## APIs
+
+* [ ] Add to Cart
+* [ ] View Cart
+* [ ] Update Quantity
+* [ ] Remove Item
+* [ ] Cart Summary
+* [ ] Cart Total
+
+## Frontend
+
+* [ ] Cart Page
+* [ ] Cart Item Display
+* [ ] Quantity Controls
+* [ ] Remove Item
+* [ ] Cart Summary
+* [ ] Empty Cart State
+* [ ] Product Detail → Cart Integration
 
 ---
 
-# Known Issues
+# Phase 6 — Checkout
 
-(None)
+**Status: ⏳ Not Started**
+
+* [ ] Address Model
+* [ ] Address CRUD
+* [ ] Shipping Information
+* [ ] Order Summary
+* [ ] Checkout Page
+* [ ] Address Selection
+* [ ] Checkout Validation
 
 ---
 
-# Future Enhancements
+# Phase 7 — Orders
 
-- Wishlist
-- Coupons
-- Reviews
-- Ratings
-- Product Recommendations
-- Inventory Alerts
-- Email Notifications
-- Invoice PDF
-- Admin Analytics
-- Dark Mode
+**Status: ⏳ Not Started**
+
+## Models
+
+* [ ] Order
+* [ ] Order Item
+
+## APIs
+
+* [ ] Place Order
+* [ ] Order History
+* [ ] Order Detail
+* [ ] Cancel Order
+* [ ] Order Tracking
+
+## Frontend
+
+* [ ] Orders Page
+* [ ] Order Detail Page
+* [ ] Order Status
+* [ ] Cancel Order UI
+* [ ] Order Tracking UI
+
+## Admin
+
+* [ ] Order Management
+* [ ] Order Status Management
+* [ ] Customer Order Details
+
+---
+
+# Phase 8 — Payments
+
+**Status: ⏳ Not Started**
+
+## Razorpay
+
+* [ ] Razorpay Integration
+* [ ] Create Payment Order
+* [ ] Payment Verification
+* [ ] Payment Model
+* [ ] Payment Success
+* [ ] Payment Failure
+* [ ] Payment Webhook Handling
+
+---
+
+# Phase 9 — AI Jewellery Assistant
+
+**Status: ⏳ Planned**
+
+## AI Shopping Assistant
+
+* [ ] Define AI Assistant Architecture
+* [ ] Product Context Preparation
+* [ ] AI API Integration
+* [ ] Jewellery Recommendation Logic
+* [ ] User Preference Understanding
+* [ ] Budget-Based Recommendations
+* [ ] Occasion-Based Recommendations
+* [ ] Jewellery Type Recommendations
+* [ ] Conversation Context
+
+## Natural Language Search
+
+* [ ] Natural Language Search Architecture
+* [ ] Query Understanding
+* [ ] Product Attribute Extraction
+* [ ] Category Detection
+* [ ] Price/Budget Detection
+* [ ] Jewellery Type Detection
+* [ ] Search Result Ranking
+* [ ] AI Search API
+* [ ] Search UI
+
+## Example Queries
+
+```text
+"Show me gold rings under ₹20,000"
+
+"I need a simple necklace for a wedding"
+
+"Find something elegant for everyday wear"
+
+"Show me earrings under ₹5,000"
+```
+
+## AI Frontend
+
+* [ ] AI Assistant UI
+* [ ] Chat Interface
+* [ ] Suggested Queries
+* [ ] Natural Language Search Box
+* [ ] AI Product Recommendations
+* [ ] Product Result Cards
+
+---
+
+# Phase 10 — Admin Dashboard
+
+**Status: ⏳ Not Started**
+
+* [ ] Dashboard
+* [ ] Analytics
+* [ ] Customers
+* [ ] Orders
+* [ ] Sales
+* [ ] Products
+* [ ] Inventory
+* [ ] Low Stock Alerts
+* [ ] Revenue Summary
+
+---
+
+# Phase 11 — Deployment
+
+**Status: ⏳ Not Started**
+
+## Database
+
+* [ ] PostgreSQL
+* [ ] Production Database Configuration
+
+## Environment
+
+* [ ] Environment Variables
+* [ ] Secret Key Configuration
+* [ ] Production Settings
+
+## Server
+
+* [ ] Gunicorn
+* [ ] Nginx
+* [ ] AWS EC2
+
+## Domain
+
+* [ ] Domain Configuration
+* [ ] SSL
+* [ ] HTTPS
+
+## Production
+
+* [ ] Static Files
+* [ ] Media Files
+* [ ] Production Testing
+* [ ] Error Monitoring
+* [ ] Security Configuration
+
+---
+
+# Phase 12 — React Migration
+
+**Status: ⏳ Planned**
+
+The existing Django REST APIs will remain unchanged.
+
+## React Setup
+
+* [ ] React Setup
+* [ ] Project Structure
+* [ ] React Router
+* [ ] Axios
+* [ ] Environment Configuration
+
+## Authentication
+
+* [ ] Login
+* [ ] Register
+* [ ] JWT Handling
+* [ ] Token Refresh
+* [ ] Logout
+* [ ] Protected Routes
+
+## Product
+
+* [ ] Home
+* [ ] Shop
+* [ ] Product Details
+* [ ] Search
+* [ ] Filtering
+* [ ] Pagination
+
+## Shopping
+
+* [ ] Cart
+* [ ] Checkout
+* [ ] Orders
+* [ ] Payments
+
+## User
+
+* [ ] Profile
+* [ ] Addresses
+* [ ] Order History
+
+---
+
+# Phase 13 — Production Improvements
+
+**Status: ⏳ Planned**
+
+* [ ] Wishlist
+* [ ] Coupons
+* [ ] Reviews
+* [ ] Ratings
+* [ ] Advanced Inventory Management
+* [ ] Email Notifications
+* [ ] PDF Invoice
+* [ ] Admin Reports
+* [ ] SEO
+* [ ] Performance Optimization
+* [ ] Caching
+* [ ] Logging
+* [ ] Error Monitoring
+* [ ] Security Hardening
+
+---
+
+# API Documentation
+
+## Authentication
+
+### Completed
+
+* [x] `POST /api/auth/register/`
+* [x] `POST /api/auth/login/`
+* [x] `POST /api/token/refresh/`
+* [x] `POST /api/auth/logout/`
+* [x] `GET /api/auth/users/`
+* [x] `GET /api/auth/profile/`
+* [x] `PUT /api/auth/profile/`
+* [x] `PUT /api/auth/change-password/`
+
+### Remaining
+
+* [ ] Forgot Password API
+* [ ] Email Verification API
+
+---
+
+# Products
+
+### Completed
+
+* [x] `GET /api/products/`
+* [x] `GET /api/products/{slug}/`
+* [x] `GET /api/products/categories/`
+* [x] `GET /api/products/{product_id}/variants/`
+* [x] `GET /api/products/{pk}/inventory/`
+
+### Product Features
+
+* [x] Search
+* [x] Filtering
+* [x] Sorting
+* [x] Pagination
+* [x] Product Variants
+* [x] Inventory
+
+---
+
+# Cart
+
+**Status: ⏳ Not Started**
+
+* [ ] `GET /api/cart/`
+* [ ] `POST /api/cart/`
+* [ ] `PATCH /api/cart/`
+* [ ] `DELETE /api/cart/`
+
+---
+
+# Orders
+
+**Status: ⏳ Not Started**
+
+* [ ] `POST /api/orders/`
+* [ ] `GET /api/orders/`
+* [ ] `GET /api/orders/{id}/`
+* [ ] `PATCH /api/orders/{id}/`
+* [ ] `DELETE /api/orders/{id}/`
+
+---
+
+# Payments
+
+**Status: ⏳ Not Started**
+
+* [ ] `POST /api/payment/create/`
+* [ ] `POST /api/payment/verify/`
+* [ ] Payment Webhook
+
+---
+
+# AI
+
+**Status: ⏳ Planned**
+
+* [ ] AI Assistant API
+* [ ] Natural Language Search API
+* [ ] Product Recommendation API
+* [ ] AI Search Integration
+* [ ] AI Assistant Integration
+
+---
+
+# Git Commit History
+
+| Date | Commit | Description |
+| ---- | ------ | ----------- |
+|      |        |             |
+|      |        |             |
+
+> Add entries after each completed feature or milestone.
 
 ---
 
 # Learning Notes
 
-Important concepts learned while building the project.
+Document important concepts learned during development.
+
+## Django
+
+* [ ] Custom User Model
+* [ ] Model Relationships
+* [ ] ForeignKey
+* [ ] QuerySets
+* [ ] Model Validation
+* [ ] Database Migrations
+* [ ] Admin Customization
+
+## Django REST Framework
+
+* [ ] ModelSerializer vs Serializer
+* [ ] Serializer Validation
+* [ ] `serializer.is_valid()`
+* [ ] `serializer.validated_data`
+* [ ] `serializer.data`
+* [ ] `serializer.save()`
+* [ ] `create()` vs `update()`
+* [ ] APIView
+* [ ] Generic Views
+* [ ] Permissions
+* [ ] Authentication
+* [ ] Pagination
+* [ ] Filtering
+* [ ] Search
+* [ ] Ordering
+* [ ] Query Optimization
+
+## Authentication
+
+* [ ] Authentication vs Authorization
+* [ ] JWT
+* [ ] Access Token vs Refresh Token
+* [ ] Token Blacklisting
+* [ ] Protected APIs
+
+## Frontend
+
+* [ ] Django Templates
+* [ ] JavaScript DOM Manipulation
+* [ ] Fetch API
+* [ ] Async/Await
+* [ ] Dynamic Rendering
+* [ ] Responsive Design
+* [ ] API → Frontend Integration
+
+## E-commerce
+
+* [ ] Cart Architecture
+* [ ] CartItem Relationships
+* [ ] Inventory Management
+* [ ] Order Lifecycle
+* [ ] Payment Lifecycle
+* [ ] Payment Verification
+
+## AI
+
+* [ ] LLM Fundamentals
+* [ ] Prompt Engineering
+* [ ] Natural Language Search
+* [ ] Product Recommendation Systems
+* [ ] Context / Product Data
+* [ ] AI API Integration
 
 ---
 
 # Daily Progress
 
-Date:
+## Date
 
-Tasks completed:
+YYYY-MM-DD
 
-Problems faced:
+## Completed
 
-Solutions:
+*
 
-Next task:
+## Challenges
+
+*
+
+## Solutions
+
+*
+
+## Next Task
+
+*
+
+---
+
+# Known Issues
+
+Document bugs and pending fixes.
+
+| Issue | Status | Solution |
+| ----- | ------ | -------- |
+|       |        |          |
+
+---
+
+# Future Ideas
+
+* Product Recommendations
+* AI Jewellery Shopping Assistant
+* Natural Language Search
+* Chat Support
+* Inventory Alerts
+* Admin Analytics
+* Wishlist
+* Dark Mode
+* Multi Vendor Support
+* Mobile App
+
+---
+
+# Database Relationships
+
+```text
+User
+├── Address
+├── Order
+└── Cart
+    └── CartItem
+
+Category
+└── Product
+    ├── ProductImage
+    ├── ProductVariant
+    ├── ProductInventory
+    └── CartItem
+
+Order
+├── OrderItem
+└── Payment
+```
+
+---
+
+# Current Project Status
+
+```text
+Phase 1  — Project Setup          ✅
+Phase 2  — Authentication         🟢
+Phase 3  — Product Module         🟢
+Phase 4  — Frontend UI            🟡  ← CURRENT
+Phase 5  — Shopping Cart          ⏳
+Phase 6  — Checkout               ⏳
+Phase 7  — Orders                 ⏳
+Phase 8  — Payments               ⏳
+Phase 9  — AI Integration         ⏳
+Phase 10 — Admin Dashboard        ⏳
+Phase 11 — Deployment             ⏳
+Phase 12 — React Migration        ⏳
+Phase 13 — Production Improvements ⏳
+```
+
+## Immediate Next Tasks
+
+1. [x] Product Detail page
+2. [ ] About page
+3. [ ] Contact page
+4. [ ] Login page
+5. [ ] Register page
+6. [ ] Profile page
+7. [ ] Orders page
+8. [ ] Error pages
+9. [ ] Shopping Cart
+10. [ ] Checkout
+11. [ ] Orders
+12. [ ] Razorpay
+13. [ ] AI Jewellery Assistant
+14. [ ] Natural Language Search
+15. [ ] Admin Dashboard
+16. [ ] Deployment
+17. [ ] React Migration
+18. [ ] Production Improvements
+
+````

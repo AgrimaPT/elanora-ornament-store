@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Product | Ornament
+{% endblock %}
+
+
+{% block content %}
+
+<section class="product-detail-section">
+
+    <div class="container">
+
+        <div
+            class="product-detail"
+            id="product-detail"
+        >
+
+            <!-- Loading state -->
+            <div class="product-detail-loading">
+
+                <span class="section-eyebrow">
+                    THE COLLECTION
+                </span>
+
+                <h2>
+                    Loading your piece...
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+    const productSlug = "{{ slug }}";
+</script>
+
+<script src="{% static 'js/product_detail.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Shop | Ornament
+{% endblock %}
+
+{% block content %}
+
+<!-- Shop Header -->
+<section class="shop-header">
+
+    <div class="container">
+
+        <div class="shop-header-content">
+
+            <span class="section-eyebrow">
+                THE COLLECTION
+            </span>
+
+            <h1 class="shop-title">
+                Discover your
+                <span>perfect piece.</span>
+            </h1>
+
+            <p class="shop-description">
+                Explore our collection of elegant pieces,
+                thoughtfully selected for every moment.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Shop Content -->
+<section class="shop-content-section">
+
+    <div class="container">
+
+        <div class="row g-5">
+
+            <!-- Filters -->
+            <aside class="col-lg-3">
+
+                <div class="shop-filters">
+
+                    <div class="filter-heading">
+                        <h2>Filter</h2>
+                    </div>
+
+
+                    <!-- Search -->
+                    <div class="filter-group">
+
+                        <label for="shop-search">
+                            Search
+                        </label>
+
+                        <input
+                            type="text"
+                            id="shop-search"
+                            class="shop-filter-input"
+                            placeholder="Search jewellery..."
+                        >
+
+                    </div>
+
+
+                    <!-- Categories -->
+                    <div class="filter-group">
+
+                        <label>
+                            Category
+                        </label>
+
+                        <div
+                            class="category-options"
+                            id="category-options"
+                        >
+
+                            <label class="category-option">
+
+                                <input
+                                    type="radio"
+                                    name="category"
+                                    value=""
+                                    checked
+                                >
+
+                                <span>All</span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Price -->
+                    <div class="filter-group">
+
+                        <label>
+                            Price
+                        </label>
+
+                        <div class="price-inputs">
+
+                            <input
+                                type="number"
+                                id="min-price"
+                                class="shop-filter-input"
+                                placeholder="Min"
+                            >
+
+                            <input
+                                type="number"
+                                id="max-price"
+                                class="shop-filter-input"
+                                placeholder="Max"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Filter button -->
+                    <button
+                        type="button"
+                        class="luxury-btn shop-filter-button"
+                    >
+                        Apply Filters
+                    </button>
+
+                </div>
+
+            </aside>
+
+
+            <!-- Products -->
+            <div class="col-lg-9">
+
+                <div class="shop-products">
+
+                    <!-- Toolbar -->
+                    <div class="shop-toolbar">
+
+                        <p class="shop-product-count">
+                            0 Products
+                        </p>
+
+                        <select
+                            class="shop-order-select"
+                            aria-label="Sort products"
+                        >
+                            <option value="">
+                                Sort by
+                            </option>
+
+                            <option value="price">
+                                Price: Low to High
+                            </option>
+
+                            <option value="-price">
+                                Price: High to Low
+                            </option>
+
+                            <option value="name">
+                                Name: A to Z
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Product Grid -->
+                    <div
+                        class="row g-4"
+                        id="product-grid"
+                    >
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/shop.js' %}"></script>
+{% endblock %}

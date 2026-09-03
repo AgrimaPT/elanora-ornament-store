@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+About | Ornament
+{% endblock %}
+
+```django
+{% block content %}
+
+<!-- ========================================
+     ABOUT HERO
+======================================== -->
+
+<section class="about-hero-section">
+
+    <div class="container">
+
+        <div class="about-hero-content">
+
+            <span class="section-eyebrow">
+                OUR STORY
+            </span>
+
+            <h1 class="about-hero-title">
+                Jewellery with a
+                <span>story to tell.</span>
+            </h1>
+
+            <p class="about-hero-description">
+                We believe the jewellery you wear should feel
+                personal, timeless, and uniquely yours.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================
+     OUR STORY
+======================================== -->
+
+<section class="about-story-section">
+
+    <div class="container">
+
+        <div class="row align-items-center g-5">
+
+            <!-- Image -->
+            <div class="col-lg-6">
+
+                <div class="about-story-image-wrapper">
+
+                    <img
+                        src="{% static 'images/brand-story.jpg' %}"
+                        alt="Elegant jewellery craftsmanship"
+                        class="about-story-image"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Content -->
+            <div class="col-lg-6">
+
+                <div class="about-story-content">
+
+                    <span class="section-eyebrow">
+                        THE BEGINNING
+                    </span>
+
+                    <h2 class="section-title">
+                        More than jewellery.
+                        <span>A part of your story.</span>
+                    </h2>
+
+                    <p>
+                        Jewellery has always carried a meaning beyond
+                        its beauty. It marks celebrations, memories,
+                        milestones, and the quiet moments that become
+                        meaningful over time.
+                    </p>
+
+                    <p>
+                        Ornament was created with this belief at its
+                        heart — to bring together timeless design,
+                        thoughtful craftsmanship, and pieces that feel
+                        personal to the people who wear them.
+                    </p>
+
+                    <p>
+                        From something chosen for yourself to a piece
+                        gifted to someone special, every ornament has
+                        the opportunity to become part of a story.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ========================================
+     OUR PHILOSOPHY
+======================================== -->
+
+<section class="about-philosophy-section">
+
+    <div class="container">
+
+        <!-- Heading -->
+        <div class="about-philosophy-heading">
+
+            <span class="section-eyebrow">
+                OUR PHILOSOPHY
+            </span>
+
+            <h2 class="section-title">
+                Beauty in every
+                <span>detail.</span>
+            </h2>
+
+            <p>
+                We believe great jewellery doesn't need to follow
+                every trend. It should feel beautiful today and
+                meaningful for years to come.
+            </p>
+
+        </div>
+
+
+        <!-- Philosophy Cards -->
+        <div class="row g-4 about-philosophy-grid">
+
+            <!-- Craftsmanship -->
+            <div class="col-md-4">
+
+                <div class="philosophy-card">
+
+                    <div class="philosophy-icon">
+                        <i class="bi bi-gem"></i>
+                    </div>
+
+                    <h3>
+                        Crafted with care
+                    </h3>
+
+                    <p>
+                        Every piece is selected with attention to
+                        detail, finish, and the feeling it creates
+                        when you wear it.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Timeless Design -->
+            <div class="col-md-4">
+
+                <div class="philosophy-card">
+
+                    <div class="philosophy-icon">
+                        <i class="bi bi-stars"></i>
+                    </div>
+
+                    <h3>
+                        Timeless design
+                    </h3>
+
+                    <p>
+                        We look beyond fleeting trends to discover
+                        pieces that remain elegant and effortless
+                        through changing seasons.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Personal Meaning -->
+            <div class="col-md-4">
+
+                <div class="philosophy-card">
+
+                    <div class="philosophy-icon">
+                        <i class="bi bi-heart"></i>
+                    </div>
+
+                    <h3>
+                        Personal meaning
+                    </h3>
+
+                    <p>
+                        The most beautiful jewellery is the piece
+                        that means something to you — a memory,
+                        a milestone, or simply yourself.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ========================================
+     FINAL CTA
+======================================== -->
+
+<section class="about-final-cta-section">
+
+    <div class="container">
+
+        <div class="about-final-cta">
+
+            <span class="section-eyebrow">
+                OUR COLLECTION
+            </span>
+
+            <h2>
+                Find something that
+                <span>feels like you.</span>
+            </h2>
+
+            <p>
+                Explore thoughtfully selected pieces designed
+                to become part of your most meaningful moments.
+            </p>
+
+            <a href="{% url 'shop' %}" class="luxury-btn">
+                Explore the collection
+                <i class="bi bi-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+
+
+{% endblock %}
+
