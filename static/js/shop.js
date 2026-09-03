@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <div class="product-card-image">
 
                             <img
-                                src="${product.image}"
+                                src="${product.image || '/static/images/product-placeholder.jpg'}"
                                 alt="${product.name}"
                             >
 
@@ -417,7 +417,9 @@ document.addEventListener("DOMContentLoaded", () => {
         // Reset JavaScript state
         selectedCategory = "";
         searchTerm = "";
-
+        sortOption = "";
+        minPrice = "";
+        maxPrice = "";
 
         // Reset search input
         const searchInput =
@@ -425,6 +427,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         searchInput.value = "";
 
+        // Reset price inputs
+        document.getElementById("min-price").value = "";
+        document.getElementById("max-price").value = "";
 
         // Reset category selection to All
         const allCategory =
@@ -436,6 +441,11 @@ document.addEventListener("DOMContentLoaded", () => {
             allCategory.checked = true;
         }
 
+        // Reset sorting dropdown
+        const orderSelect =
+            document.querySelector(".shop-order-select");
+
+        orderSelect.value = "";
 
         // Show all products again
         filterProducts();
