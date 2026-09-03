@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="product-card">
 
                     <a
-                        href="javascript:void(0)"
+                        href="/product/${product.slug}/"
                         class="product-card-link"
                     >
 

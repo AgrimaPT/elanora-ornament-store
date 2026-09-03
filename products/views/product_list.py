@@ -31,8 +31,7 @@ class ProductListAPIView(APIView):
 
         filters = filter_serializer.validated_data
 
-        print("VALIDATED FILTERS:", filters)
-
+        
         # -------------------------
         # Base QuerySet
         # -------------------------
@@ -113,14 +112,7 @@ class ProductListAPIView(APIView):
 
         paginator = self.pagination_class()
 
-        print("PAGINATOR CLASS:", paginator.__class__)
-        print("PAGE SIZE:", paginator.page_size)
-        print("REQUEST QUERY PARAMS:", request.query_params)
-        print("SQL QUERY:", products.query)
-        print("QUERYSET COUNT BEFORE PAGINATION:", products.count())
-        print("QUERYSET LIST BEFORE PAGINATION:", list(products))
-
-
+        
         page = paginator.paginate_queryset(
             products,
             request,
@@ -132,9 +124,7 @@ class ProductListAPIView(APIView):
 
 
 
-        print("PAGE COUNT:", len(page))
-        print("PAGE PRODUCTS:", list(page))
-
+       
 
         # -------------------------
         # Serialization
@@ -145,9 +135,7 @@ class ProductListAPIView(APIView):
             many=True
         )
 
-        print("SERIALIZED COUNT:", len(serializer.data))
-        print("SERIALIZED DATA:", serializer.data)
-
+        
 
         # -------------------------
         # Paginated response
@@ -158,22 +146,7 @@ class ProductListAPIView(APIView):
         )
 
 
-        # -------------------------
-        # Serialization
-        # -------------------------
-
-        serializer = ProductListSerializer(
-            page,
-            many=True
-        )
-
-        # -------------------------
-        # Paginated response
-        # -------------------------
-
-        return paginator.get_paginated_response(
-            serializer.data
-        )
+        
 
 ####before ProductFilterSerializer
 
