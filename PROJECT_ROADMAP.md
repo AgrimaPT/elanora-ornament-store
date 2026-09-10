@@ -294,13 +294,14 @@ Database
 * [x] Register
 * [x] Profile
 * [x] Contact
+* [x] Error Pages
 
 ## Remaining Pages
 
 * [ ] Orders
 * [ ] Cart
 * [ ] Checkout
-* [ ] Error Pages
+
 
 ## Frontend Features Completed
 

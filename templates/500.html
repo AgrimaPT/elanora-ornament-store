@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Something Went Wrong | Ornament
+{% endblock %}
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'css/error.css' %}"
+>
+
+{% endblock %}
+
+{% block content %}
+
+<section class="error-section">
+
+
+<div class="container">
+
+    <div class="error-content">
+
+        <span class="error-code">
+            500
+        </span>
+
+        <span class="section-eyebrow">
+            SOMETHING WENT WRONG
+        </span>
+
+        <h1>
+            We're having a little trouble.
+        </h1>
+
+        <p>
+            Something unexpected happened on our side.
+            Please try again in a moment.
+        </p>
+
+        <div class="error-actions">
+
+            <a
+                href="/"
+                class="error-button error-button-primary"
+            >
+                Back to Home
+            </a>
+
+            <a
+                href="/shop/"
+                class="error-button error-button-secondary"
+            >
+                Browse Jewellery
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</section>
+
+{% endblock %}
