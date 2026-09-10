@@ -47,6 +47,16 @@ urlpatterns = [
         "",
         include("products.frontend_urls"),
     ),
+
+    path(
+        "",
+        include("accounts.frontend_urls"),
+    ),
+
+    path(
+        "api/cart/",
+        include("cart.urls"),
+    ),
     
 ]
 

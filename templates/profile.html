@@ -1,0 +1,356 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Profile | Ornament
+{% endblock %}
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'css/profile.css' %}"
+>
+
+{% endblock %}
+
+{% block content %}
+
+<section class="profile-section">
+
+    <div class="container">
+
+        <div class="profile-container">
+
+            <div class="profile-header">
+
+                <span class="section-eyebrow">
+                    MY ACCOUNT
+                </span>
+
+                <h1>
+                    Your profile.
+                </h1>
+
+                <p>
+                    Manage your account details and preferences.
+                </p>
+
+            </div>
+
+            <div
+                id="profile-message"
+                class="profile-message"
+            >
+            </div>
+
+            <div class="profile-card">
+
+                <div class="profile-card-header">
+
+                    <h2>
+                        Personal Information
+                    </h2>
+
+                </div>
+
+                
+                <div
+                    class="profile-details"
+                    id="profile-details"
+                >
+
+                    <div class="profile-field">
+
+                        <span class="profile-field-label">
+                            First Name
+                        </span>
+
+                        <span
+                            class="profile-field-value"
+                            id="profile-first-name"
+                        >
+                            —
+                        </span>
+
+                    </div>
+
+                    <div class="profile-field">
+
+                        <span class="profile-field-label">
+                            Last Name
+                        </span>
+
+                        <span
+                            class="profile-field-value"
+                            id="profile-last-name"
+                        >
+                            —
+                        </span>
+
+                    </div>
+
+                    <div class="profile-field">
+
+                        <span class="profile-field-label">
+                            Email
+                        </span>
+
+                        <span
+                            class="profile-field-value"
+                            id="profile-email"
+                        >
+                            —
+                        </span>
+
+                    </div>
+
+                    <div class="profile-field">
+
+                        <span class="profile-field-label">
+                            Phone Number
+                        </span>
+
+                        <span
+                            class="profile-field-value"
+                            id="profile-phone"
+                        >
+                            —
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <form
+                    id="edit-profile-form"
+                    class="edit-profile-form"
+                    hidden
+                >
+
+                    <div class="edit-profile-field">
+
+                        <label for="edit-first-name">
+                            First Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="edit-first-name"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="edit-profile-field">
+
+                        <label for="edit-last-name">
+                            Last Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="edit-last-name"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="edit-profile-field">
+
+                        <label for="edit-email">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            id="edit-email"
+                            readonly
+                        >
+
+                    </div>
+
+                    <div class="edit-profile-field">
+
+                        <label for="edit-phone">
+                            Phone Number
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="edit-phone"
+                            maxlength="10"
+                            required
+                        >
+
+                    </div>
+
+                    <div
+                        id="edit-profile-message"
+                        class="edit-profile-message"
+                    >
+                    </div>
+
+                    <div class="edit-profile-actions">
+
+                        <button
+                            type="submit"
+                            class="profile-action-button"
+                        >
+                            Save Changes
+                        </button>
+
+                        <button
+                            type="button"
+                            class="profile-action-button"
+                            id="cancel-edit-button"
+                        >
+                            Cancel
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+
+            </div>
+
+            <div class="profile-actions">
+
+                <button
+                    type="button"
+                    class="profile-action-button"
+                    id="edit-profile-button"
+                >
+                    Edit Profile
+                </button>
+
+                <button
+                    type="button"
+                    class="profile-action-button"
+                    id="change-password-button"
+                >
+                    Change Password
+                </button>
+
+                <button
+                    type="button"
+                    class="profile-action-button"
+                    id="logout-button"
+                >
+                    Logout
+                </button>
+
+            </div>
+
+            
+            <div
+                class="change-password-card"
+                id="change-password-card"
+                hidden
+            >
+
+                <div class="change-password-header">
+
+                    <h2>
+                        Change Password
+                    </h2>
+
+                    <p>
+                        Choose a new password for your account.
+                    </p>
+
+                </div>
+
+                <form
+                    id="change-password-form"
+                    class="change-password-form"
+                >
+
+                    <div class="change-password-field">
+
+                        <label for="current-password">
+                            Current Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="current-password"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="change-password-field">
+
+                        <label for="new-password">
+                            New Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="new-password"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="change-password-field">
+
+                        <label for="confirm-password">
+                            Confirm New Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="confirm-password"
+                            required
+                        >
+
+                    </div>
+
+                    <div
+                        id="change-password-message"
+                        class="change-password-message"
+                    >
+                    </div>
+
+                    <div class="change-password-actions">
+
+                        <button
+                            type="submit"
+                            class="profile-action-button"
+                        >
+                            Change Password
+                        </button>
+
+                        <button
+                            type="button"
+                            class="profile-action-button"
+                            id="cancel-password-button"
+                        >
+                            Cancel
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'js/profile.js' %}"></script>
+
+{% endblock %}
+

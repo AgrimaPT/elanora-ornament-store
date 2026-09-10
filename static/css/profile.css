@@ -1,0 +1,453 @@
+
+/* ========================================
+   PROFILE PAGE
+======================================== */
+
+.profile-section {
+    padding: 110px 0;
+    min-height: 75vh;
+}
+
+.profile-container {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+
+/* ========================================
+   PROFILE HEADER
+======================================== */
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.profile-header h1 {
+    margin-top: 14px;
+    margin-bottom: 12px;
+    font-size: 42px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+}
+
+.profile-header p {
+    margin: 0;
+    font-size: 15px;
+    opacity: 0.65;
+}
+
+
+/* ========================================
+   MESSAGE
+======================================== */
+
+.profile-message {
+    min-height: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+
+/* ========================================
+   PROFILE CARD
+======================================== */
+
+.profile-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    padding: 42px;
+    transition: box-shadow 0.25s ease;
+}
+
+.profile-card:hover {
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.04);
+}
+
+.profile-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 22px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.profile-card-header h2 {
+    margin: 0;
+    font-size: 21px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+}
+
+
+/* ========================================
+   PROFILE DETAILS
+======================================== */
+
+.profile-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px 45px;
+}
+
+.profile-field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.profile-field-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    opacity: 0.55;
+}
+
+.profile-field-value {
+    font-size: 15px;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+
+/* ========================================
+   PROFILE ACTIONS
+======================================== */
+
+.profile-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.profile-action-button {
+    min-height: 48px;
+    padding: 13px 18px;
+    border: 1px solid #dcdcdc;
+    background: #fff;
+    color: inherit;
+    cursor: pointer;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease,
+        transform 0.2s ease;
+}
+
+.profile-action-button:hover {
+    background: #f8f8f8;
+    border-color: #cfcfcf;
+    transform: translateY(-1px);
+}
+
+
+/* Primary action */
+
+.profile-actions
+.profile-action-button:first-child {
+    background: #1f1f1f;
+    border-color: #1f1f1f;
+    color: #fff;
+}
+
+.profile-actions
+.profile-action-button:first-child:hover {
+    background: #333;
+    border-color: #333;
+}
+
+
+/* Logout */
+
+#logout-button {
+    color: #777;
+}
+
+#logout-button:hover {
+    color: #9a3f3f;
+    border-color: #d9bcbc;
+    background: #fdf8f8;
+}
+
+
+/* ========================================
+   EDIT PROFILE FORM
+======================================== */
+
+.edit-profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.edit-profile-field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.edit-profile-field label {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.edit-profile-field input {
+    width: 100%;
+    min-height: 48px;
+    padding: 13px 15px;
+    border: 1px solid #dedede;
+    border-radius: 0;
+    outline: none;
+    background: #fff;
+    color: inherit;
+    font-size: 15px;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.edit-profile-field input:hover {
+    border-color: #c8c8c8;
+}
+
+.edit-profile-field input:focus {
+    border-color: #888;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.035);
+}
+
+.edit-profile-field input:read-only {
+    background: #f7f7f7;
+    color: #777;
+    cursor: not-allowed;
+}
+
+.edit-profile-message {
+    min-height: 20px;
+    font-size: 14px;
+}
+
+.edit-profile-actions {
+    display: flex;
+    gap: 12px;
+    padding-top: 4px;
+}
+
+.edit-profile-actions .profile-action-button:first-child {
+    background: #1f1f1f;
+    border-color: #1f1f1f;
+    color: #fff;
+}
+
+.edit-profile-actions .profile-action-button:first-child:hover {
+    background: #333;
+    border-color: #333;
+}
+
+
+/* ========================================
+   CHANGE PASSWORD
+======================================== */
+
+.change-password-card {
+    margin-top: 28px;
+    padding: 42px;
+    border: 1px solid #e5e5e5;
+    background: #fff;
+    animation: profileCardReveal 0.25s ease;
+}
+
+.change-password-header {
+    padding-bottom: 22px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.change-password-header h2 {
+    margin: 0 0 9px;
+    font-size: 21px;
+    font-weight: 500;
+}
+
+.change-password-header p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.65;
+}
+
+.change-password-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.change-password-field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.change-password-field label {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.change-password-field input {
+    width: 100%;
+    min-height: 48px;
+    padding: 13px 15px;
+    border: 1px solid #dedede;
+    border-radius: 0;
+    outline: none;
+    background: #fff;
+    color: inherit;
+    font-size: 15px;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.change-password-field input:hover {
+    border-color: #c8c8c8;
+}
+
+.change-password-field input:focus {
+    border-color: #888;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.035);
+}
+
+.change-password-message {
+    min-height: 20px;
+    font-size: 14px;
+}
+
+.change-password-actions {
+    display: flex;
+    gap: 12px;
+    padding-top: 4px;
+}
+
+.change-password-actions .profile-action-button:first-child {
+    background: #1f1f1f;
+    border-color: #1f1f1f;
+    color: #fff;
+}
+
+.change-password-actions .profile-action-button:first-child:hover {
+    background: #333;
+    border-color: #333;
+}
+
+
+/* ========================================
+   ANIMATION
+======================================== */
+
+@keyframes profileCardReveal {
+
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 768px) {
+
+    .profile-section {
+        padding: 85px 0;
+    }
+
+    .profile-container {
+        max-width: 680px;
+    }
+
+    .profile-header h1 {
+        font-size: 36px;
+    }
+
+    .profile-card,
+    .change-password-card {
+        padding: 32px;
+    }
+
+    .profile-details {
+        gap: 25px 30px;
+    }
+
+}
+
+
+@media (max-width: 576px) {
+
+    .profile-section {
+        padding: 65px 0;
+    }
+
+    .profile-header {
+        margin-bottom: 35px;
+    }
+
+    .profile-header h1 {
+        font-size: 31px;
+    }
+
+    .profile-header p {
+        font-size: 14px;
+    }
+
+    .profile-card,
+    .change-password-card {
+        padding: 25px 20px;
+    }
+
+    .profile-card-header {
+        margin-bottom: 25px;
+    }
+
+    .profile-card-header h2,
+    .change-password-header h2 {
+        font-size: 19px;
+    }
+
+    .profile-details {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .profile-field {
+        padding-bottom: 15px;
+    }
+
+    .profile-actions {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .edit-profile-actions,
+    .change-password-actions {
+        flex-direction: column;
+    }
+
+    .profile-action-button {
+        width: 100%;
+    }
+
+}
+

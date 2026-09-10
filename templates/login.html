@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Login | Ornament
+{% endblock %}
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'css/login.css' %}"
+>
+{% endblock %}
+
+{% block content %}
+
+<section class="login-section">
+
+<div class="container">
+
+    <div class="login-container">
+
+        <div class="login-header">
+
+            <span class="section-eyebrow">
+                WELCOME BACK
+            </span>
+
+            <h1>
+                Login to your account.
+            </h1>
+
+            <p>
+                Sign in to continue your jewellery journey.
+            </p>
+
+        </div>
+
+
+        <form
+            id="login-form"
+            class="login-form"
+        >
+
+            <div class="login-field">
+
+                <label for="login-email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="login-email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required
+                >
+
+            </div>
+
+
+            <div class="login-field">
+
+                <label for="login-password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="login-password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                >
+
+            </div>
+
+
+            <div
+                id="login-message"
+                class="login-message"
+            >
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-button"
+                id="login-button"
+            >
+                Login
+            </button>
+
+        </form>
+
+
+        <div class="login-register-link">
+
+            <p>
+                Don't have an account?
+                <a href="/register/">
+                    Create an account
+                </a>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'js/login.js' %}"></script>
+
+{% endblock %}

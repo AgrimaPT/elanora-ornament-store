@@ -197,6 +197,7 @@ Database
 * [x] Register API
 * [x] Password Hashing
 * [x] Custom Validation
+* [x] Register Frontend
 
 ## JWT Authentication
 
@@ -204,17 +205,25 @@ Database
 * [x] JWT Testing
 * [x] Login Serializer
 * [x] Login API
+* [x] Login Frontend
 * [x] Access Token
 * [x] Refresh Token
 * [x] Refresh Access Token
 * [x] JWT Blacklist Setup
 * [x] Logout API
+* [x] Logout Frontend
+* [ ] Automatic Access Token Refresh
 
 ## Profile
 
 * [x] Profile API
+* [x] Profile Frontend
+* [x] Display User Information
 * [x] Update Profile API
+* [x] Edit Profile UI
 * [x] Change Password API
+* [x] Change Password UI
+* [x] Logout
 
 ## Remaining Authentication
 
@@ -280,14 +289,14 @@ Database
 * [x] Home
 * [x] Shop
 * [x] Product Details
+* [x] About
+* [x] Login
+* [x] Register
+* [x] Profile
+* [x] Contact
 
 ## Remaining Pages
 
-* [ ] About
-* [ ] Contact
-* [ ] Login
-* [x] Register
-* [ ] Profile
 * [ ] Orders
 * [ ] Cart
 * [ ] Checkout
@@ -322,28 +331,49 @@ Database
 * [x] Product Not Found State
 * [x] Luxury Product Styling
 
+### Authentication UI
+
+* [x] Login Page
+* [x] Register Page
+* [x] Profile Page
+* [x] Edit Profile
+* [x] Change Password
+* [x] Logout
+* [x] Automatic JWT Token Refresh
+
 ---
 
 # Phase 5 — Shopping Cart
 
-**Status: ⏳ Not Started**
+**Status: 🟡 Backend Completed — Frontend Pending**
 
 ## Backend
 
-* [ ] Cart Model
-* [ ] Cart Item Model
-* [ ] Cart Relationships
-* [ ] Cart Validation
-* [ ] Cart Price Handling
+* [x] Cart Model
+* [x] Cart Item Model
+* [x] Cart Relationships
+* [x] Cart Validation
+* [x] Cart Price Handling
+* [x] Cart Admin
+* [x] CartItem Serializer
+* [x] Cart Serializer
+* [x] Add to Cart API
+* [x] View Cart API
+* [x] Update Quantity API
+* [x] Remove Item API
+* [x] Clear Cart API
+* [x] JWT Authentication
+* [x] Stock Validation
+* [x] User Ownership Protection
+* [x] Postman Testing
 
 ## APIs
 
-* [ ] Add to Cart
-* [ ] View Cart
-* [ ] Update Quantity
-* [ ] Remove Item
-* [ ] Cart Summary
-* [ ] Cart Total
+* [x] `GET /api/cart/`
+* [x] `POST /api/cart/add/`
+* [x] `PATCH /api/cart/items/{item_id}/`
+* [x] `DELETE /api/cart/items/{item_id}/`
+* [x] `DELETE /api/cart/`
 
 ## Frontend
 
@@ -354,6 +384,7 @@ Database
 * [ ] Cart Summary
 * [ ] Empty Cart State
 * [ ] Product Detail → Cart Integration
+* [ ] Cart API Integration
 
 ---
 
@@ -524,11 +555,17 @@ Database
 
 ---
 
-# Phase 12 — React Migration
+# Phase 12 — AI → React Preparation
 
 **Status: ⏳ Planned**
 
 The existing Django REST APIs will remain unchanged.
+
+---
+
+# Phase 13 — React Migration
+
+**Status: ⏳ Planned**
 
 ## React Setup
 
@@ -571,7 +608,7 @@ The existing Django REST APIs will remain unchanged.
 
 ---
 
-# Phase 13 — Production Improvements
+# Phase 14 — Production Improvements
 
 **Status: ⏳ Planned**
 
@@ -604,13 +641,14 @@ The existing Django REST APIs will remain unchanged.
 * [x] `POST /api/auth/logout/`
 * [x] `GET /api/auth/users/`
 * [x] `GET /api/auth/profile/`
-* [x] `PUT /api/auth/profile/`
+* [x] `PUT /api/auth/profile/update/`
 * [x] `PUT /api/auth/change-password/`
 
 ### Remaining
 
 * [ ] Forgot Password API
 * [ ] Email Verification API
+* [ ] Automatic Token Refresh Handling
 
 ---
 
@@ -637,12 +675,21 @@ The existing Django REST APIs will remain unchanged.
 
 # Cart
 
-**Status: ⏳ Not Started**
+**Status: 🟡 Backend Completed — Frontend Pending**
 
-* [ ] `GET /api/cart/`
-* [ ] `POST /api/cart/`
-* [ ] `PATCH /api/cart/`
-* [ ] `DELETE /api/cart/`
+### Completed
+
+* [x] `GET /api/cart/`
+* [x] `POST /api/cart/add/`
+* [x] `PATCH /api/cart/items/{item_id}/`
+* [x] `DELETE /api/cart/items/{item_id}/`
+* [x] `DELETE /api/cart/`
+
+### Frontend
+
+* [ ] Cart Page
+* [ ] Cart API Integration
+* [ ] Product Detail → Cart Integration
 
 ---
 
@@ -731,6 +778,7 @@ Document important concepts learned during development.
 * [ ] Access Token vs Refresh Token
 * [ ] Token Blacklisting
 * [ ] Protected APIs
+* [ ] Automatic Token Refresh
 
 ## Frontend
 
@@ -741,6 +789,7 @@ Document important concepts learned during development.
 * [ ] Dynamic Rendering
 * [ ] Responsive Design
 * [ ] API → Frontend Integration
+* [ ] Reusable API Helper Functions
 
 ## E-commerce
 
@@ -770,19 +819,19 @@ YYYY-MM-DD
 
 ## Completed
 
-*
+* [ ]
 
 ## Challenges
 
-*
+* [ ]
 
 ## Solutions
 
-*
+* [ ]
 
 ## Next Task
 
-*
+* [ ]
 
 ---
 
@@ -837,40 +886,50 @@ Order
 # Current Project Status
 
 ```text
-Phase 1  — Project Setup          ✅
-Phase 2  — Authentication         🟢
-Phase 3  — Product Module         🟢
-Phase 4  — Frontend UI            🟡  ← CURRENT
-Phase 5  — Shopping Cart          ⏳
-Phase 6  — Checkout               ⏳
-Phase 7  — Orders                 ⏳
-Phase 8  — Payments               ⏳
-Phase 9  — AI Integration         ⏳
-Phase 10 — Admin Dashboard        ⏳
-Phase 11 — Deployment             ⏳
-Phase 12 — React Migration        ⏳
-Phase 13 — Production Improvements ⏳
+Phase 1  — Project Setup             ✅ Completed
+Phase 2  — Authentication            🟢 Core Completed
+Phase 3  — Product Module             🟢 Core Completed
+Phase 4  — Frontend UI                🟡 CURRENT
+Phase 5  — Shopping Cart              🟡 Backend Completed
+Phase 6  — Checkout                   ⏳ Not Started
+Phase 7  — Orders                     ⏳ Not Started
+Phase 8  — Payments                   ⏳ Not Started
+Phase 9  — AI Integration             ⏳ Planned
+Phase 10 — Admin Dashboard            ⏳ Not Started
+Phase 11 — Deployment                 ⏳ Not Started
+Phase 12 — AI → React Preparation     ⏳ Planned
+Phase 13 — React Migration            ⏳ Planned
+Phase 14 — Production Improvements    ⏳ Planned
 ```
 
 ## Immediate Next Tasks
 
 1. [x] Product Detail page
-2. [ ] About page
+2. [x] About page
 3. [ ] Contact page
-4. [ ] Login page
-5. [ ] Register page
-6. [ ] Profile page
-7. [ ] Orders page
-8. [ ] Error pages
-9. [ ] Shopping Cart
-10. [ ] Checkout
-11. [ ] Orders
-12. [ ] Razorpay
-13. [ ] AI Jewellery Assistant
-14. [ ] Natural Language Search
-15. [ ] Admin Dashboard
-16. [ ] Deployment
-17. [ ] React Migration
-18. [ ] Production Improvements
+4. [x] Login page
+5. [x] Register page
+6. [x] Profile page
+7. [ ] Automatic JWT Token Refresh
+8. [ ] Orders page
+9. [ ] Error pages
+10. [ ] Cart Page
+11. [ ] Product Detail → Cart Integration
+12. [ ] Checkout
+13. [ ] Orders Backend
+14. [ ] Razorpay
+15. [ ] AI Jewellery Assistant
+16. [ ] Natural Language Search
+17. [ ] Admin Dashboard
+18. [ ] Deployment
+19. [ ] React Migration
+20. [ ] Production Improvements
 
-````
+```
+
+**This is the version I would use as the current `PROJECT_ROADMAP.md`.**
+
+One important change in the plan: **we are not treating the Cart backend as unfinished anymore.** You've already built and tested the core Cart APIs. The remaining Cart work is primarily the **frontend integration**.
+
+And our immediate next technical task remains **automatic JWT token refresh**, then we'll continue Phase 4.
+```

@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Register | Ornament
+{% endblock %}
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'css/register.css' %}"
+>
+
+{% endblock %}
+
+{% block content %}
+
+<section class="register-section">
+
+    <div class="container">
+
+        <div class="register-container">
+
+            <div class="register-header">
+
+                <span class="section-eyebrow">
+                    JOIN ORNAMENT
+                </span>
+
+                <h1>
+                    Create your account.
+                </h1>
+
+                <p>
+                    Begin your jewellery journey with us.
+                </p>
+
+            </div>
+
+            <form
+                id="register-form"
+                class="register-form"
+            >
+
+                <div class="register-name-fields">
+
+                    <div class="register-field">
+
+                        <label for="register-first-name">
+                            First Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="register-first-name"
+                            name="first_name"
+                            placeholder="Enter your first name"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="register-field">
+
+                        <label for="register-last-name">
+                            Last Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="register-last-name"
+                            name="last_name"
+                            placeholder="Enter your last name"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="register-field">
+
+                    <label for="register-email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="register-email"
+                        name="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+                <div class="register-field">
+
+                    <label for="register-phone">
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="register-phone"
+                        name="phone_number"
+                        placeholder="Enter your 10-digit phone number"
+                        maxlength="10"
+                        required
+                    >
+
+                </div>
+
+                <div class="register-field">
+
+                    <label for="register-password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="register-password"
+                        name="password"
+                        placeholder="Create a password"
+                        required
+                    >
+
+                </div>
+
+                <div
+                    id="register-message"
+                    class="register-message"
+                >
+                </div>
+
+                <button
+                    type="submit"
+                    class="register-button"
+                    id="register-button"
+                >
+                    Create Account
+                </button>
+
+            </form>
+
+            <div class="register-login-link">
+
+                <p>
+                    Already have an account?
+
+                    <a href="/login/">
+                        Login
+                    </a>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'js/register.js' %}"></script>
+
+{% endblock %}
+
