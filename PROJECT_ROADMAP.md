@@ -378,12 +378,12 @@ Database
 
 ## Frontend
 
-* [ ] Cart Page
-* [ ] Cart Item Display
-* [ ] Quantity Controls
-* [ ] Remove Item
-* [ ] Cart Summary
-* [ ] Empty Cart State
+* [x] Cart Page
+* [x] Cart Item Display
+* [x] Quantity Controls
+* [x] Remove Item
+* [x] Cart Summary
+* [x] Empty Cart State
 * [ ] Product Detail → Cart Integration
 * [ ] Cart API Integration
 
@@ -688,7 +688,7 @@ The existing Django REST APIs will remain unchanged.
 
 ### Frontend
 
-* [ ] Cart Page
+* [x] Cart Page
 * [ ] Cart API Integration
 * [ ] Product Detail → Cart Integration
 
@@ -914,7 +914,7 @@ Phase 14 — Production Improvements    ⏳ Planned
 7. [ ] Automatic JWT Token Refresh
 8. [ ] Orders page
 9. [ ] Error pages
-10. [ ] Cart Page
+10. [x] Cart Page
 11. [ ] Product Detail → Cart Integration
 12. [ ] Checkout
 13. [ ] Orders Backend

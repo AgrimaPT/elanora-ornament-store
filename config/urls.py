@@ -53,6 +53,10 @@ urlpatterns = [
         include("accounts.frontend_urls"),
     ),
 
+    path("", 
+         include("cart.frontend_urls")
+    ),
+
     path(
         "api/cart/",
         include("cart.urls"),

@@ -210,3 +210,14 @@ class CartAPIView(APIView):
             },
             status=status.HTTP_200_OK
         )
+    
+
+
+
+from django.shortcuts import render
+
+def cart_page(request):
+    return render(
+    request,
+    "cart.html",
+    )

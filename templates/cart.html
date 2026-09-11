@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Cart | Ornament
+{% endblock %}
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'css/cart.css' %}"
+>
+
+{% endblock %}
+
+{% block content %}
+
+<section class="cart-section">
+
+
+<div class="container">
+
+    <!-- Page Header -->
+
+    <div class="cart-header">
+
+        <span class="section-eyebrow">
+            YOUR CART
+        </span>
+
+        <h1>
+            Shopping Cart
+        </h1>
+
+        <p>
+            Review your selected jewellery before checkout.
+        </p>
+
+    </div>
+
+
+    <!-- Cart Layout -->
+
+    <div class="cart-layout">
+
+        <!-- Cart Items -->
+
+        <div class="cart-items-container">
+
+            <div
+                id="cart-loading"
+                class="cart-state"
+            >
+                Loading your cart...
+            </div>
+
+
+            <div
+                id="cart-error"
+                class="cart-state cart-error"
+            >
+            </div>
+
+
+            <div
+                id="cart-empty"
+                class="cart-state cart-empty"
+                hidden
+            >
+
+                <h2>
+                    Your cart is empty
+                </h2>
+
+                <p>
+                    Discover something beautiful for your collection.
+                </p>
+
+                <a
+                    href="/shop/"
+                    class="cart-button cart-button-primary"
+                >
+                    Browse Jewellery
+                </a>
+
+            </div>
+
+
+            <div
+                id="cart-items"
+                class="cart-items"
+            >
+            </div>
+
+        </div>
+
+
+        <!-- Cart Summary -->
+
+        <aside class="cart-summary">
+
+            <h2>
+                Order Summary
+            </h2>
+
+            <div class="cart-summary-row">
+
+                <span>
+                    Subtotal
+                </span>
+
+                <span id="cart-subtotal">
+                    ₹0
+                </span>
+
+            </div>
+
+            <div class="cart-summary-row">
+
+                <span>
+                    Shipping
+                </span>
+
+                <span>
+                    Free
+                </span>
+
+            </div>
+
+            <div class="cart-summary-divider">
+            </div>
+
+            <div class="cart-summary-total">
+
+                <span>
+                    Total
+                </span>
+
+                <span id="cart-total">
+                    ₹0
+                </span>
+
+            </div>
+
+            <a
+                href="/checkout/"
+                class="cart-button cart-button-primary cart-checkout-button"
+            >
+                Proceed to Checkout
+            </a>
+
+        </aside>
+
+    </div>
+
+</div>
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script
+    src="{% static 'js/cart.js' %}">
+</script>
+
+{% endblock %}
