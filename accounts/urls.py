@@ -1,7 +1,8 @@
 from django.urls import path
 
 from .views import  RegisterAPIView,UserListAPIView,LoginAPIView,ProfileAPIView,UpdateProfileAPIView,ChangePasswordAPIView,LogoutAPIView
-
+from accounts.views.address import AddressListCreateAPIView
+from accounts.views.address_detail import AddressDetailAPIView
 
 urlpatterns = [
     path("users/", UserListAPIView.as_view(), name="user-list"),
@@ -11,4 +12,8 @@ urlpatterns = [
     path("profile/update/",UpdateProfileAPIView.as_view(),name="update-profile"),
     path("change-password/",ChangePasswordAPIView.as_view(),name="change-password"),
     path("logout/",LogoutAPIView.as_view(),name="logout",),
+    path("addresses/",AddressListCreateAPIView.as_view(),name="address-list-create",),
+    path("addresses/<int:address_id>/",AddressDetailAPIView.as_view(),name="address-detail",),
+
+
 ]

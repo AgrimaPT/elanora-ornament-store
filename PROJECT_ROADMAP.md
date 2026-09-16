@@ -299,7 +299,7 @@ Database
 ## Remaining Pages
 
 * [ ] Orders
-* [ ] Cart
+* [x] Cart
 * [ ] Checkout
 
 
@@ -384,7 +384,7 @@ Database
 * [x] Remove Item
 * [x] Cart Summary
 * [x] Empty Cart State
-* [ ] Product Detail → Cart Integration
+* [x] Product Detail → Cart Integration
 * [ ] Cart API Integration
 
 ---
@@ -393,8 +393,10 @@ Database
 
 **Status: ⏳ Not Started**
 
-* [ ] Address Model
-* [ ] Address CRUD
+* [x] Address Model
+* [x] Address CRUD
+* [x] Address Ownership Protection
+* [x] Default Address Logic
 * [ ] Shipping Information
 * [ ] Order Summary
 * [ ] Checkout Page

@@ -289,6 +289,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const increaseButton =
                 document.getElementById("quantity-increase");
 
+            const addToCartButton =
+                document.getElementById("add-to-cart");
+
 
             decreaseButton.addEventListener("click", () => {
 
@@ -316,6 +319,77 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
             });
+
+            addToCartButton.addEventListener(
+                "click",
+                async () => {
+
+                    try {
+
+                        const response =
+                            await fetchWithAuth(
+                                "/api/cart/add/",
+                                {
+                                    method: "POST",
+
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json",
+                                    },
+
+                                    body: JSON.stringify({
+                                        product: product.id,
+                                        quantity: quantity,
+                                    }),
+                                }
+                            );
+
+
+                        const data =
+                            await response.json();
+
+
+                        if (!response.ok) {
+
+                            console.error(
+                                "Add to cart failed:",
+                                data
+                            );
+
+                            alert(
+                                data.detail ||
+                                "Unable to add this item to your cart."
+                            );
+
+                            return;
+                        }
+
+
+                        console.log(
+                            "Added to cart:",
+                            data
+                        );
+
+
+                        addToCartButton.textContent =
+                            "Added to Cart ✓";
+
+
+                    } catch (error) {
+
+                        console.error(
+                            "Add to cart error:",
+                            error
+                        );
+
+                        alert(
+                            "Something went wrong. Please try again."
+                        );
+
+                    }
+
+                }
+            );
 
         }
 
