@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from cart.models import Cart, CartItem
-from products.models import Product
+from products.models import Product, ProductVariant
 
 
 class CartProductSerializer(serializers.ModelSerializer):
@@ -26,11 +26,25 @@ class CartProductSerializer(serializers.ModelSerializer):
             return image.image.url
 
         return None
-    
+
+
+class CartVariantSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProductVariant
+        fields = (
+            "id",
+            "name",
+            "price",
+            "stock",
+            "is_active",
+        )
+
 
 class CartItemSerializer(serializers.ModelSerializer):
-
     product = CartProductSerializer(read_only=True)
+    variant = CartVariantSerializer(read_only=True)
+    unit_price = serializers.SerializerMethodField()
     subtotal = serializers.SerializerMethodField()
 
     class Meta:
@@ -38,14 +52,23 @@ class CartItemSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "product",
+            "variant",
             "quantity",
+            "unit_price",
             "subtotal",
-            #we don't want to expose cart number to the frontend.so no cart field
         )
 
+    def get_effective_price(self, obj):
+        if obj.variant and obj.variant.price is not None:
+            return obj.variant.price
+
+        return obj.product.price
+
+    def get_unit_price(self, obj):
+        return self.get_effective_price(obj)
+
     def get_subtotal(self, obj):
-        return obj.product.price * obj.quantity
-    
+        return self.get_effective_price(obj) * obj.quantity
 
 class CartSerializer(serializers.ModelSerializer):
 
@@ -67,12 +90,39 @@ class CartSerializer(serializers.ModelSerializer):
 class AddToCartSerializer(serializers.Serializer):
 
     product = serializers.PrimaryKeyRelatedField(
-        queryset=Product.objects.filter(is_active=True)
+        queryset=Product.objects.filter(
+            is_active=True
+        )
+    )
+
+    variant = serializers.PrimaryKeyRelatedField(
+        queryset=ProductVariant.objects.filter(
+            is_active=True
+        ),
+        required=False,
+        allow_null=True,
     )
 
     quantity = serializers.IntegerField(
         min_value=1
     )
+
+    def validate(self, attrs):
+
+        product = attrs["product"]
+
+        variant = attrs.get("variant")
+
+        if variant and variant.product_id != product.id:
+
+            raise serializers.ValidationError(
+                {
+                    "variant":
+                    "This variant does not belong to the selected product."
+                }
+            )
+
+        return attrs
 
 
 class UpdateCartItemSerializer(serializers.Serializer):

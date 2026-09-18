@@ -1,99 +1,213 @@
+/* =========================================================
+   REGISTER PAGE
+========================================================= */
 
 .register-section {
     padding: 100px 0;
+
     min-height: 70vh;
+
     display: flex;
+
     align-items: center;
 }
 
 .register-container {
     max-width: 520px;
+
     margin: 0 auto;
 }
 
 .register-header {
     text-align: center;
+
     margin-bottom: 45px;
 }
 
 .register-header h1 {
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin: 1rem 0 1rem;
+
+    color: var(--color-espresso);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+
+    font-weight: 400;
+
+    line-height: 1.08;
 }
 
 .register-header p {
     margin-bottom: 0;
+
+    color: var(--color-muted);
+
+    font-size: 0.95rem;
+
+    line-height: 1.8;
 }
 
 .register-form {
     display: flex;
+
     flex-direction: column;
+
     gap: 24px;
 }
 
 .register-name-fields {
     display: grid;
+
     grid-template-columns: 1fr 1fr;
+
     gap: 16px;
 }
 
 .register-field {
     display: flex;
+
     flex-direction: column;
+
     gap: 8px;
 }
 
 .register-field label {
-    font-size: 14px;
+    color: var(--color-espresso);
+
+    font-size: 0.78rem;
+
     font-weight: 500;
 }
 
 .register-field input {
     width: 100%;
+
     padding: 14px 16px;
-    border: 1px solid #ddd;
+
+    border:
+        1px solid
+        rgba(43, 37, 32, 0.18);
+
     border-radius: 0;
+
     outline: none;
-    font-size: 15px;
-    transition: border-color 0.2s ease;
+
+    background-color: var(--color-white);
+
+    color: var(--color-espresso);
+
+    font-family: inherit;
+
+    font-size: 0.9rem;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.register-field input:hover {
+    border-color: var(--color-gold);
 }
 
 .register-field input:focus {
-    border-color: #999;
+    border-color: var(--color-gold);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(184, 155, 94, 0.10);
 }
 
 .register-button {
     width: 100%;
+
+    min-height: 50px;
+
     padding: 15px;
-    border: none;
+
+    border:
+        1px solid
+        var(--color-espresso);
+
     border-radius: 0;
+
+    background-color: var(--color-espresso);
+
+    color: var(--color-white);
+
     cursor: pointer;
-    font-size: 15px;
+
+    font-family: inherit;
+
+    font-size: 0.72rem;
+
     font-weight: 500;
-    transition: opacity 0.2s ease;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+
+    transition:
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.2s ease;
 }
 
 .register-button:hover {
-    opacity: 0.85;
+    background-color: var(--color-gold);
+
+    border-color: var(--color-gold);
+
+    opacity: 1;
+
+    transform: translateY(-1px);
 }
 
 .register-message {
     min-height: 20px;
-    font-size: 14px;
+
+    color: var(--color-muted);
+
+    font-size: 0.85rem;
 }
 
 .register-login-link {
     text-align: center;
+
     margin-top: 30px;
 }
 
 .register-login-link p {
     margin-bottom: 0;
+
+    color: var(--color-muted);
+
+    font-size: 0.85rem;
 }
 
 .register-login-link a {
+    color: var(--color-espresso);
+
     text-decoration: none;
+
+    border-bottom:
+        1px solid
+        var(--color-espresso);
+
+    transition:
+        color 0.2s ease,
+        border-color 0.2s ease;
 }
+
+.register-login-link a:hover {
+    color: var(--color-gold);
+
+    border-color: var(--color-gold);
+}
+
 
 @media (max-width: 576px) {
 
@@ -103,7 +217,9 @@
 
     .register-name-fields {
         grid-template-columns: 1fr;
+
         gap: 24px;
     }
 
 }
+

@@ -6,3 +6,11 @@ def home(request):
 
 def shop(request):
     return render(request, "products/shop.html")
+
+
+def checkout(request):
+
+    return render(
+        request,
+        "checkout.html",
+    )

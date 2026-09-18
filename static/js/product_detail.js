@@ -4,6 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("product-detail");
 
 
+    let selectedVariant = null;
+
+
     async function loadProduct() {
 
         try {
@@ -11,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const response = await fetch(
                 `/api/products/${productSlug}/`
             );
+
 
             if (!response.ok) {
 
@@ -20,18 +24,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
             }
 
+
             const product =
                 await response.json();
 
+
             displayProduct(product);
 
-        } 
+        }
         catch (error) {
 
             console.error(
                 "Error loading product:",
                 error
             );
+
 
             productDetail.innerHTML = `
                 <div class="product-not-found">
@@ -64,10 +71,39 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+    function getEffectivePrice(product, variant) {
+
+        if (
+            variant &&
+            variant.price !== null
+        ) {
+
+            return Number(
+                variant.price
+            );
+
+        }
+
+
+        return Number(
+            product.price
+        );
+
+    }
+
+
     function displayProduct(product) {
 
         const images =
             product.images || [];
+
+
+        const variants =
+            (product.variants || [])
+                .filter(
+                    variant =>
+                        variant.is_active
+                );
 
 
         const mainImage =
@@ -149,31 +185,86 @@ document.addEventListener("DOMContentLoaded", () => {
                     </h1>
 
 
-                    <p class="product-price">
-                        ₹${Number(product.price).toLocaleString("en-IN")}
+                    <p
+                        class="product-price"
+                        id="product-price"
+                    >
+                        ₹${Number(
+                            product.price
+                        ).toLocaleString("en-IN")}
                     </p>
 
 
-                    <p class="product-stock">
+                    ${
+                        variants.length > 0
+                            ? `
 
+                                <div
+                                    class="product-variants"
+                                >
+
+                                    <span
+                                        class="variant-label"
+                                    >
+                                        Select Size
+                                    </span>
+
+
+                                    <div
+                                        class="variant-options"
+                                        id="variant-options"
+                                    >
+
+                                        ${
+                                            variants.map(
+                                                (variant) => `
+
+                                                    <button
+                                                        type="button"
+                                                        class="variant-option"
+                                                        data-variant-id="${variant.id}"
+                                                        ${variant.stock <= 0 ? "disabled" : ""}
+                                                    >
+                                                        ${variant.name}
+                                                    </button>
+
+                                                `
+                                            ).join("")
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                              `
+                            : ""
+                    }
+
+
+                    <p
+                        class="product-stock"
+                        id="product-stock"
+                    >
                         ${
                             product.stock > 0
                                 ? "In Stock"
                                 : "Out of Stock"
                         }
-
                     </p>
+
 
                     <div class="product-purchase">
 
                         ${
                             product.stock > 0
                                 ? `
+
                                     <div class="product-quantity">
 
                                         <span class="quantity-label">
                                             Quantity
                                         </span>
+
 
                                         <div class="quantity-control">
 
@@ -185,12 +276,14 @@ document.addEventListener("DOMContentLoaded", () => {
                                                 −
                                             </button>
 
+
                                             <span
                                                 class="quantity-value"
                                                 id="quantity-value"
                                             >
                                                 1
                                             </span>
+
 
                                             <button
                                                 type="button"
@@ -204,6 +297,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                                     </div>
 
+
                                     <button
                                         type="button"
                                         class="add-to-cart-button"
@@ -211,8 +305,10 @@ document.addEventListener("DOMContentLoaded", () => {
                                     >
                                         Add to Cart
                                     </button>
-                                `
+
+                                  `
                                 : `
+
                                     <button
                                         type="button"
                                         class="add-to-cart-button out-of-stock-button"
@@ -220,10 +316,12 @@ document.addEventListener("DOMContentLoaded", () => {
                                     >
                                         Out of Stock
                                     </button>
-                                `
+
+                                  `
                         }
 
                     </div>
+
 
                 </div>
 
@@ -233,7 +331,22 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
 
 
-        // Thumbnail functionality
+        setupThumbnailFunctionality(
+            product
+        );
+
+
+        setupProductPurchase(
+            product,
+            variants
+        );
+
+    }
+
+
+    function setupThumbnailFunctionality(
+        product
+    ) {
 
         const thumbnails =
             document.querySelectorAll(
@@ -247,84 +360,393 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
 
-        thumbnails.forEach(thumbnail => {
+        thumbnails.forEach(
+            thumbnail => {
 
-            thumbnail.addEventListener(
-                "click",
-                () => {
+                thumbnail.addEventListener(
+                    "click",
+                    () => {
 
-                    mainProductImage.src =
-                        thumbnail.dataset.image;
+                        mainProductImage.src =
+                            thumbnail.dataset.image;
 
 
-                    thumbnails.forEach(item => {
+                        thumbnails.forEach(
+                            item => {
 
-                        item.classList.remove(
+                                item.classList.remove(
+                                    "active"
+                                );
+
+                            }
+                        );
+
+
+                        thumbnail.classList.add(
                             "active"
                         );
 
-                    });
+                    }
+                );
+
+            }
+        );
+
+    }
 
 
-                    thumbnail.classList.add(
-                        "active"
-                    );
+    function setupProductPurchase(
+        product,
+        variants
+    ) {
+
+        const quantityValue =
+            document.getElementById(
+                "quantity-value"
+            );
+
+
+        const decreaseButton =
+            document.getElementById(
+                "quantity-decrease"
+            );
+
+
+        const increaseButton =
+            document.getElementById(
+                "quantity-increase"
+            );
+
+
+        const addToCartButton =
+            document.getElementById(
+                "add-to-cart"
+            );
+
+
+        const priceElement =
+            document.getElementById(
+                "product-price"
+            );
+
+
+        const stockElement =
+            document.getElementById(
+                "product-stock"
+            );
+
+
+        let quantity = 1;
+
+
+        /*
+         * If the product has variants,
+         * select the first active variant
+         * by default.
+         */
+        if (variants.length > 0) {
+
+            selectedVariant =
+                variants.find(
+                    variant =>
+                        variant.stock > 0
+                ) || null;
+
+        }
+
+        function getAvailableStock() {
+
+            if (variants.length > 0) {
+
+                return selectedVariant
+                    ? selectedVariant.stock
+                    : 0;
+
+            }
+
+
+            return product.stock;
+
+        }
+
+
+        function updateProductDisplay() {
+
+            const effectivePrice =
+                getEffectivePrice(
+                    product,
+                    selectedVariant
+                );
+
+
+            const availableStock =
+                getAvailableStock();
+
+
+            priceElement.textContent =
+                `₹${effectivePrice.toLocaleString(
+                    "en-IN"
+                )}`;
+
+
+            if (availableStock > 0) {
+
+                stockElement.textContent =
+                    `In Stock — ${availableStock} available`;
+
+            }
+            else {
+
+                stockElement.textContent =
+                    "Out of Stock";
+
+            }
+
+
+            if (
+                quantity > availableStock
+            ) {
+
+                quantity =
+                    availableStock;
+
+            }
+
+
+            if (quantity < 1) {
+
+                quantity = 1;
+
+            }
+
+
+            quantityValue.textContent =
+                quantity;
+
+
+            if (addToCartButton) {
+
+                addToCartButton.disabled =
+                    availableStock <= 0;
+
+                addToCartButton.classList.toggle(
+                    "out-of-stock-button",
+                    availableStock <= 0
+                );
+
+
+                addToCartButton.textContent =
+                    availableStock > 0
+                        ? "Add to Cart"
+                        : "Out of Stock";
+
+            }
+
+        }
+
+
+        /*
+         * Variant selection
+         */
+
+        const variantOptions =
+            document.querySelectorAll(
+                ".variant-option"
+            );
+
+
+        variantOptions.forEach(
+            option => {
+
+                option.addEventListener(
+                    "click",
+                    () => {
+
+                        if (option.disabled) {
+
+                            return;
+
+                        }
+
+
+                        const variantId =
+                            Number(
+                                option.dataset.variantId
+                            );
+
+
+                        selectedVariant =
+                            variants.find(
+                                variant =>
+                                    variant.id ===
+                                    variantId
+                            );
+
+
+                        variantOptions.forEach(
+                            item => {
+
+                                item.classList.remove(
+                                    "selected"
+                                );
+
+                            }
+                        );
+
+
+                        option.classList.add(
+                            "selected"
+                        );
+
+
+                        quantity = 1;
+
+
+                        updateProductDisplay();
+
+                    }
+                );
+
+            }
+        );
+
+
+        /*
+         * Mark the default variant
+         * as selected.
+         */
+
+        if (selectedVariant) {
+
+            const selectedOption =
+                document.querySelector(
+                    `.variant-option[data-variant-id="${selectedVariant.id}"]`
+                );
+
+
+            if (selectedOption) {
+
+                selectedOption.classList.add(
+                    "selected"
+                );
+
+            }
+
+        }
+
+
+        /*
+         * Quantity decrease
+         */
+
+        if (decreaseButton) {
+
+            decreaseButton.addEventListener(
+                "click",
+                () => {
+
+                    if (quantity > 1) {
+
+                        quantity--;
+
+                        quantityValue.textContent =
+                            quantity;
+
+                    }
 
                 }
             );
 
-        });
+        }
 
 
-        if (product.stock > 0) {
+        /*
+         * Quantity increase
+         */
 
-            let quantity = 1;
+        if (increaseButton) {
 
-            const quantityValue =
-                document.getElementById("quantity-value");
+            increaseButton.addEventListener(
+                "click",
+                () => {
 
-            const decreaseButton =
-                document.getElementById("quantity-decrease");
-
-            const increaseButton =
-                document.getElementById("quantity-increase");
-
-            const addToCartButton =
-                document.getElementById("add-to-cart");
+                    const availableStock =
+                        getAvailableStock();
 
 
-            decreaseButton.addEventListener("click", () => {
+                    if (
+                        quantity <
+                        availableStock
+                    ) {
 
-                if (quantity > 1) {
+                        quantity++;
 
-                    quantity--;
+                        quantityValue.textContent =
+                            quantity;
 
-                    quantityValue.textContent =
-                        quantity;
-
-                }
-
-            });
-
-
-            increaseButton.addEventListener("click", () => {
-
-                if (quantity < product.stock) {
-
-                    quantity++;
-
-                    quantityValue.textContent =
-                        quantity;
+                    }
 
                 }
+            );
 
-            });
+        }
+
+
+        /*
+         * Add to Cart
+         */
+
+        if (addToCartButton) {
 
             addToCartButton.addEventListener(
                 "click",
                 async () => {
 
+                    const availableStock =
+                        getAvailableStock();
+
+
+                    if (
+                        availableStock <= 0
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const cartData = {
+
+                        product:
+                            product.id,
+
+                        quantity:
+                            quantity,
+
+                    };
+
+
+                    /*
+                     * Only send variant when
+                     * the product actually has
+                     * a selected variant.
+                     */
+
+                    if (
+                        selectedVariant
+                    ) {
+
+                        cartData.variant =
+                            selectedVariant.id;
+
+                    }
+
+
                     try {
+
+                        addToCartButton.disabled =
+                            true;
+
 
                         const response =
                             await fetchWithAuth(
@@ -337,10 +759,10 @@ document.addEventListener("DOMContentLoaded", () => {
                                             "application/json",
                                     },
 
-                                    body: JSON.stringify({
-                                        product: product.id,
-                                        quantity: quantity,
-                                    }),
+                                    body:
+                                        JSON.stringify(
+                                            cartData
+                                        ),
                                 }
                             );
 
@@ -356,12 +778,17 @@ document.addEventListener("DOMContentLoaded", () => {
                                 data
                             );
 
+
                             alert(
                                 data.detail ||
                                 "Unable to add this item to your cart."
                             );
 
+
+                            updateProductDisplay();
+
                             return;
+
                         }
 
 
@@ -375,16 +802,21 @@ document.addEventListener("DOMContentLoaded", () => {
                             "Added to Cart ✓";
 
 
-                    } catch (error) {
+                    }
+                    catch (error) {
 
                         console.error(
                             "Add to cart error:",
                             error
                         );
 
+
                         alert(
                             "Something went wrong. Please try again."
                         );
+
+
+                        updateProductDisplay();
 
                     }
 
@@ -392,6 +824,13 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
         }
+
+
+        /*
+         * Initial product state
+         */
+
+        updateProductDisplay();
 
     }
 

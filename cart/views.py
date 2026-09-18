@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -13,22 +13,7 @@ from cart.serializers import (
     UpdateCartItemSerializer,
 )
 
-class CartAPIView(APIView):
 
-    permission_classes = [
-        IsAuthenticated
-    ]
-
-    def get(self, request):
-
-        cart, created = Cart.objects.get_or_create(
-            user=request.user
-        )
-
-        serializer = CartSerializer(cart)
-
-        return Response(serializer.data)
-    
 class AddToCartAPIView(APIView):
 
     permission_classes = [
@@ -46,6 +31,11 @@ class AddToCartAPIView(APIView):
         )
 
         product = serializer.validated_data["product"]
+
+        variant = serializer.validated_data.get(
+            "variant"
+        )
+
         quantity = serializer.validated_data["quantity"]
 
 
@@ -55,26 +45,36 @@ class AddToCartAPIView(APIView):
         )
 
 
-        try:
+        # Determine available stock
+        available_stock = (
+            variant.stock
+            if variant
+            else product.stock
+        )
 
-            cart_item = CartItem.objects.get(
-                cart=cart,
-                product=product
-            )
+
+        # Find existing cart item for the
+        # same product + variant combination
+        cart_item = CartItem.objects.filter(
+            cart=cart,
+            product=product,
+            variant=variant,
+        ).first()
+
+
+        if cart_item:
 
             final_quantity = (
                 cart_item.quantity + quantity
             )
 
-        except CartItem.DoesNotExist:
-
-            cart_item = None
+        else:
 
             final_quantity = quantity
 
 
         # Check available stock
-        if final_quantity > product.stock:
+        if final_quantity > available_stock:
 
             return Response(
                 {
@@ -99,7 +99,8 @@ class AddToCartAPIView(APIView):
             cart_item = CartItem.objects.create(
                 cart=cart,
                 product=product,
-                quantity=quantity
+                variant=variant,
+                quantity=quantity,
             )
 
 
@@ -116,9 +117,15 @@ class AddToCartAPIView(APIView):
 
 class CartItemAPIView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [
+        IsAuthenticated
+    ]
 
-    def get_cart_item(self, request, item_id):
+    def get_cart_item(
+        self,
+        request,
+        item_id
+    ):
 
         return get_object_or_404(
             CartItem,
@@ -126,22 +133,44 @@ class CartItemAPIView(APIView):
             cart__user=request.user,
         )
 
-    def patch(self, request, item_id):
+
+    def patch(
+        self,
+        request,
+        item_id
+    ):
 
         cart_item = self.get_cart_item(
             request,
             item_id
         )
 
+
         serializer = UpdateCartItemSerializer(
             data=request.data
         )
 
-        serializer.is_valid(raise_exception=True)
+        serializer.is_valid(
+            raise_exception=True
+        )
 
-        quantity = serializer.validated_data["quantity"]
 
-        if quantity > cart_item.product.stock:
+        quantity = serializer.validated_data[
+            "quantity"
+        ]
+
+
+        # Determine available stock
+        available_stock = (
+            cart_item.variant.stock
+            if cart_item.variant
+            else cart_item.product.stock
+        )
+
+
+        # Check available stock
+        if quantity > available_stock:
+
             return Response(
                 {
                     "detail":
@@ -150,34 +179,46 @@ class CartItemAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+
         cart_item.quantity = quantity
+
         cart_item.save()
+
 
         response_serializer = CartItemSerializer(
             cart_item
         )
+
 
         return Response(
             response_serializer.data,
             status=status.HTTP_200_OK
         )
 
-    def delete(self, request, item_id):
+
+    def delete(
+        self,
+        request,
+        item_id
+    ):
 
         cart_item = self.get_cart_item(
             request,
             item_id
         )
 
+
         cart_item.delete()
+
 
         return Response(
             {
-                "detail": "Item removed from cart."
+                "detail":
+                "Item removed from cart."
             },
             status=status.HTTP_200_OK
         )
-    
+
 
 class CartAPIView(APIView):
 
@@ -185,15 +226,21 @@ class CartAPIView(APIView):
         IsAuthenticated
     ]
 
+
     def get(self, request):
 
         cart, created = Cart.objects.get_or_create(
             user=request.user
         )
 
+
         serializer = CartSerializer(cart)
 
-        return Response(serializer.data)
+
+        return Response(
+            serializer.data
+        )
+
 
     def delete(self, request):
 
@@ -202,22 +249,22 @@ class CartAPIView(APIView):
             user=request.user,
         )
 
+
         cart.items.all().delete()
+
 
         return Response(
             {
-                "detail": "Cart cleared successfully."
+                "detail":
+                "Cart cleared successfully."
             },
             status=status.HTTP_200_OK
         )
-    
 
-
-
-from django.shortcuts import render
 
 def cart_page(request):
+
     return render(
-    request,
-    "cart.html",
+        request,
+        "cart.html",
     )

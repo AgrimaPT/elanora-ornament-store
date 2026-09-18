@@ -1,6 +1,6 @@
 from django.urls import path
 
-from core.views import home, shop
+from core.views import home, shop, checkout
 
 
 urlpatterns = [
@@ -14,5 +14,11 @@ urlpatterns = [
         "shop/",
         shop,
         name="shop",
+    ),
+
+    path(
+        "checkout/",
+        checkout,
+        name="checkout",
     ),
 ]

@@ -20,6 +20,40 @@ const cartTotal =
     document.getElementById("cart-total");
 
 
+function getEffectivePrice(item) {
+
+    if (
+        item.variant &&
+        item.variant.price !== null
+    ) {
+
+        return Number(
+            item.variant.price
+        );
+
+    }
+
+
+    return Number(
+        item.product.price
+    );
+
+}
+
+function getAvailableStock(item) {
+
+    if (item.variant) {
+
+        return item.variant.stock;
+
+    }
+
+
+    return item.product.stock;
+
+}
+
+
 async function loadCart() {
 
     try {
@@ -47,7 +81,7 @@ async function loadCart() {
         emptyState.hidden = true;
 
         cartItemsContainer.innerHTML = "";
-        
+
         if (
             !cart.items ||
             cart.items.length === 0
@@ -75,6 +109,12 @@ async function loadCart() {
 
         cart.items.forEach(
             (item) => {
+
+                const unitPrice =
+                    getEffectivePrice(item);
+
+                const availableStock =
+                    getAvailableStock(item);
 
                 total +=
                     Number(item.subtotal);
@@ -116,10 +156,20 @@ async function loadCart() {
                             <p
                                 class="cart-item-price"
                             >
-                                ₹${Number(
-                                    item.product.price
-                                ).toLocaleString("en-IN")}
+                                ₹${unitPrice.toLocaleString("en-IN")}
                             </p>
+
+                            ${
+                                item.variant
+                                    ? `
+                                        <p
+                                            class="cart-item-variant"
+                                        >
+                                            ${item.variant.name}
+                                        </p>
+                                    `
+                                    : ""
+                            }
 
                         </div>
 
@@ -132,7 +182,6 @@ async function loadCart() {
                                 type="button"
                                 class="quantity-button quantity-decrease"
                                 data-item-id="${item.id}"
-                                data-stock="${item.product.stock}"
                             >
                                 −
                             </button>
@@ -147,7 +196,6 @@ async function loadCart() {
                                 type="button"
                                 class="quantity-button quantity-increase"
                                 data-item-id="${item.id}"
-                                data-stock="${item.product.stock}"
                             >
                                 +
                             </button>
@@ -227,6 +275,16 @@ async function loadCart() {
                             item.quantity + 1;
 
 
+                        if (
+                            newQuantity >
+                            availableStock
+                        ) {
+
+                            return;
+
+                        }
+
+
                         updateQuantity(
                             item.id,
                             newQuantity
@@ -234,7 +292,6 @@ async function loadCart() {
 
                     }
                 );
-
 
                 const removeButton =
                     cartItem.querySelector(

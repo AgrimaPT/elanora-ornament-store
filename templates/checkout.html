@@ -1,0 +1,368 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}
+Checkout | Ornament
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'css/checkout.css' %}"
+>
+
+{% endblock %}
+
+
+{% block content %}
+
+<section class="checkout-section">
+
+    <div class="container">
+
+        <div class="checkout-header">
+
+            <span class="section-eyebrow">
+                CHECKOUT
+            </span>
+
+            <h1>
+                Complete Your Order
+            </h1>
+
+            <p>
+                Confirm your delivery details and review your order.
+            </p>
+
+        </div>
+
+
+        <div class="checkout-layout">
+
+
+            <!-- Delivery Address -->
+
+            <section class="checkout-address-section">
+
+                <div class="checkout-section-header">
+
+                    <h2>
+                        Delivery Address
+                    </h2>
+
+                    <button
+                        type="button"
+                        id="add-address-button"
+                        class="checkout-button checkout-button-secondary"
+                    >
+                        Add New Address
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="address-loading"
+                    class="checkout-state"
+                >
+                    Loading your addresses...
+                </div>
+
+
+                <div
+                    id="address-error"
+                    class="checkout-state checkout-error"
+                    hidden
+                >
+                </div>
+
+
+                <div
+                    id="address-empty"
+                    class="checkout-state"
+                    hidden
+                >
+
+                    <h3>
+                        No saved addresses
+                    </h3>
+
+                    <p>
+                        Add a delivery address to continue.
+                    </p>
+
+                </div>
+
+
+                <div
+                    id="address-list"
+                    class="address-list"
+                >
+                </div>
+
+
+                <!-- Add Address Form -->
+
+                <div
+                    id="address-form-container"
+                    class="address-form-container"
+                    hidden
+                >
+
+                    <h3>
+                        Add New Address
+                    </h3>
+
+
+                    <form id="address-form">
+
+
+                        <div class="checkout-form-group">
+
+                            <label for="full-name">
+                                Full Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="full-name"
+                                name="full_name"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="checkout-form-group">
+
+                            <label for="phone-number">
+                                Phone Number
+                            </label>
+
+                            <input
+                                type="tel"
+                                id="phone-number"
+                                name="phone_number"
+                                maxlength="10"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="checkout-form-group">
+
+                            <label for="address-line-1">
+                                Address Line 1
+                            </label>
+
+                            <input
+                                type="text"
+                                id="address-line-1"
+                                name="address_line_1"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="checkout-form-group">
+
+                            <label for="address-line-2">
+                                Address Line 2
+                            </label>
+
+                            <input
+                                type="text"
+                                id="address-line-2"
+                                name="address_line_2"
+                            >
+
+                        </div>
+
+
+                        <div class="checkout-form-row">
+
+                            <div class="checkout-form-group">
+
+                                <label for="city">
+                                    City
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="city"
+                                    name="city"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="checkout-form-group">
+
+                                <label for="state">
+                                    State
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="state"
+                                    name="state"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="checkout-form-group">
+
+                            <label for="pincode">
+                                Pincode
+                            </label>
+
+                            <input
+                                type="text"
+                                id="pincode"
+                                name="pincode"
+                                maxlength="6"
+                                required
+                            >
+
+                        </div>
+
+
+                        <label class="default-address-option">
+
+                            <input
+                                type="checkbox"
+                                id="is-default"
+                                name="is_default"
+                            >
+
+                            <span>
+                                Make this my default address
+                            </span>
+
+                        </label>
+
+
+                        <div class="address-form-actions">
+
+                            <button
+                                type="submit"
+                                class="checkout-button checkout-button-primary"
+                            >
+                                Save Address
+                            </button>
+
+                            <button
+                                type="button"
+                                id="cancel-address-button"
+                                class="checkout-button checkout-button-secondary"
+                            >
+                                Cancel
+                            </button>
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+            </section>
+
+
+            <!-- Order Summary -->
+
+            <aside class="checkout-summary">
+
+                <h2>
+                    Order Summary
+                </h2>
+
+
+                <div
+                    id="checkout-items"
+                    class="checkout-items"
+                >
+                </div>
+
+
+                <div class="checkout-summary-row">
+
+                    <span>
+                        Subtotal
+                    </span>
+
+                    <span id="checkout-subtotal">
+                        ₹0
+                    </span>
+
+                </div>
+
+
+                <div class="checkout-summary-row">
+
+                    <span>
+                        Shipping
+                    </span>
+
+                    <span>
+                        Free
+                    </span>
+
+                </div>
+
+
+                <div class="checkout-summary-divider">
+                </div>
+
+
+                <div class="checkout-summary-total">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <span id="checkout-total">
+                        ₹0
+                    </span>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="place-order-button"
+                    class="checkout-button checkout-button-primary"
+                    disabled
+                >
+                    Continue to Order
+                </button>
+
+            </aside>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script
+    src="{% static 'js/checkout.js' %}">
+</script>
+
+{% endblock %}
