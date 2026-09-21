@@ -212,7 +212,7 @@ Database
 * [x] JWT Blacklist Setup
 * [x] Logout API
 * [x] Logout Frontend
-* [ ] Automatic Access Token Refresh
+* [x] Automatic Access Token Refresh
 
 ## Profile
 
@@ -295,13 +295,14 @@ Database
 * [x] Profile
 * [x] Contact
 * [x] Error Pages
+* [x] Cart
+* [x] Orders
+* [x] Order Details
+* [x] Checkout Foundation
 
 ## Remaining Pages
 
-* [ ] Orders
-* [x] Cart
-* [ ] Checkout
-
+* [ ] Checkout Finalization
 
 ## Frontend Features Completed
 
@@ -330,6 +331,9 @@ Database
 * [x] Stock-Based Quantity Limit
 * [x] Out-of-Stock State
 * [x] Product Not Found State
+* [x] Product Variant Selection
+* [x] Variant-Specific Pricing
+* [x] Variant-Specific Stock
 * [x] Luxury Product Styling
 
 ### Authentication UI
@@ -342,11 +346,61 @@ Database
 * [x] Logout
 * [x] Automatic JWT Token Refresh
 
+### Cart UI
+
+* [x] Cart Page
+* [x] Cart Item Display
+* [x] Variant Display
+* [x] Variant-Specific Pricing
+* [x] Unit Price Display
+* [x] Quantity Controls
+* [x] Stock-Based Quantity Limit
+* [x] Remove Item
+* [x] Cart Summary
+* [x] Empty Cart State
+* [x] Cart API Integration
+* [x] Product Detail → Cart Integration
+* [x] Cart Frontend Testing
+* [x] Luxury Cart Styling
+
+### Orders UI
+
+* [x] Orders Page
+* [x] Order History Loading
+* [x] Order Card Rendering
+* [x] Order Details Page
+* [x] Order Item Display
+* [x] Variant Display
+* [x] Order Summary
+* [x] Shipping Address Display
+* [x] Order Status Display
+* [x] Payment Status Display
+* [x] Order Cancellation UI
+* [x] Cancellation Confirmation
+* [x] Order Refresh After Cancellation
+* [x] Loading State
+* [x] Empty State
+* [x] Error State
+* [x] Responsive Orders Layout
+* [x] Luxury Orders Styling
+* [x] Orders Frontend Testing
+
+### Checkout UI
+
+* [x] Checkout Page Foundation
+* [x] Address Loading
+* [x] Address Selection
+* [x] Default Address Selection
+* [x] Add Address from Checkout
+* [x] Cart Loading
+* [x] Order Summary Foundation
+* [x] Checkout Validation Foundation
+
 ---
 
 # Phase 5 — Shopping Cart
 
-**Status: 🟡 Backend Completed — Frontend Pending**
+**Status: ✅ Completed**
 
 ## Backend
 
@@ -366,6 +420,9 @@ Database
 * [x] JWT Authentication
 * [x] Stock Validation
 * [x] User Ownership Protection
+* [x] Product Variant Support
+* [x] Variant-Specific Pricing
+* [x] Unit Price
 * [x] Postman Testing
 
 ## APIs
@@ -385,56 +442,169 @@ Database
 * [x] Cart Summary
 * [x] Empty Cart State
 * [x] Product Detail → Cart Integration
-* [ ] Cart API Integration
+* [x] Cart API Integration
+* [x] Variant Display
+* [x] Variant Pricing
+* [x] Variant Stock Handling
+* [x] Cart Frontend Testing
+* [x] Luxury Cart Styling
 
 ---
 
 # Phase 6 — Checkout
 
-**Status: ⏳ Not Started**
+**Status: 🟡 In Progress**
+
+## Address
 
 * [x] Address Model
 * [x] Address CRUD
 * [x] Address Ownership Protection
 * [x] Default Address Logic
-* [ ] Shipping Information
-* [ ] Order Summary
-* [ ] Checkout Page
-* [ ] Address Selection
-* [ ] Checkout Validation
+* [x] Address API Testing
+
+## Checkout
+
+* [x] Checkout Page Foundation
+* [x] Address Loading
+* [x] Address Selection
+* [x] Add Address from Checkout
+* [x] Cart Loading
+* [x] Order Summary Foundation
+* [x] Checkout Validation Foundation
+* [x] Shipping Information
+* [x] Order Creation
+* [x] Final Order Summary
+* [x] Place Order
+* [x] Inventory Validation During Order Creation
+* [x] Cart Clearing After Order Creation
+* [ ] Final Checkout UI Polish
+* [ ] Final Success State
+* [ ] Final Error State
+* [ ] End-to-End Checkout Testing
 
 ---
 
 # Phase 7 — Orders
 
-**Status: ⏳ Not Started**
+**Status: 🟡 Core Backend + Frontend Completed — Final Commit Pending**
 
 ## Models
 
-* [ ] Order
-* [ ] Order Item
+* [x] Order
+* [x] Order Item
+* [x] Order Status
+* [x] Payment Status
+* [x] Shipping Address Snapshot
+* [x] Purchase-Time Unit Price
+* [x] Purchase-Time Subtotal
+* [x] Product Variant Support
+
+## Order Creation
+
+* [x] Place Order API
+* [x] Address Ownership Validation
+* [x] Empty Cart Validation
+* [x] Stock Validation
+* [x] Variant Stock Validation
+* [x] Purchase-Time Price Calculation
+* [x] Order Creation
+* [x] Order Item Creation
+* [x] Inventory Reduction
+* [x] Cart Clearing
+* [x] Atomic Transaction
+* [x] Inventory Row Locking
+* [x] Postman Testing
 
 ## APIs
 
-* [ ] Place Order
-* [ ] Order History
-* [ ] Order Detail
-* [ ] Cancel Order
-* [ ] Order Tracking
+* [x] `POST /api/orders/`
+* [x] `GET /api/orders/history/`
+* [x] `GET /api/orders/{id}/`
+* [x] `POST /api/orders/{id}/cancel/`
+* [x] `PATCH /api/orders/{id}/status/`
 
-## Frontend
+## Order History
 
-* [ ] Orders Page
-* [ ] Order Detail Page
-* [ ] Order Status
-* [ ] Cancel Order UI
-* [ ] Order Tracking UI
+* [x] Customer Order History
+* [x] User Ownership Protection
+* [x] Newest-First Ordering
+* [x] Authentication Protection
+* [x] Postman Testing
+
+## Order Detail
+
+* [x] Customer Order Detail
+* [x] User Ownership Protection
+* [x] Invalid Order Handling
+* [x] Authentication Protection
+* [x] Postman Testing
+
+## Order Cancellation
+
+* [x] Customer Cancellation API
+* [x] PENDING Cancellation
+* [x] CONFIRMED Cancellation
+* [x] Stock Restoration
+* [x] Variant Stock Restoration
+* [x] Mixed Product + Variant Stock Restoration
+* [x] Double-Cancellation Protection
+* [x] Invalid Status Protection
+* [x] Ownership Protection
+* [x] Authentication Protection
+* [x] Transaction Safety
+* [x] Edge-Case Testing
+
+## Order Status / Tracking
+
+* [x] Admin Order Status API
+* [x] Admin Permission Protection
+* [x] PENDING → CONFIRMED
+* [x] CONFIRMED → PROCESSING
+* [x] PROCESSING → SHIPPED
+* [x] SHIPPED → DELIVERED
+* [x] Invalid Transition Protection
+* [x] Terminal Status Protection
+* [x] Customer Status-Update Protection
+* [x] Postman Testing
+
+## Orders Frontend
+
+* [x] Orders Page
+* [x] Order History API Integration
+* [x] Order Cards
+* [x] Order Details Page
+* [x] Order Details API Integration
+* [x] Order Items
+* [x] Variant Display
+* [x] Order Total
+* [x] Payment Status
+* [x] Shipping Address
+* [x] Cancellation UI
+* [x] Cancellation Confirmation
+* [x] Refresh After Cancellation
+* [x] Loading State
+* [x] Empty State
+* [x] Error State
+* [x] Ownership Protection Testing
+* [x] Invalid Order Testing
+* [x] Responsive Design
+* [x] Luxury Orders Styling
+* [x] Shared `orders.css` for Orders and Order Details
+* [x] Full Orders Frontend Testing
 
 ## Admin
 
-* [ ] Order Management
-* [ ] Order Status Management
-* [ ] Customer Order Details
+* [x] Order Admin
+* [x] Order Item Inline
+* [x] Order Status Management
+* [x] Payment Status Display
+* [x] Customer Order Details
+
+## Remaining Stage
+
+* [ ] Final Git Commit
+* [ ] Final Roadmap Commit Update
 
 ---
 
@@ -651,7 +821,6 @@ The existing Django REST APIs will remain unchanged.
 
 * [ ] Forgot Password API
 * [ ] Email Verification API
-* [ ] Automatic Token Refresh Handling
 
 ---
 
@@ -678,7 +847,7 @@ The existing Django REST APIs will remain unchanged.
 
 # Cart
 
-**Status: 🟡 Backend Completed — Frontend Pending**
+**Status: ✅ Completed**
 
 ### Completed
 
@@ -691,20 +860,77 @@ The existing Django REST APIs will remain unchanged.
 ### Frontend
 
 * [x] Cart Page
-* [ ] Cart API Integration
-* [ ] Product Detail → Cart Integration
+* [x] Cart API Integration
+* [x] Product Detail → Cart Integration
+* [x] Variant Display
+* [x] Variant Pricing
+* [x] Variant Stock Handling
+* [x] Cart Testing
+
+---
+
+# Checkout
+
+**Status: 🟡 In Progress**
+
+### Completed
+
+* [x] Address Management
+* [x] Address Ownership Protection
+* [x] Default Address Logic
+* [x] Checkout Page Foundation
+* [x] Address Selection
+* [x] Cart Loading
+* [x] Order Summary Foundation
+* [x] Order Creation
+* [x] Inventory Validation
+* [x] Cart Clearing
+
+### Remaining
+
+* [ ] Final Checkout UI Polish
+* [ ] Final Success State
+* [ ] Final Error State
+* [ ] End-to-End Checkout Testing
 
 ---
 
 # Orders
 
-**Status: ⏳ Not Started**
+**Status: 🟡 Core Backend + Frontend Completed — Final Commit Pending**
 
-* [ ] `POST /api/orders/`
-* [ ] `GET /api/orders/`
-* [ ] `GET /api/orders/{id}/`
-* [ ] `PATCH /api/orders/{id}/`
-* [ ] `DELETE /api/orders/{id}/`
+### Completed APIs
+
+* [x] `POST /api/orders/`
+* [x] `GET /api/orders/history/`
+* [x] `GET /api/orders/{id}/`
+* [x] `POST /api/orders/{id}/cancel/`
+* [x] `PATCH /api/orders/{id}/status/`
+
+### Order Features
+
+* [x] Order Creation
+* [x] Order History
+* [x] Order Detail
+* [x] Order Cancellation
+* [x] Stock Restoration
+* [x] Variant Stock Restoration
+* [x] Order Status Transitions
+* [x] Ownership Protection
+* [x] Authentication Protection
+* [x] Inventory Validation
+* [x] Atomic Transactions
+* [x] Order Admin
+* [x] Orders Frontend
+* [x] Order Details Frontend
+* [x] Cancellation UI
+* [x] Responsive/Luxury Styling
+* [x] Full Orders Frontend Testing
+
+### Remaining
+
+* [ ] Final Git Commit
+* [ ] Roadmap Commit Update
 
 ---
 
@@ -802,6 +1028,11 @@ Document important concepts learned during development.
 * [ ] Order Lifecycle
 * [ ] Payment Lifecycle
 * [ ] Payment Verification
+* [ ] Order Status Management
+* [ ] Order Cancellation
+* [ ] Inventory Restoration
+* [ ] Transaction Management
+* [ ] Shipping Address Snapshots
 
 ## AI
 
@@ -893,9 +1124,9 @@ Phase 1  — Project Setup             ✅ Completed
 Phase 2  — Authentication            🟢 Core Completed
 Phase 3  — Product Module             🟢 Core Completed
 Phase 4  — Frontend UI                🟡 CURRENT
-Phase 5  — Shopping Cart              🟡 Backend Completed
-Phase 6  — Checkout                   ⏳ Not Started
-Phase 7  — Orders                     ⏳ Not Started
+Phase 5  — Shopping Cart              ✅ Completed
+Phase 6  — Checkout                   🟡 IN PROGRESS
+Phase 7  — Orders                     🟡 Core Completed
 Phase 8  — Payments                   ⏳ Not Started
 Phase 9  — AI Integration             ⏳ Planned
 Phase 10 — Admin Dashboard            ⏳ Not Started
@@ -909,30 +1140,32 @@ Phase 14 — Production Improvements    ⏳ Planned
 
 1. [x] Product Detail page
 2. [x] About page
-3. [ ] Contact page
+3. [x] Contact page
 4. [x] Login page
 5. [x] Register page
 6. [x] Profile page
-7. [ ] Automatic JWT Token Refresh
-8. [ ] Orders page
-9. [ ] Error pages
-10. [x] Cart Page
-11. [ ] Product Detail → Cart Integration
-12. [ ] Checkout
-13. [ ] Orders Backend
-14. [ ] Razorpay
-15. [ ] AI Jewellery Assistant
-16. [ ] Natural Language Search
-17. [ ] Admin Dashboard
-18. [ ] Deployment
-19. [ ] React Migration
-20. [ ] Production Improvements
+7. [x] Automatic JWT Token Refresh
+8. [x] Error pages
+9. [x] Cart Page
+10. [x] Product Detail → Cart Integration
+11. [x] Cart API Integration
+12. [x] Cart Variant Support
+13. [x] Cart Pricing / Unit Price
+14. [x] Orders Backend
+15. [x] Orders Frontend
+16. [ ] Final Orders Git Commit
+17. [ ] Final Checkout UI Polish
+18. [ ] Final Checkout Success/Error States
+19. [ ] End-to-End Checkout Testing
+20. [ ] Razorpay
+21. [ ] AI Jewellery Assistant
+22. [ ] Natural Language Search
+23. [ ] Admin Dashboard
+24. [ ] Deployment
+25. [ ] React Migration
+26. [ ] Production Improvements
 
 ```
 
-**This is the version I would use as the current `PROJECT_ROADMAP.md`.**
-
-One important change in the plan: **we are not treating the Cart backend as unfinished anymore.** You've already built and tested the core Cart APIs. The remaining Cart work is primarily the **frontend integration**.
-
-And our immediate next technical task remains **automatic JWT token refresh**, then we'll continue Phase 4.
+This now reflects the actual project state much more accurately: **Orders are built and tested; only the final Orders commit remains.** After that, we can finish the remaining Checkout work before moving into Payments.
 ```

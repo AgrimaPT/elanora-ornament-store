@@ -61,6 +61,13 @@ urlpatterns = [
         "api/cart/",
         include("cart.urls"),
     ),
+
+    path("api/orders/", include("orders.urls")),
+
+    path(
+        "",
+        include("orders.frontend_urls"),
+    ),
     
 ]
 
