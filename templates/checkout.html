@@ -11,11 +11,15 @@ Checkout | Ornament
 
 <link
     rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+>
+
+<link
+    rel="stylesheet"
     href="{% static 'css/checkout.css' %}"
 >
 
 {% endblock %}
-
 
 {% block content %}
 
@@ -351,6 +355,66 @@ Checkout | Ornament
 
 
         </div>
+
+
+        <!-- Checkout Success State -->
+
+        <section
+            id="checkout-success"
+            class="checkout-result checkout-success"
+            hidden
+        >
+
+            <div class="checkout-result-icon">
+
+                <i class="fa-solid fa-check"></i>
+
+            </div>
+
+
+            <p class="section-eyebrow">
+                ORDER CONFIRMED
+            </p>
+
+
+            <h2>
+                Your Order Has Been Placed
+            </h2>
+
+
+            <p class="checkout-result-message">
+                Thank you for your purchase.
+                Your order has been successfully placed.
+            </p>
+
+
+            <p class="checkout-order-number">
+                Order
+                <strong id="success-order-number"></strong>
+            </p>
+
+
+            <div class="checkout-result-actions">
+
+                <a
+                    href="#"
+                    id="view-order-button"
+                    class="checkout-button checkout-button-primary"
+                >
+                    View Order
+                </a>
+
+
+                <a
+                    href="/shop/"
+                    class="checkout-button checkout-button-secondary"
+                >
+                    Continue Shopping
+                </a>
+
+            </div>
+
+        </section>
 
     </div>
 

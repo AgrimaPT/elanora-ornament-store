@@ -562,6 +562,134 @@
 
 
 /* ========================================
+   CHECKOUT RESULT STATES
+======================================== */
+
+.checkout-result {
+    max-width: 760px;
+
+    margin: 0 auto;
+
+    padding: 70px 40px;
+
+    border: 
+        1px solid 
+        rgba(43, 37, 32, 0.10);
+
+    background-color: var(--color-white);
+
+    text-align: center;
+}
+
+
+/* ========================================
+   SUCCESS ICON
+======================================== */
+
+.checkout-result-icon {
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    width: 72px;
+
+    height: 72px;
+
+    margin: 0 auto 28px;
+
+    border: 
+        1px solid 
+        var(--color-gold);
+
+    border-radius: 50%;
+
+    color: var(--color-gold);
+
+    font-size: 1.5rem;
+}
+
+
+/* ========================================
+   SUCCESS HEADING
+======================================== */
+
+.checkout-result h2 {
+    margin: 1rem 0 1.25rem;
+
+    color: var(--color-espresso);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: clamp(2rem, 4vw, 2.8rem);
+
+    font-weight: 400;
+
+    line-height: 1.2;
+}
+
+
+/* ========================================
+   SUCCESS MESSAGE
+======================================== */
+
+.checkout-result-message {
+    max-width: 520px;
+
+    margin: 0 auto 25px;
+
+    color: var(--color-muted);
+
+    font-size: 0.92rem;
+
+    line-height: 1.8;
+}
+
+
+/* ========================================
+   ORDER NUMBER
+======================================== */
+
+.checkout-order-number {
+    margin: 0 0 35px;
+
+    color: var(--color-muted);
+
+    font-size: 0.82rem;
+
+    letter-spacing: 0.04em;
+}
+
+.checkout-order-number strong {
+    color: var(--color-espresso);
+
+    font-weight: 600;
+}
+
+
+/* ========================================
+   RESULT ACTIONS
+======================================== */
+
+.checkout-result-actions {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+}
+
+.checkout-result-actions .checkout-button {
+    min-width: 170px;
+}
+
+/* ========================================
    RESPONSIVE
 ======================================== */
 
@@ -622,5 +750,23 @@
         width: 100%;
     }
 
-}
 
+    /* Checkout result */
+
+    .checkout-result {
+        padding: 50px 24px;
+    }
+
+    .checkout-result h2 {
+        font-size: 2rem;
+    }
+
+    .checkout-result-actions {
+        flex-direction: column;
+    }
+
+    .checkout-result-actions .checkout-button {
+        width: 100%;
+    }
+
+}

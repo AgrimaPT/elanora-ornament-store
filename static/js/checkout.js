@@ -51,10 +51,59 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
 
+    /*
+    --------------------------------------------------
+    CHECKOUT SUCCESS ELEMENTS
+    --------------------------------------------------
+    */
+
+    const checkoutLayout =
+        document.querySelector(".checkout-layout");
+
+    const checkoutSuccess =
+        document.getElementById(
+            "checkout-success"
+        );
+
+    const successOrderNumber =
+        document.getElementById(
+            "success-order-number"
+        );
+
+    const viewOrderButton =
+        document.getElementById(
+            "view-order-button"
+        );
+
+
+    /*
+    --------------------------------------------------
+    PLACE ORDER BUTTON
+    --------------------------------------------------
+    */
+
+    placeOrderButton.addEventListener(
+        "click",
+        placeOrder
+    );
+
+
+    /*
+    --------------------------------------------------
+    CHECKOUT STATE
+    --------------------------------------------------
+    */
+
     let selectedAddressId = null;
 
     let cartHasItems = false;
 
+
+    /*
+    --------------------------------------------------
+    UPDATE CONTINUE BUTTON
+    --------------------------------------------------
+    */
 
     function updateContinueButton() {
 
@@ -64,6 +113,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+
+    /*
+    --------------------------------------------------
+    LOAD ADDRESSES
+    --------------------------------------------------
+    */
 
     async function loadAddresses() {
 
@@ -104,6 +159,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 addressEmpty.hidden =
                     false;
 
+                updateContinueButton();
+
                 return;
 
             }
@@ -112,6 +169,12 @@ document.addEventListener("DOMContentLoaded", () => {
             addressEmpty.hidden =
                 true;
 
+
+            /*
+            --------------------------------------------------
+            CREATE ADDRESS CARDS
+            --------------------------------------------------
+            */
 
             addresses.forEach(
                 (address) => {
@@ -126,6 +189,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         "address-card";
 
 
+                    /*
+                    --------------------------------------------------
+                    SELECT DEFAULT ADDRESS
+                    --------------------------------------------------
+                    */
+
                     if (
                         address.is_default
                     ) {
@@ -139,6 +208,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     }
 
+
+                    /*
+                    --------------------------------------------------
+                    ADDRESS CARD HTML
+                    --------------------------------------------------
+                    */
 
                     addressCard.innerHTML = `
 
@@ -171,9 +246,11 @@ document.addEventListener("DOMContentLoaded", () => {
                             ${address.phone_number}
                         </p>
 
+
                         <p>
                             ${address.address_line_1}
                         </p>
+
 
                         ${
                             address.address_line_2
@@ -185,6 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 : ""
                         }
 
+
                         <p>
                             ${address.city},
                             ${address.state}
@@ -193,6 +271,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     `;
 
+
+                    /*
+                    --------------------------------------------------
+                    ADDRESS SELECTION
+                    --------------------------------------------------
+                    */
 
                     addressCard.addEventListener(
                         "click",
@@ -250,8 +334,10 @@ document.addEventListener("DOMContentLoaded", () => {
             addressLoading.style.display =
                 "none";
 
+
             addressError.textContent =
                 "We couldn't load your addresses. Please try again.";
+
 
             addressError.hidden =
                 false;
@@ -260,6 +346,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+
+    /*
+    --------------------------------------------------
+    LOAD CART
+    --------------------------------------------------
+    */
 
     async function loadCart() {
 
@@ -288,6 +380,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 "";
 
 
+            /*
+            --------------------------------------------------
+            EMPTY CART
+            --------------------------------------------------
+            */
+
             if (
                 !cart.items ||
                 cart.items.length === 0
@@ -296,13 +394,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 cartHasItems =
                     false;
 
+
                 checkoutSubtotal.textContent =
                     "₹0";
+
 
                 checkoutTotal.textContent =
                     "₹0";
 
+
                 updateContinueButton();
+
 
                 return;
 
@@ -316,11 +418,19 @@ document.addEventListener("DOMContentLoaded", () => {
             let total = 0;
 
 
+            /*
+            --------------------------------------------------
+            RENDER CART ITEMS
+            --------------------------------------------------
+            */
+
             cart.items.forEach(
                 (item) => {
 
                     total +=
-                        Number(item.subtotal);
+                        Number(
+                            item.subtotal
+                        );
 
 
                     const checkoutItem =
@@ -352,6 +462,20 @@ document.addEventListener("DOMContentLoaded", () => {
                                 ${item.product.name}
                             </h3>
 
+
+                            ${
+                                item.variant
+                                    ? `
+                                        <p
+                                            class="checkout-item-variant"
+                                        >
+                                            ${item.variant.name}
+                                        </p>
+                                      `
+                                    : ""
+                            }
+
+
                             <p
                                 class="checkout-item-quantity"
                             >
@@ -366,7 +490,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         >
                             ₹${Number(
                                 item.subtotal
-                            ).toLocaleString("en-IN")}
+                            ).toLocaleString(
+                                "en-IN"
+                            )}
                         </p>
 
                     `;
@@ -380,11 +506,22 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
 
+            /*
+            --------------------------------------------------
+            UPDATE TOTALS
+            --------------------------------------------------
+            */
+
             checkoutSubtotal.textContent =
-                `₹${total.toLocaleString("en-IN")}`;
+                `₹${total.toLocaleString(
+                    "en-IN"
+                )}`;
+
 
             checkoutTotal.textContent =
-                `₹${total.toLocaleString("en-IN")}`;
+                `₹${total.toLocaleString(
+                    "en-IN"
+                )}`;
 
 
             updateContinueButton();
@@ -397,16 +534,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 error
             );
 
+
             checkoutItems.innerHTML = `
-                <div class="checkout-state checkout-error">
-                    We couldn't load your cart. Please try again.
+
+                <div
+                    class="checkout-state checkout-error"
+                >
+                    We couldn't load your cart.
+                    Please try again.
                 </div>
+
             `;
 
         }
 
     }
 
+
+    /*
+    --------------------------------------------------
+    ADD ADDRESS BUTTON
+    --------------------------------------------------
+    */
 
     addAddressButton.addEventListener(
         "click",
@@ -418,6 +567,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     );
 
+
+    /*
+    --------------------------------------------------
+    CANCEL ADDRESS FORM
+    --------------------------------------------------
+    */
 
     cancelAddressButton.addEventListener(
         "click",
@@ -431,6 +586,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     );
 
+
+    /*
+    --------------------------------------------------
+    CREATE NEW ADDRESS
+    --------------------------------------------------
+    */
 
     addressForm.addEventListener(
         "submit",
@@ -526,8 +687,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     addressError.textContent =
                         "Unable to save this address. Please check your details.";
 
+
                     addressError.hidden =
                         false;
+
 
                     return;
 
@@ -540,9 +703,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 addressForm.reset();
 
+
                 addressFormContainer.hidden =
                     true;
 
+
+                /*
+                --------------------------------------------------
+                RELOAD ADDRESSES
+                --------------------------------------------------
+                */
 
                 await loadAddresses();
 
@@ -558,6 +728,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 addressError.textContent =
                     "Something went wrong while saving the address.";
 
+
                 addressError.hidden =
                     false;
 
@@ -566,6 +737,201 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     );
 
+
+    /*
+    --------------------------------------------------
+    SHOW CHECKOUT SUCCESS
+    --------------------------------------------------
+    */
+
+    function showCheckoutSuccess(order) {
+
+        /*
+        Hide the normal checkout layout.
+        */
+
+        checkoutLayout.hidden =
+            true;
+
+
+        /*
+        Display the success section.
+        */
+
+        checkoutSuccess.hidden =
+            false;
+
+
+        /*
+        Display the real order number.
+        */
+
+        successOrderNumber.textContent =
+            `#${order.order_number}`;
+
+
+        /*
+        Configure the View Order button.
+        */
+
+        viewOrderButton.href =
+            `/orders/${order.id}/`;
+
+    }
+
+
+    /*
+    --------------------------------------------------
+    PLACE ORDER
+    --------------------------------------------------
+    */
+
+    async function placeOrder() {
+
+        /*
+        --------------------------------------------------
+        BASIC FRONTEND VALIDATION
+        --------------------------------------------------
+        */
+
+        if (
+            !selectedAddressId ||
+            !cartHasItems
+        ) {
+
+            return;
+
+        }
+
+
+        /*
+        --------------------------------------------------
+        DISABLE BUTTON WHILE REQUEST IS RUNNING
+        --------------------------------------------------
+        */
+
+        placeOrderButton.disabled =
+            true;
+
+
+        placeOrderButton.textContent =
+            "Placing Order...";
+
+
+        try {
+
+            /*
+            --------------------------------------------------
+            SEND ORDER REQUEST
+            --------------------------------------------------
+            */
+
+            const response =
+                await fetchWithAuth(
+                    "/api/orders/",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+                        },
+
+                        body:
+                            JSON.stringify({
+                                address_id:
+                                    selectedAddressId,
+                            }),
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            /*
+            --------------------------------------------------
+            HANDLE BACKEND ERROR
+            --------------------------------------------------
+            */
+
+            if (!response.ok) {
+
+                console.error(
+                    "Order creation failed:",
+                    data
+                );
+
+
+                throw new Error(
+                    data.detail ||
+                    "Unable to place your order."
+                );
+
+            }
+
+
+            /*
+            --------------------------------------------------
+            ORDER CREATED SUCCESSFULLY
+            --------------------------------------------------
+            */
+
+            console.log(
+                "Order created successfully:",
+                data
+            );
+
+
+            showCheckoutSuccess(
+                data
+            );
+
+
+        } catch (error) {
+
+            /*
+            --------------------------------------------------
+            HANDLE ORDER CREATION ERROR
+            --------------------------------------------------
+            */
+
+            console.error(
+                "Place order error:",
+                error
+            );
+
+
+            alert(
+                error.message ||
+                "Something went wrong while placing your order."
+            );
+
+
+            /*
+            --------------------------------------------------
+            RESTORE BUTTON
+            --------------------------------------------------
+            */
+
+            placeOrderButton.disabled =
+                false;
+
+
+            placeOrderButton.textContent =
+                "Continue to Order";
+
+        }
+
+    }
+
+
+    /*
+    --------------------------------------------------
+    INITIAL PAGE LOAD
+    --------------------------------------------------
+    */
 
     loadAddresses();
 

@@ -485,9 +485,10 @@ Database
 
 ---
 
+
 # Phase 7 — Orders
 
-**Status: 🟡 Core Backend + Frontend Completed — Final Commit Pending**
+**Status: 🟢 Core Orders Completed**
 
 ## Models
 
@@ -600,11 +601,6 @@ Database
 * [x] Order Status Management
 * [x] Payment Status Display
 * [x] Customer Order Details
-
-## Remaining Stage
-
-* [ ] Final Git Commit
-* [ ] Final Roadmap Commit Update
 
 ---
 
