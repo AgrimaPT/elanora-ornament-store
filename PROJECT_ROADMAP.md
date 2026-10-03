@@ -4,7 +4,7 @@
 
 A full-stack e-commerce web application for selling ornaments.
 
-The project follows an API-first architecture using Django and Django REST Framework (DRF). During Phase 1, the frontend will be built with Django Templates, HTML, CSS, Bootstrap, and JavaScript. In a later phase, the frontend will be migrated to React while reusing the same REST APIs.
+The project follows an API-first architecture using Django and Django REST Framework (DRF). During Phase 1, the frontend is built with Django Templates, HTML, CSS, Bootstrap, and JavaScript. In a later phase, the frontend will be migrated to React while reusing the same REST APIs.
 
 The project is being developed following professional software engineering practices including Git version control, modular application architecture, API testing with Postman, clean code principles, incremental feature development, and learning concepts before using shortcuts.
 
@@ -18,6 +18,8 @@ The project is being developed following professional software engineering pract
 * Learn JWT Authentication
 * Build reusable REST APIs
 * Integrate Razorpay payment gateway
+* Implement secure payment verification and webhooks
+* Implement inventory reservation and restoration
 * Deploy on AWS with Nginx and Gunicorn
 * Build an AI-powered jewellery shopping assistant
 * Implement natural-language product search
@@ -103,6 +105,7 @@ ornament_store/
 ├── core/
 ├── orders/
 ├── products/
+├── payments/
 ├── media/
 ├── static/
 ├── templates/
@@ -282,7 +285,7 @@ Database
 
 # Phase 4 — Frontend UI
 
-**Status: 🟡 In Progress**
+**Status: 🟢 Core Frontend Completed**
 
 ## Completed Pages
 
@@ -290,19 +293,16 @@ Database
 * [x] Shop
 * [x] Product Details
 * [x] About
+* [x] Contact
 * [x] Login
 * [x] Register
 * [x] Profile
-* [x] Contact
 * [x] Error Pages
 * [x] Cart
 * [x] Orders
 * [x] Order Details
-* [x] Checkout Foundation
-
-## Remaining Pages
-
-* [ ] Checkout Finalization
+* [x] Checkout
+* [x] Checkout Success State
 
 ## Frontend Features Completed
 
@@ -335,6 +335,7 @@ Database
 * [x] Variant-Specific Pricing
 * [x] Variant-Specific Stock
 * [x] Luxury Product Styling
+* [x] Product Detail → Cart Integration
 
 ### Authentication UI
 
@@ -387,14 +388,20 @@ Database
 
 ### Checkout UI
 
-* [x] Checkout Page Foundation
+* [x] Checkout Page
 * [x] Address Loading
 * [x] Address Selection
 * [x] Default Address Selection
 * [x] Add Address from Checkout
 * [x] Cart Loading
-* [x] Order Summary Foundation
-* [x] Checkout Validation Foundation
+* [x] Order Summary
+* [x] Checkout Validation
+* [x] Shipping Information
+* [x] Place Order
+* [x] Razorpay Checkout Integration
+* [x] Payment Success State
+* [x] Payment Failure Handling
+* [x] Checkout Success Page
 
 ---
 
@@ -422,6 +429,7 @@ Database
 * [x] User Ownership Protection
 * [x] Product Variant Support
 * [x] Variant-Specific Pricing
+* [x] Variant-Specific Stock
 * [x] Unit Price
 * [x] Postman Testing
 
@@ -453,7 +461,7 @@ Database
 
 # Phase 6 — Checkout
 
-**Status: 🟡 In Progress**
+**Status: ✅ Completed**
 
 ## Address
 
@@ -465,26 +473,24 @@ Database
 
 ## Checkout
 
-* [x] Checkout Page Foundation
+* [x] Checkout Page
 * [x] Address Loading
 * [x] Address Selection
 * [x] Add Address from Checkout
 * [x] Cart Loading
-* [x] Order Summary Foundation
-* [x] Checkout Validation Foundation
+* [x] Order Summary
+* [x] Checkout Validation
 * [x] Shipping Information
 * [x] Order Creation
 * [x] Final Order Summary
 * [x] Place Order
 * [x] Inventory Validation During Order Creation
-* [x] Cart Clearing After Order Creation
-* [ ] Final Checkout UI Polish
-* [ ] Final Success State
-* [ ] Final Error State
-* [ ] End-to-End Checkout Testing
+* [x] Inventory Reservation
+* [x] Checkout Success State
+* [x] Checkout Error Handling
+* [x] End-to-End Checkout Testing
 
 ---
-
 
 # Phase 7 — Orders
 
@@ -511,8 +517,7 @@ Database
 * [x] Purchase-Time Price Calculation
 * [x] Order Creation
 * [x] Order Item Creation
-* [x] Inventory Reduction
-* [x] Cart Clearing
+* [x] Inventory Reservation / Reduction
 * [x] Atomic Transaction
 * [x] Inventory Row Locking
 * [x] Postman Testing
@@ -591,7 +596,7 @@ Database
 * [x] Invalid Order Testing
 * [x] Responsive Design
 * [x] Luxury Orders Styling
-* [x] Shared `orders.css` for Orders and Order Details
+* [x] Shared `orders.css`
 * [x] Full Orders Frontend Testing
 
 ## Admin
@@ -604,19 +609,213 @@ Database
 
 ---
 
-# Phase 8 — Payments
+# Phase 8 — Payments / Razorpay
 
-**Status: ⏳ Not Started**
+**Status: 🟡 Core Payment Integration Completed — Webhook Configuration Pending**
 
-## Razorpay
+## Razorpay Setup
 
-* [ ] Razorpay Integration
-* [ ] Create Payment Order
-* [ ] Payment Verification
-* [ ] Payment Model
-* [ ] Payment Success
-* [ ] Payment Failure
-* [ ] Payment Webhook Handling
+* [x] Razorpay SDK Installed
+* [x] `payments` Django App Created
+* [x] Razorpay Test Credentials Configured Through `.env`
+* [x] Razorpay Key ID Configuration
+* [x] Razorpay API Secret Configuration
+* [x] Webhook Secret Configuration
+* [x] Payment Expiry Configuration
+* [x] `SECURE_CROSS_ORIGIN_OPENER_POLICY` Configuration
+
+## Payment Model
+
+* [x] Payment Model
+* [x] One-to-One Order Relationship
+* [x] Razorpay Order ID
+* [x] Razorpay Payment ID
+* [x] Razorpay Signature
+* [x] Payment Amount
+* [x] Payment Status
+* [x] Payment Expiration
+* [x] Payment Timestamps
+* [x] Payment Admin
+* [x] Payment Migration
+
+## Create Payment
+
+* [x] Create Payment API
+* [x] Razorpay Order Creation
+* [x] Amount → Paise Conversion
+* [x] Payment Record Creation
+* [x] Payment Expiration Timestamp
+* [x] Existing Payment Handling
+* [x] Order Ownership Validation
+* [x] Cancelled Order Protection
+* [x] Already-Paid Order Protection
+
+## Payment Checkout
+
+* [x] Razorpay Checkout Integration
+* [x] Razorpay Key Configuration
+* [x] Razorpay Order ID
+* [x] Amount Handling
+* [x] Payment Success Handler
+* [x] Payment Failure Handler
+* [x] Checkout Dismissal Handling
+* [x] Successful Test Payment
+
+## Payment Verification
+
+* [x] Payment Verification API
+* [x] Razorpay Signature Verification
+* [x] Payment Ownership Validation
+* [x] Duplicate Payment Protection
+* [x] Payment → PAID
+* [x] Order Payment Status → PAID
+* [x] Order Status → CONFIRMED
+* [x] Cart Cleanup After Successful Payment
+* [x] No Double Inventory Deduction During Verification
+
+## Inventory / Payment Lifecycle
+
+### Stock Reservation
+
+* [x] Stock Reserved During Order Creation
+* [x] Product Stock Validation
+* [x] Variant Stock Validation
+* [x] Transaction-Safe Inventory Handling
+* [x] Inventory Row Locking
+
+### Successful Payment
+
+```text
+Order Created
+      ↓
+Stock Reserved
+      ↓
+Payment Successful
+      ↓
+Stock Remains Deducted
+      ↓
+Product Is Sold
+```
+
+* [x] Successful Payment Does Not Restore Reserved Stock
+
+### Failed / Abandoned Payment
+
+```text
+Order Created
+      ↓
+Stock Reserved
+      ↓
+Payment Not Completed
+      ↓
+Payment Expires
+      ↓
+expire_payments
+      ↓
+Order Cancelled
+      ↓
+Stock Restored
+```
+
+* [x] Payment Expiration
+* [x] Expired Payment Detection
+* [x] Payment → EXPIRED
+* [x] Order → CANCELLED
+* [x] Reserved Stock Restoration
+* [x] `expire_payments` Management Command
+* [x] Expiration Testing
+
+> During development, `expire_payments` is run manually. During production deployment, it must be scheduled automatically.
+
+## Payment Webhook
+
+### Django Webhook Implementation
+
+* [x] Webhook Endpoint
+* [x] POST-Only Webhook Handling
+* [x] CSRF Exemption
+* [x] Webhook Secret Support
+* [x] HMAC Signature Verification
+* [x] `payment.captured` Handling
+* [x] Amount Validation
+* [x] Webhook Event ID Handling
+* [x] Webhook Idempotency
+* [x] Cart Cleanup After Captured Payment
+* [x] Manual Signed Webhook Test
+
+### Webhook Configuration
+
+* [ ] Configure Webhook in Razorpay Dashboard
+* [ ] Configure `payment.captured` Event
+* [ ] Confirm Webhook Secret Matches `.env`
+* [ ] Test Real Razorpay → Django Webhook Delivery
+* [ ] Confirm `POST /api/payment/webhook/` Receives `200 OK`
+
+> `GET /api/payment/webhook/` returning `405 Method Not Allowed` with `Allow: POST, OPTIONS` is expected because Razorpay webhooks use POST.
+
+## Payment Expiration
+
+* [x] `expire_payments` Management Command
+* [x] Expired Payment Detection
+* [x] Order Cancellation
+* [x] Reserved Stock Restoration
+* [x] Expiration Testing
+
+## Price Mismatch Protection
+
+* [x] Current Cart Signature
+* [x] Product Matching
+* [x] Variant Matching
+* [x] Quantity Matching
+* [x] Effective Price Matching
+* [x] Prevent Reuse of Incorrect Old Pending Payment
+* [x] Exact Retry Reuse
+* [x] Price-Mismatch Testing
+
+## End-to-End Payment Test
+
+Successfully tested:
+
+```text
+Customer
+   ↓
+Checkout
+   ↓
+Django Order
+   ↓
+Razorpay Order
+   ↓
+Razorpay Checkout
+   ↓
+Payment Captured
+   ↓
+Django Verification
+   ↓
+Payment = PAID
+   ↓
+Order = CONFIRMED
+```
+
+Successful test evidence:
+
+* Razorpay Payment ID: `pay_Tj8RwfGGWS4J6Y`
+* Razorpay Order ID: `order_Tj8LeJTwN0C3BG`
+* Amount: ₹149.99
+* Razorpay Status: Captured
+* Django Order: `ORD-5C8F6C13`
+* Django Payment Status: Paid
+
+## Remaining Phase 8 Work
+
+* [ ] Configure Razorpay Dashboard Webhook
+* [ ] Test Real Razorpay Webhook Delivery
+* [ ] Remove Temporary Razorpay Debug Logging
+* [ ] Final Payment Code Review
+* [ ] Final `python manage.py check`
+* [ ] Review `git status`
+* [ ] Review `git diff`
+* [ ] Update Roadmap After Final Webhook Test
+* [ ] Final Razorpay Git Commit
 
 ---
 
@@ -714,6 +913,12 @@ Database
 * [ ] SSL
 * [ ] HTTPS
 
+## Scheduled Tasks
+
+* [ ] Automatically Schedule `expire_payments`
+* [ ] Verify Expired Payment Cleanup in Production
+* [ ] Configure Scheduled Maintenance Tasks
+
 ## Production
 
 * [ ] Static Files
@@ -729,6 +934,14 @@ Database
 **Status: ⏳ Planned**
 
 The existing Django REST APIs will remain unchanged.
+
+* [ ] Review Existing REST API Architecture
+* [ ] Standardize API Response Patterns
+* [ ] Review Authentication Flow
+* [ ] Review Token Refresh Flow
+* [ ] Prepare API Documentation
+* [ ] Identify React Data Requirements
+* [ ] Prepare Frontend API Helper Architecture
 
 ---
 
@@ -761,6 +974,7 @@ The existing Django REST APIs will remain unchanged.
 * [ ] Search
 * [ ] Filtering
 * [ ] Pagination
+* [ ] Product Variants
 
 ## Shopping
 
@@ -795,6 +1009,9 @@ The existing Django REST APIs will remain unchanged.
 * [ ] Logging
 * [ ] Error Monitoring
 * [ ] Security Hardening
+* [ ] HTML Injection / XSS Hardening
+* [ ] Payment Security Review
+* [ ] Inventory Concurrency Review
 
 ---
 
@@ -867,33 +1084,30 @@ The existing Django REST APIs will remain unchanged.
 
 # Checkout
 
-**Status: 🟡 In Progress**
+**Status: ✅ Completed**
 
 ### Completed
 
 * [x] Address Management
 * [x] Address Ownership Protection
 * [x] Default Address Logic
-* [x] Checkout Page Foundation
+* [x] Checkout Page
 * [x] Address Selection
 * [x] Cart Loading
-* [x] Order Summary Foundation
+* [x] Order Summary
 * [x] Order Creation
 * [x] Inventory Validation
-* [x] Cart Clearing
-
-### Remaining
-
-* [ ] Final Checkout UI Polish
-* [ ] Final Success State
-* [ ] Final Error State
-* [ ] End-to-End Checkout Testing
+* [x] Inventory Reservation
+* [x] Payment Flow Integration
+* [x] Checkout Success State
+* [x] Checkout Error Handling
+* [x] End-to-End Checkout Testing
 
 ---
 
 # Orders
 
-**Status: 🟡 Core Backend + Frontend Completed — Final Commit Pending**
+**Status: 🟢 Completed**
 
 ### Completed APIs
 
@@ -916,6 +1130,7 @@ The existing Django REST APIs will remain unchanged.
 * [x] Authentication Protection
 * [x] Inventory Validation
 * [x] Atomic Transactions
+* [x] Inventory Row Locking
 * [x] Order Admin
 * [x] Orders Frontend
 * [x] Order Details Frontend
@@ -923,20 +1138,32 @@ The existing Django REST APIs will remain unchanged.
 * [x] Responsive/Luxury Styling
 * [x] Full Orders Frontend Testing
 
-### Remaining
-
-* [ ] Final Git Commit
-* [ ] Roadmap Commit Update
-
 ---
 
 # Payments
 
-**Status: ⏳ Not Started**
+**Status: 🟡 Core Completed — Webhook Configuration Pending**
 
-* [ ] `POST /api/payment/create/`
-* [ ] `POST /api/payment/verify/`
-* [ ] Payment Webhook
+### Completed
+
+* [x] `POST /api/payment/create/`
+* [x] `POST /api/payment/verify/`
+* [x] `POST /api/payment/webhook/`
+* [x] Payment Expiration Command
+* [x] Razorpay Checkout
+* [x] Payment Verification
+* [x] Payment Status Handling
+* [x] Inventory Reservation
+* [x] Inventory Restoration After Expiration
+* [x] Webhook Signature Verification
+* [x] Webhook Idempotency
+
+### Remaining
+
+* [ ] Configure Razorpay Dashboard Webhook
+* [ ] Test Real Razorpay Webhook Delivery
+* [ ] Final Payment Cleanup
+* [ ] Final Git Commit
 
 ---
 
@@ -958,6 +1185,7 @@ The existing Django REST APIs will remain unchanged.
 | ---- | ------ | ----------- |
 |      |        |             |
 |      |        |             |
+|      |        |             |
 
 > Add entries after each completed feature or milestone.
 
@@ -976,6 +1204,9 @@ Document important concepts learned during development.
 * [ ] Model Validation
 * [ ] Database Migrations
 * [ ] Admin Customization
+* [ ] Transactions
+* [ ] `select_for_update()`
+* [ ] Management Commands
 
 ## Django REST Framework
 
@@ -995,6 +1226,7 @@ Document important concepts learned during development.
 * [ ] Search
 * [ ] Ordering
 * [ ] Query Optimization
+* [ ] Webhook APIs
 
 ## Authentication
 
@@ -1015,20 +1247,25 @@ Document important concepts learned during development.
 * [ ] Responsive Design
 * [ ] API → Frontend Integration
 * [ ] Reusable API Helper Functions
+* [ ] Payment Checkout Integration
 
 ## E-commerce
 
 * [ ] Cart Architecture
 * [ ] CartItem Relationships
 * [ ] Inventory Management
+* [ ] Inventory Reservation
+* [ ] Inventory Restoration
 * [ ] Order Lifecycle
 * [ ] Payment Lifecycle
 * [ ] Payment Verification
+* [ ] Payment Webhooks
 * [ ] Order Status Management
 * [ ] Order Cancellation
-* [ ] Inventory Restoration
 * [ ] Transaction Management
 * [ ] Shipping Address Snapshots
+* [ ] Purchase-Time Price Snapshots
+* [ ] Payment Expiration
 
 ## AI
 
@@ -1069,9 +1306,11 @@ YYYY-MM-DD
 
 Document bugs and pending fixes.
 
-| Issue | Status | Solution |
-| ----- | ------ | -------- |
-|       |        |          |
+| Issue                                                         | Status          | Solution                                     |
+| ------------------------------------------------------------- | --------------- | -------------------------------------------- |
+| Razorpay Dashboard webhook not configured                     | Pending         | Configure webhook and test real delivery     |
+| Payment expiration requires manual command during development | Expected        | Schedule `expire_payments` during deployment |
+| Temporary Razorpay debug logging                              | Pending cleanup | Remove before final payment commit           |
 
 ---
 
@@ -1119,11 +1358,11 @@ Order
 Phase 1  — Project Setup             ✅ Completed
 Phase 2  — Authentication            🟢 Core Completed
 Phase 3  — Product Module             🟢 Core Completed
-Phase 4  — Frontend UI                🟡 CURRENT
+Phase 4  — Frontend UI                🟢 Core Completed
 Phase 5  — Shopping Cart              ✅ Completed
-Phase 6  — Checkout                   🟡 IN PROGRESS
-Phase 7  — Orders                     🟡 Core Completed
-Phase 8  — Payments                   ⏳ Not Started
+Phase 6  — Checkout                   ✅ Completed
+Phase 7  — Orders                     🟢 Core Completed
+Phase 8  — Payments / Razorpay       🟡 Core Completed
 Phase 9  — AI Integration             ⏳ Planned
 Phase 10 — Admin Dashboard            ⏳ Not Started
 Phase 11 — Deployment                 ⏳ Not Started
@@ -1149,19 +1388,24 @@ Phase 14 — Production Improvements    ⏳ Planned
 13. [x] Cart Pricing / Unit Price
 14. [x] Orders Backend
 15. [x] Orders Frontend
-16. [ ] Final Orders Git Commit
-17. [ ] Final Checkout UI Polish
-18. [ ] Final Checkout Success/Error States
-19. [ ] End-to-End Checkout Testing
-20. [ ] Razorpay
-21. [ ] AI Jewellery Assistant
-22. [ ] Natural Language Search
-23. [ ] Admin Dashboard
-24. [ ] Deployment
-25. [ ] React Migration
-26. [ ] Production Improvements
+16. [x] Checkout Backend
+17. [x] Checkout Frontend
+18. [x] Razorpay Payment Creation
+19. [x] Razorpay Checkout
+20. [x] Razorpay Payment Verification
+21. [x] Payment Expiration
+22. [x] Inventory Restoration After Expiration
+23. [x] Webhook Backend Implementation
+24. [ ] Configure Razorpay Dashboard Webhook
+25. [ ] Test Real Razorpay Webhook Delivery
+26. [ ] Remove Temporary Payment Debug Logs
+27. [ ] Final Razorpay Code Review
+28. [ ] Final Razorpay Git Commit
+29. [ ] AI Jewellery Assistant
+30. [ ] Natural Language Search
+31. [ ] Admin Dashboard
+32. [ ] Deployment
+33. [ ] React Migration
+34. [ ] Production Improvements
 
-```
-
-This now reflects the actual project state much more accurately: **Orders are built and tested; only the final Orders commit remains.** After that, we can finish the remaining Checkout work before moving into Payments.
-```
+---

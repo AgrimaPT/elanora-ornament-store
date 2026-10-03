@@ -19,6 +19,7 @@ class Order(models.Model):
         PENDING = "PENDING", "Pending"
         PAID = "PAID", "Paid"
         FAILED = "FAILED", "Failed"
+        EXPIRED = "EXPIRED", "Expired"
         REFUNDED = "REFUNDED", "Refunded"
 
     user = models.ForeignKey(

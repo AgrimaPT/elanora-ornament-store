@@ -780,6 +780,163 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+    async function createPayment(orderId) {
+        const response = await fetchWithAuth(
+            "/api/payment/create/",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    order_id: orderId,
+                }),
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.detail ||
+                "Unable to create payment."
+            );
+        }
+
+        return data;
+    }
+
+    async function verifyPayment(response) {
+        const apiResponse = await fetchWithAuth(
+            "/api/payment/verify/",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    razorpay_order_id:
+                        response.razorpay_order_id,
+
+                    razorpay_payment_id:
+                        response.razorpay_payment_id,
+
+                    razorpay_signature:
+                        response.razorpay_signature,
+                }),
+            }
+        );
+
+        const data = await apiResponse.json();
+
+        if (!apiResponse.ok) {
+            throw new Error(
+                data.detail ||
+                "Payment verification failed."
+            );
+        }
+
+        return data;
+    }
+
+
+    function openRazorpayCheckout(payment) {
+        const options = {
+            key: payment.key_id,
+
+            amount: payment.amount_in_paise,
+
+            currency: payment.currency,
+
+            name: "Ornament Store",
+
+            description: `Payment for Order #${payment.order_number}`,
+
+            order_id: payment.razorpay_order_id,
+
+            handler: async function (response) {
+                try {
+                    const verification =
+                        await verifyPayment(response);
+
+                    console.log(
+                        "Payment verified successfully:",
+                        verification
+                    );
+
+                    showCheckoutSuccess({
+                        id: verification.order_id,
+                        order_number: verification.order_number,
+                    });
+
+                } catch (error) {
+                    console.error(
+                        "Payment verification failed:",
+                        error
+                    );
+
+                    alert(
+                        error.message ||
+                        "Payment verification failed. Please contact support."
+                    );
+                }
+            },
+
+            modal: {
+                ondismiss: function () {
+                    placeOrderButton.disabled = false;
+
+                    placeOrderButton.textContent =
+                        "Continue to Order";
+                },
+            },
+
+            theme: {
+                color: "#b08d57",
+            },
+        };
+
+        const razorpay = new Razorpay(options);
+
+        razorpay.on("payment.failed", function (response) {
+            console.log(
+                "========== RAZORPAY PAYMENT FAILED =========="
+            );
+
+            console.log(
+                "Complete response:",
+                response
+            );
+
+            console.log(
+                "Error object:",
+                response.error
+            );
+
+            console.log(
+                "Error JSON:",
+                JSON.stringify(response.error, null, 2)
+            );
+
+            console.log(
+                "Description:",
+                response.error?.description
+            );
+
+            console.log(
+                "============================================="
+            );
+
+            placeOrderButton.disabled = false;
+
+            placeOrderButton.textContent =
+                "Continue to Order";
+        });
+
+        razorpay.open();
+    }
+
+
     /*
     --------------------------------------------------
     PLACE ORDER
@@ -870,8 +1027,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
 
             }
+            const payment = await createPayment(data.id);
 
-
+            openRazorpayCheckout(payment);
             /*
             --------------------------------------------------
             ORDER CREATED SUCCESSFULLY
@@ -884,10 +1042,7 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
 
-            showCheckoutSuccess(
-                data
-            );
-
+            
 
         } catch (error) {
 

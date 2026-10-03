@@ -19,10 +19,87 @@ from orders.serializers import (
     UpdateOrderStatusSerializer,
 )
 from products.models import Product, ProductVariant
-
+from django.utils import timezone
 
 class PlaceOrderAPIView(APIView):
     permission_classes = [IsAuthenticated]
+
+    def find_matching_pending_order(self, user, cart_items):
+        pending_orders = (
+            Order.objects
+            .filter(
+                user=user,
+                order_status=Order.OrderStatus.PENDING,
+                payment_status=Order.PaymentStatus.PENDING,
+            )
+            .prefetch_related("items")
+            .order_by("-created_at")
+        )
+
+        # Build the signature of the current cart.
+        #
+        # The price is calculated from the current Product / Variant data,
+        # because the cart itself should not be trusted as the final price.
+        current_cart_items = []
+
+        for item in cart_items:
+            product = item.product
+            variant = item.variant
+
+            unit_price = (
+                variant.price
+                if variant and variant.price is not None
+                else product.price
+            )
+
+            current_cart_items.append(
+                (
+                    item.product_id,
+                    item.variant_id,
+                    item.quantity,
+                    unit_price,
+                )
+            )
+
+        current_cart_items = sorted(current_cart_items)
+
+        for order in pending_orders:
+
+            # Check whether an existing payment is still usable.
+            payment = getattr(order, "payment", None)
+
+            if payment:
+                if payment.status in {
+                    "PAID",
+                    "REFUNDED",
+                    "EXPIRED",
+                }:
+                    continue
+
+                if payment.expires_at:
+                    
+
+                    if payment.expires_at <= timezone.now():
+                        continue
+
+            order_items = []
+
+            for item in order.items.all():
+                order_items.append(
+                    (
+                        item.product_id,
+                        item.variant_id,
+                        item.quantity,
+                        item.unit_price,
+                    )
+                )
+
+            order_items = sorted(order_items)
+
+            if order_items == current_cart_items:
+                return order
+
+        return None
 
     def post(self, request):
         # ---------------------------------------------------------
@@ -72,6 +149,47 @@ class PlaceOrderAPIView(APIView):
                 "id",
             )
 
+            # -----------------------------------------------------
+            # 5. Check for an existing pending order
+            # -----------------------------------------------------
+            existing_order = self.find_matching_pending_order(
+                user=request.user,
+                cart_items=cart_items,
+            )
+
+            if existing_order:
+                # Update shipping address in case the customer
+                # selected a different address during retry.
+                existing_order.shipping_full_name = address.full_name
+                existing_order.shipping_phone_number = address.phone_number
+                existing_order.shipping_address_line_1 = (
+                    address.address_line_1
+                )
+                existing_order.shipping_address_line_2 = (
+                    address.address_line_2
+                )
+                existing_order.shipping_city = address.city
+                existing_order.shipping_state = address.state
+                existing_order.shipping_pincode = address.pincode
+
+                existing_order.save(
+                    update_fields=[
+                        "shipping_full_name",
+                        "shipping_phone_number",
+                        "shipping_address_line_1",
+                        "shipping_address_line_2",
+                        "shipping_city",
+                        "shipping_state",
+                        "shipping_pincode",
+                        "updated_at",
+                    ]
+                )
+
+                return Response(
+                    OrderSerializer(existing_order).data,
+                    status=status.HTTP_200_OK,
+                )
+            
             total_amount = Decimal("0.00")
             validated_items = []
 
@@ -243,7 +361,7 @@ class PlaceOrderAPIView(APIView):
             # -----------------------------------------------------
             # 16. Clear cart after successful order creation
             # -----------------------------------------------------
-            cart.items.all().delete()
+            # cart.items.all().delete()
 
 
         # ---------------------------------------------------------

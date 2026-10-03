@@ -68,7 +68,11 @@ urlpatterns = [
         "",
         include("orders.frontend_urls"),
     ),
-    
+
+    path(
+        "api/payment/",
+        include("payments.urls"),
+    ),
 ]
 
 if settings.DEBUG:
