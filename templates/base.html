@@ -25,6 +25,12 @@
         href="{% static 'css/style.css' %}"
     >
 
+    <link
+        rel="stylesheet"
+        href="{% static 'css/ai-chat.css' %}"
+    >
+
+
     {% block extra_css %}
     {% endblock %}
 
@@ -51,6 +57,97 @@
     <!-- Footer -->
     {% include "includes/footer.html" %}
 
+    <!-- AI Shopping Assistant -->
+    <div class="ai-chat-widget">
+
+        <!-- Chat Window -->
+        <div
+            class="ai-chat-window"
+            id="aiChatWindow"
+        >
+
+            <!-- Chat Header -->
+            <div class="ai-chat-header">
+
+                <div>
+                    <span class="ai-chat-title">
+                        Ornament Assistant
+                    </span>
+
+                    <small class="ai-chat-subtitle">
+                        Your personal jewellery guide
+                    </small>
+                </div>
+
+                <button
+                    type="button"
+                    class="ai-chat-close"
+                    id="aiChatClose"
+                    aria-label="Close chat"
+                >
+                    <i class="bi bi-x-lg"></i>
+                </button>
+
+            </div>
+
+
+            <!-- Chat Messages -->
+            <div
+                class="ai-chat-messages"
+                id="aiChatMessages"
+            >
+
+                <!-- Initial AI message -->
+                <div class="ai-message">
+                    <div class="ai-message-bubble">
+                        Hello! How can I help you find the perfect
+                        piece of jewellery today?
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Chat Input -->
+            <div class="ai-chat-input-area">
+
+                <form id="aiChatForm">
+
+                    <input
+                        type="text"
+                        id="aiChatInput"
+                        class="ai-chat-input"
+                        placeholder="Ask about our jewellery..."
+                        autocomplete="off"
+                    >
+
+                    <button
+                        type="submit"
+                        class="ai-chat-send"
+                        aria-label="Send message"
+                    >
+                        <i class="bi bi-send-fill"></i>
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- Floating Chat Button -->
+        <button
+            type="button"
+            class="ai-chat-toggle"
+            id="aiChatToggle"
+            aria-label="Open jewellery assistant"
+        >
+            <i class="bi bi-stars"></i>
+        </button>
+
+    </div>
+
 
     <!-- Bootstrap JavaScript -->
     <script
@@ -70,6 +167,11 @@
     <script
         src="{% static 'js/navbar.js' %}">
     </script>
+
+    <script
+        src="{% static 'js/ai-chat.js' %}">
+    </script>
+
     {% block scripts %}
     {% endblock %}
 

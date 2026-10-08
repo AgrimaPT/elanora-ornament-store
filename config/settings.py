@@ -30,6 +30,7 @@ RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
 RAZORPAY_WEBHOOK_SECRET = os.getenv(
     "RAZORPAY_WEBHOOK_SECRET"
 )
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 PAYMENT_EXPIRY_MINUTES = int(
     os.getenv(
@@ -68,6 +69,7 @@ INSTALLED_APPS = [
     'cart',
     'orders',
     "payments",
+    "ai",
 ]
 
 REST_FRAMEWORK = {

@@ -73,6 +73,11 @@ urlpatterns = [
         "api/payment/",
         include("payments.urls"),
     ),
+
+    path(
+        "api/ai/",
+        include("ai.urls"),
+    ),
 ]
 
 if settings.DEBUG:

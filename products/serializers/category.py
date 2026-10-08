@@ -10,4 +10,5 @@ class CategorySerializer(serializers.ModelSerializer):
             "id",
             "name",
             "slug",
+            "image",
         )
