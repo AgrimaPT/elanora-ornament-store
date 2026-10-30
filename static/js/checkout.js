@@ -1,1095 +1,579 @@
+
 document.addEventListener("DOMContentLoaded", () => {
+    const $ = (id) => document.getElementById(id);
 
-    const addressLoading =
-        document.getElementById("address-loading");
+    const addressLoading = $("address-loading");
+    const addressError = $("address-error");
+    const addressEmpty = $("address-empty");
+    const addressList = $("address-list");
+    const addressForm = $("address-form");
+    const addressFormContainer = $("address-form-container");
 
-    const addressError =
-        document.getElementById("address-error");
+    const selectedAddressCard = $("selected-address-card");
+    const selectedAddressName = $("selected-address-name");
+    const selectedAddressPhone = $("selected-address-phone");
+    const selectedAddressPreview = $("selected-address-preview");
+    const selectedAddressBadge = $("selected-address-badge");
 
-    const addressEmpty =
-        document.getElementById("address-empty");
+    const addressPickerDialog = $("address-picker-dialog");
+    const addressFormDialog = $("address-form-dialog");
+    const addressPickerLoading = $("address-picker-loading");
+    const addressFormError = $("address-form-error");
 
-    const addressList =
-        document.getElementById("address-list");
+    const checkoutItems = $("checkout-items");
+    const checkoutSubtotal = $("checkout-subtotal");
+    const checkoutTotal = $("checkout-total");
+    const placeOrderButton = $("place-order-button");
+    const checkoutLayout = document.querySelector(".checkout-layout");
+    const checkoutSuccess = $("checkout-success");
+    const successOrderNumber = $("success-order-number");
+    const viewOrderButton = $("view-order-button");
+    const checkoutAlert = $("checkout-alert");
 
-    const addressFormContainer =
-        document.getElementById(
-            "address-form-container"
-        );
-
-    const addressForm =
-        document.getElementById("address-form");
-
-    const addAddressButton =
-        document.getElementById(
-            "add-address-button"
-        );
-
-    const cancelAddressButton =
-        document.getElementById(
-            "cancel-address-button"
-        );
-
-    const checkoutItems =
-        document.getElementById(
-            "checkout-items"
-        );
-
-    const checkoutSubtotal =
-        document.getElementById(
-            "checkout-subtotal"
-        );
-
-    const checkoutTotal =
-        document.getElementById(
-            "checkout-total"
-        );
-
-    const placeOrderButton =
-        document.getElementById(
-            "place-order-button"
-        );
-
-
-    /*
-    --------------------------------------------------
-    CHECKOUT SUCCESS ELEMENTS
-    --------------------------------------------------
-    */
-
-    const checkoutLayout =
-        document.querySelector(".checkout-layout");
-
-    const checkoutSuccess =
-        document.getElementById(
-            "checkout-success"
-        );
-
-    const successOrderNumber =
-        document.getElementById(
-            "success-order-number"
-        );
-
-    const viewOrderButton =
-        document.getElementById(
-            "view-order-button"
-        );
-
-
-    /*
-    --------------------------------------------------
-    PLACE ORDER BUTTON
-    --------------------------------------------------
-    */
-
-    placeOrderButton.addEventListener(
-        "click",
-        placeOrder
-    );
-
-
-    /*
-    --------------------------------------------------
-    CHECKOUT STATE
-    --------------------------------------------------
-    */
-
+    let addresses = [];
     let selectedAddressId = null;
-
+    let pendingAddressId = null;
     let cartHasItems = false;
+    let isSubmittingOrder = false;
+    let isSavingAddress = false;
 
+    function showAlert(message, type = "error") {
+        checkoutAlert.textContent = message;
+        checkoutAlert.className = `checkout-alert is-${type}`;
+        checkoutAlert.hidden = false;
+        checkoutAlert.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
 
-    /*
-    --------------------------------------------------
-    UPDATE CONTINUE BUTTON
-    --------------------------------------------------
-    */
+    function hideAlert() {
+        checkoutAlert.hidden = true;
+        checkoutAlert.textContent = "";
+    }
+
+    function formatCurrency(value) {
+        return `₹${Number(value || 0).toLocaleString("en-IN", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        })}`;
+    }
 
     function updateContinueButton() {
-
         placeOrderButton.disabled =
-            !selectedAddressId ||
-            !cartHasItems;
-
+            !selectedAddressId || !cartHasItems || isSubmittingOrder;
     }
 
+    function openDialog(dialog) {
+        if (!dialog) return;
 
-    /*
-    --------------------------------------------------
-    LOAD ADDRESSES
-    --------------------------------------------------
-    */
+        if (typeof dialog.showModal === "function") {
+            if (!dialog.open) dialog.showModal();
+        } else {
+            dialog.setAttribute("open", "");
+        }
+    }
+
+    function closeDialog(dialog) {
+        if (!dialog) return;
+
+        if (typeof dialog.close === "function" && dialog.open) {
+            dialog.close();
+        } else {
+            dialog.removeAttribute("open");
+        }
+    }
+
+    function makeTextElement(tag, className, text) {
+        const element = document.createElement(tag);
+        if (className) element.className = className;
+        element.textContent = text ?? "";
+        return element;
+    }
+
+    function formatAddress(address) {
+        return [
+            address.address_line_1,
+            address.address_line_2,
+            `${address.city}, ${address.state} ${address.pincode}`,
+        ].filter(Boolean).join(", ");
+    }
+
+    function getAddressById(id) {
+        return addresses.find((address) => String(address.id) === String(id));
+    }
+
+    function renderSelectedAddress() {
+        const address = getAddressById(selectedAddressId);
+
+        selectedAddressCard.hidden = !address;
+        addressEmpty.hidden = addresses.length > 0;
+
+
+        if (!address) {
+            selectedAddressName.textContent = "";
+            selectedAddressPhone.textContent = "";
+            selectedAddressPreview.textContent = "";
+            selectedAddressBadge.hidden = true;
+            updateContinueButton();
+            return;
+        }
+
+        selectedAddressName.textContent = address.full_name || "";
+        selectedAddressPhone.textContent = address.phone_number || "";
+        selectedAddressPreview.textContent = formatAddress(address);
+        selectedAddressBadge.hidden = !address.is_default;
+
+        updateContinueButton();
+    }
+
+    function renderAddressPicker() {
+        addressList.replaceChildren();
+
+        addresses.forEach((address) => {
+            const label = document.createElement("label");
+            label.className = "address-card";
+
+            const radio = document.createElement("input");
+            radio.type = "radio";
+            radio.name = "checkout-address-choice";
+            radio.value = address.id;
+            radio.checked = String(address.id) === String(pendingAddressId);
+            radio.className = "address-card-radio";
+
+            radio.addEventListener("change", () => {
+                pendingAddressId = address.id;
+                renderAddressPicker();
+            });
+
+            const details = document.createElement("span");
+            details.className = "address-card-details";
+
+            const heading = document.createElement("span");
+            heading.className = "address-card-header";
+
+            heading.appendChild(
+                makeTextElement("strong", "address-card-name", address.full_name)
+            );
+
+            if (address.is_default) {
+                heading.appendChild(
+                    makeTextElement("span", "address-default-badge", "Default")
+                );
+            }
+
+            details.appendChild(heading);
+            details.appendChild(
+                makeTextElement("span", "address-card-phone", address.phone_number)
+            );
+            details.appendChild(
+                makeTextElement("span", "address-card-full-address", formatAddress(address))
+            );
+
+            label.append(radio, details);
+
+            if (String(address.id) === String(pendingAddressId)) {
+                label.classList.add("selected");
+            }
+
+            addressList.appendChild(label);
+        });
+
+        $("confirm-address-button").disabled = !getAddressById(pendingAddressId);
+    }
 
     async function loadAddresses() {
+        addressLoading.hidden = false;
+        addressError.hidden = true;
 
         try {
-
-            const response =
-                await fetchWithAuth(
-                    "/api/auth/addresses/"
-                );
-
+            const response = await fetchWithAuth("/api/auth/addresses/");
 
             if (!response.ok) {
-
-                throw new Error(
-                    "Unable to load addresses."
-                );
-
+                throw new Error("We couldn't load your saved addresses.");
             }
 
+            const data = await response.json();
+            addresses = Array.isArray(data) ? data : [];
 
-            const addresses =
-                await response.json();
-
-
-            addressLoading.style.display =
-                "none";
-
-
-            addressList.innerHTML =
-                "";
-
-
-            if (
-                !addresses ||
-                addresses.length === 0
-            ) {
-
-                addressEmpty.hidden =
-                    false;
-
-                updateContinueButton();
-
-                return;
-
+            if (!getAddressById(selectedAddressId)) {
+                const defaultAddress = addresses.find((address) => address.is_default);
+                selectedAddressId = defaultAddress?.id ?? addresses[0]?.id ?? null;
             }
 
-
-            addressEmpty.hidden =
-                true;
-
-
-            /*
-            --------------------------------------------------
-            CREATE ADDRESS CARDS
-            --------------------------------------------------
-            */
-
-            addresses.forEach(
-                (address) => {
-
-                    const addressCard =
-                        document.createElement(
-                            "article"
-                        );
-
-
-                    addressCard.className =
-                        "address-card";
-
-
-                    /*
-                    --------------------------------------------------
-                    SELECT DEFAULT ADDRESS
-                    --------------------------------------------------
-                    */
-
-                    if (
-                        address.is_default
-                    ) {
-
-                        addressCard.classList.add(
-                            "selected"
-                        );
-
-                        selectedAddressId =
-                            address.id;
-
-                    }
-
-
-                    /*
-                    --------------------------------------------------
-                    ADDRESS CARD HTML
-                    --------------------------------------------------
-                    */
-
-                    addressCard.innerHTML = `
-
-                        <div
-                            class="address-card-header"
-                        >
-
-                            <h3
-                                class="address-card-name"
-                            >
-                                ${address.full_name}
-                            </h3>
-
-                            ${
-                                address.is_default
-                                    ? `
-                                        <span
-                                            class="address-default-badge"
-                                        >
-                                            Default
-                                        </span>
-                                      `
-                                    : ""
-                            }
-
-                        </div>
-
-
-                        <p>
-                            ${address.phone_number}
-                        </p>
-
-
-                        <p>
-                            ${address.address_line_1}
-                        </p>
-
-
-                        ${
-                            address.address_line_2
-                                ? `
-                                    <p>
-                                        ${address.address_line_2}
-                                    </p>
-                                  `
-                                : ""
-                        }
-
-
-                        <p>
-                            ${address.city},
-                            ${address.state}
-                            - ${address.pincode}
-                        </p>
-
-                    `;
-
-
-                    /*
-                    --------------------------------------------------
-                    ADDRESS SELECTION
-                    --------------------------------------------------
-                    */
-
-                    addressCard.addEventListener(
-                        "click",
-                        () => {
-
-                            selectedAddressId =
-                                address.id;
-
-
-                            document
-                                .querySelectorAll(
-                                    ".address-card"
-                                )
-                                .forEach(
-                                    (card) => {
-
-                                        card.classList.remove(
-                                            "selected"
-                                        );
-
-                                    }
-                                );
-
-
-                            addressCard.classList.add(
-                                "selected"
-                            );
-
-
-                            updateContinueButton();
-
-                        }
-                    );
-
-
-                    addressList.appendChild(
-                        addressCard
-                    );
-
-                }
-            );
-
-
-            updateContinueButton();
-
-
+            pendingAddressId = selectedAddressId;
+            renderSelectedAddress();
+            renderAddressPicker();
         } catch (error) {
-
-            console.error(
-                "Address loading error:",
-                error
-            );
-
-
-            addressLoading.style.display =
-                "none";
-
-
+            console.error("Address loading error:", error);
             addressError.textContent =
-                "We couldn't load your addresses. Please try again.";
-
-
-            addressError.hidden =
-                false;
-
+                error.message || "Unable to load addresses. Please try again.";
+            addressError.hidden = false;
+        } finally {
+            addressLoading.hidden = true;
         }
-
     }
 
-
-    /*
-    --------------------------------------------------
-    LOAD CART
-    --------------------------------------------------
-    */
-
-    async function loadCart() {
-
-        try {
-
-            const response =
-                await fetchWithAuth(
-                    "/api/cart/"
-                );
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Unable to load cart."
-                );
-
-            }
-
-
-            const cart =
-                await response.json();
-
-
-            checkoutItems.innerHTML =
-                "";
-
-
-            /*
-            --------------------------------------------------
-            EMPTY CART
-            --------------------------------------------------
-            */
-
-            if (
-                !cart.items ||
-                cart.items.length === 0
-            ) {
-
-                cartHasItems =
-                    false;
-
-
-                checkoutSubtotal.textContent =
-                    "₹0";
-
-
-                checkoutTotal.textContent =
-                    "₹0";
-
-
-                updateContinueButton();
-
-
-                return;
-
-            }
-
-
-            cartHasItems =
-                true;
-
-
-            let total = 0;
-
-
-            /*
-            --------------------------------------------------
-            RENDER CART ITEMS
-            --------------------------------------------------
-            */
-
-            cart.items.forEach(
-                (item) => {
-
-                    total +=
-                        Number(
-                            item.subtotal
-                        );
-
-
-                    const checkoutItem =
-                        document.createElement(
-                            "article"
-                        );
-
-
-                    checkoutItem.className =
-                        "checkout-item";
-
-
-                    checkoutItem.innerHTML = `
-
-                        <img
-                            src="${item.product.image}"
-                            alt="${item.product.name}"
-                            class="checkout-item-image"
-                        >
-
-
-                        <div
-                            class="checkout-item-info"
-                        >
-
-                            <h3
-                                class="checkout-item-name"
-                            >
-                                ${item.product.name}
-                            </h3>
-
-
-                            ${
-                                item.variant
-                                    ? `
-                                        <p
-                                            class="checkout-item-variant"
-                                        >
-                                            ${item.variant.name}
-                                        </p>
-                                      `
-                                    : ""
-                            }
-
-
-                            <p
-                                class="checkout-item-quantity"
-                            >
-                                Quantity: ${item.quantity}
-                            </p>
-
-                        </div>
-
-
-                        <p
-                            class="checkout-item-price"
-                        >
-                            ₹${Number(
-                                item.subtotal
-                            ).toLocaleString(
-                                "en-IN"
-                            )}
-                        </p>
-
-                    `;
-
-
-                    checkoutItems.appendChild(
-                        checkoutItem
-                    );
-
-                }
-            );
-
-
-            /*
-            --------------------------------------------------
-            UPDATE TOTALS
-            --------------------------------------------------
-            */
-
-            checkoutSubtotal.textContent =
-                `₹${total.toLocaleString(
-                    "en-IN"
-                )}`;
-
-
-            checkoutTotal.textContent =
-                `₹${total.toLocaleString(
-                    "en-IN"
-                )}`;
-
-
-            updateContinueButton();
-
-
-        } catch (error) {
-
-            console.error(
-                "Cart loading error:",
-                error
-            );
-
-
-            checkoutItems.innerHTML = `
-
-                <div
-                    class="checkout-state checkout-error"
-                >
-                    We couldn't load your cart.
-                    Please try again.
-                </div>
-
-            `;
-
+    function renderCartItem(item) {
+        const article = document.createElement("article");
+        article.className = "checkout-item";
+
+        const image = document.createElement("img");
+        image.className = "checkout-item-image";
+        image.alt = item.product?.name || "Product";
+        image.loading = "lazy";
+
+        if (item.product?.image) {
+            image.src = item.product.image;
+            image.addEventListener("error", () => {
+                image.hidden = true;
+            }, { once: true });
+        } else {
+            image.hidden = true;
         }
 
-    }
-
-
-    /*
-    --------------------------------------------------
-    ADD ADDRESS BUTTON
-    --------------------------------------------------
-    */
-
-    addAddressButton.addEventListener(
-        "click",
-        () => {
-
-            addressFormContainer.hidden =
-                false;
-
-        }
-    );
-
-
-    /*
-    --------------------------------------------------
-    CANCEL ADDRESS FORM
-    --------------------------------------------------
-    */
-
-    cancelAddressButton.addEventListener(
-        "click",
-        () => {
-
-            addressForm.reset();
-
-            addressFormContainer.hidden =
-                true;
-
-        }
-    );
-
-
-    /*
-    --------------------------------------------------
-    CREATE NEW ADDRESS
-    --------------------------------------------------
-    */
-
-    addressForm.addEventListener(
-        "submit",
-        async (event) => {
-
-            event.preventDefault();
-
-
-            const formData =
-                new FormData(
-                    addressForm
-                );
-
-
-            const addressData = {
-
-                full_name:
-                    formData.get(
-                        "full_name"
-                    ),
-
-                phone_number:
-                    formData.get(
-                        "phone_number"
-                    ),
-
-                address_line_1:
-                    formData.get(
-                        "address_line_1"
-                    ),
-
-                address_line_2:
-                    formData.get(
-                        "address_line_2"
-                    ),
-
-                city:
-                    formData.get(
-                        "city"
-                    ),
-
-                state:
-                    formData.get(
-                        "state"
-                    ),
-
-                pincode:
-                    formData.get(
-                        "pincode"
-                    ),
-
-                is_default:
-                    formData.get(
-                        "is_default"
-                    ) === "on",
-
-            };
-
-
-            try {
-
-                const response =
-                    await fetchWithAuth(
-                        "/api/auth/addresses/",
-                        {
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json",
-                            },
-
-                            body:
-                                JSON.stringify(
-                                    addressData
-                                ),
-                        }
-                    );
-
-
-                const data =
-                    await response.json();
-
-
-                if (!response.ok) {
-
-                    console.error(
-                        "Address creation failed:",
-                        data
-                    );
-
-
-                    addressError.textContent =
-                        "Unable to save this address. Please check your details.";
-
-
-                    addressError.hidden =
-                        false;
-
-
-                    return;
-
-                }
-
-
-                addressError.hidden =
-                    true;
-
-
-                addressForm.reset();
-
-
-                addressFormContainer.hidden =
-                    true;
-
-
-                /*
-                --------------------------------------------------
-                RELOAD ADDRESSES
-                --------------------------------------------------
-                */
-
-                await loadAddresses();
-
-
-            } catch (error) {
-
-                console.error(
-                    "Address creation error:",
-                    error
-                );
-
-
-                addressError.textContent =
-                    "Something went wrong while saving the address.";
-
-
-                addressError.hidden =
-                    false;
-
-            }
-
-        }
-    );
-
-
-    /*
-    --------------------------------------------------
-    SHOW CHECKOUT SUCCESS
-    --------------------------------------------------
-    */
-
-    function showCheckoutSuccess(order) {
-
-        /*
-        Hide the normal checkout layout.
-        */
-
-        checkoutLayout.hidden =
-            true;
-
-
-        /*
-        Display the success section.
-        */
-
-        checkoutSuccess.hidden =
-            false;
-
-
-        /*
-        Display the real order number.
-        */
-
-        successOrderNumber.textContent =
-            `#${order.order_number}`;
-
-
-        /*
-        Configure the View Order button.
-        */
-
-        viewOrderButton.href =
-            `/orders/${order.id}/`;
-
-    }
-
-
-    async function createPayment(orderId) {
-        const response = await fetchWithAuth(
-            "/api/payment/create/",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    order_id: orderId,
-                }),
-            }
+        const info = document.createElement("div");
+        info.className = "checkout-item-info";
+        info.appendChild(
+            makeTextElement("h3", "checkout-item-name", item.product?.name || "Product")
         );
 
-        const data = await response.json();
+        if (item.variant?.name) {
+            info.appendChild(
+                makeTextElement("p", "checkout-item-variant", item.variant.name)
+            );
+        }
+
+        info.appendChild(
+            makeTextElement("p", "checkout-item-quantity", `Qty: ${item.quantity}`)
+        );
+
+        article.append(
+            image,
+            info,
+            makeTextElement("p", "checkout-item-price", formatCurrency(item.subtotal))
+        );
+
+        return article;
+    }
+
+    async function loadCart() {
+        checkoutItems.replaceChildren();
+        checkoutItems.appendChild(
+            makeTextElement("p", "checkout-state", "Loading your bag...")
+        );
+
+        try {
+            const response = await fetchWithAuth("/api/cart/");
+
+            if (!response.ok) {
+                throw new Error("We couldn't load your cart.");
+            }
+
+            const cart = await response.json();
+            const items = Array.isArray(cart.items) ? cart.items : [];
+
+            checkoutItems.replaceChildren();
+
+            if (items.length === 0) {
+                cartHasItems = false;
+                checkoutItems.appendChild(
+                    makeTextElement("p", "checkout-state", "Your bag is empty.")
+                );
+                checkoutSubtotal.textContent = formatCurrency(0);
+                checkoutTotal.textContent = formatCurrency(0);
+                updateContinueButton();
+                return;
+            }
+
+            cartHasItems = true;
+            let subtotal = 0;
+
+            items.forEach((item) => {
+                subtotal += Number(item.subtotal || 0);
+                checkoutItems.appendChild(renderCartItem(item));
+            });
+
+            checkoutSubtotal.textContent = formatCurrency(subtotal);
+            checkoutTotal.textContent = formatCurrency(subtotal);
+            updateContinueButton();
+        } catch (error) {
+            console.error("Cart loading error:", error);
+            cartHasItems = false;
+            checkoutItems.replaceChildren(
+                makeTextElement(
+                    "p",
+                    "checkout-state checkout-error",
+                    error.message || "Unable to load your cart. Please try again."
+                )
+            );
+            updateContinueButton();
+        }
+    }
+
+    function openAddressForm() {
+        addressForm.reset();
+        addressFormError.hidden = true;
+        openDialog(addressFormDialog);
+        $("full-name").focus();
+    }
+
+    $("change-address-button").addEventListener("click", () => {
+        pendingAddressId = selectedAddressId;
+        renderAddressPicker();
+        openDialog(addressPickerDialog);
+    });
+
+    $("close-address-picker").addEventListener("click", () => {
+        closeDialog(addressPickerDialog);
+    });
+
+    $("confirm-address-button").addEventListener("click", () => {
+        if (!getAddressById(pendingAddressId)) return;
+
+        selectedAddressId = pendingAddressId;
+        renderSelectedAddress();
+        closeDialog(addressPickerDialog);
+        hideAlert();
+    });
+
+    $("add-address-button").addEventListener("click", openAddressForm);
+    $("picker-add-address-button").addEventListener("click", () => {
+        closeDialog(addressPickerDialog);
+        openAddressForm();
+    });
+
+    $("close-address-form").addEventListener("click", () => {
+        closeDialog(addressFormDialog);
+    });
+
+    $("cancel-address-button").addEventListener("click", () => {
+        addressForm.reset();
+        closeDialog(addressFormDialog);
+    });
+
+    // Clicking a dialog's backdrop closes it without submitting anything.
+    [addressPickerDialog, addressFormDialog].forEach((dialog) => {
+        dialog.addEventListener("click", (event) => {
+            if (event.target === dialog) closeDialog(dialog);
+        });
+    });
+
+    addressForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (isSavingAddress) return;
+
+        isSavingAddress = true;
+        const saveButton = $("save-address-button");
+        saveButton.disabled = true;
+        saveButton.textContent = "Saving address...";
+        addressFormError.hidden = true;
+
+        const formData = new FormData(addressForm);
+        const addressData = {
+            full_name: formData.get("full_name")?.toString().trim(),
+            phone_number: formData.get("phone_number")?.toString().trim(),
+            address_line_1: formData.get("address_line_1")?.toString().trim(),
+            address_line_2: formData.get("address_line_2")?.toString().trim(),
+            city: formData.get("city")?.toString().trim(),
+            state: formData.get("state")?.toString().trim(),
+            pincode: formData.get("pincode")?.toString().trim(),
+            is_default: formData.get("is_default") === "on",
+        };
+
+        try {
+            const response = await fetchWithAuth("/api/auth/addresses/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(addressData),
+            });
+
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                const detail = data.detail ||
+                    Object.values(data).flat().join(" ") ||
+                    "Unable to save this address. Check your details.";
+
+                throw new Error(detail);
+            }
+
+            // Use the saved address as the selection after creation.
+            closeDialog(addressFormDialog);
+            await loadAddresses();
+
+            if (data.id != null && getAddressById(data.id)) {
+                selectedAddressId = data.id;
+            } else if (addressData.is_default) {
+                selectedAddressId =
+                    addresses.find((address) => address.is_default)?.id ??
+                    selectedAddressId;
+            } else if (addresses.length) {
+                selectedAddressId =
+                    addresses[addresses.length - 1].id;
+            }
+
+            pendingAddressId = selectedAddressId;
+            renderSelectedAddress();
+            renderAddressPicker();
+            showAlert("Your delivery address has been saved.", "success");
+        } catch (error) {
+            console.error("Address creation error:", error);
+            addressFormError.textContent =
+                error.message || "Unable to save your address.";
+            addressFormError.hidden = false;
+        } finally {
+            isSavingAddress = false;
+            saveButton.disabled = false;
+            saveButton.textContent = "Save address";
+        }
+    });
+
+    function showCheckoutSuccess(order) {
+        checkoutLayout.hidden = true;
+        checkoutSuccess.hidden = false;
+        successOrderNumber.textContent = `#${order.order_number}`;
+        viewOrderButton.href = `/orders/${order.id}/`;
+        checkoutSuccess.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    async function createPayment(orderId) {
+        const response = await fetchWithAuth("/api/payment/create/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ order_id: orderId }),
+        });
+
+        const data = await response.json().catch(() => ({}));
 
         if (!response.ok) {
-            throw new Error(
-                data.detail ||
-                "Unable to create payment."
-            );
+            throw new Error(data.detail || "Unable to create payment.");
         }
 
         return data;
     }
 
     async function verifyPayment(response) {
-        const apiResponse = await fetchWithAuth(
-            "/api/payment/verify/",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    razorpay_order_id:
-                        response.razorpay_order_id,
+        const apiResponse = await fetchWithAuth("/api/payment/verify/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+            }),
+        });
 
-                    razorpay_payment_id:
-                        response.razorpay_payment_id,
-
-                    razorpay_signature:
-                        response.razorpay_signature,
-                }),
-            }
-        );
-
-        const data = await apiResponse.json();
+        const data = await apiResponse.json().catch(() => ({}));
 
         if (!apiResponse.ok) {
-            throw new Error(
-                data.detail ||
-                "Payment verification failed."
-            );
+            throw new Error(data.detail || "Payment verification failed.");
         }
 
         return data;
     }
 
+    function resetOrderButton() {
+        isSubmittingOrder = false;
+        placeOrderButton.innerHTML =
+            '<span>Place order &amp; pay</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i>';
+        updateContinueButton();
+    }
 
-    function openRazorpayCheckout(payment) {
+    function openRazorpayCheckout(payment, orderId) {
         const options = {
             key: payment.key_id,
-
             amount: payment.amount_in_paise,
-
             currency: payment.currency,
-
-            name: "Ornament Store",
-
+            name: "ELANORA",
             description: `Payment for Order #${payment.order_number}`,
-
             order_id: payment.razorpay_order_id,
 
             handler: async function (response) {
                 try {
-                    const verification =
-                        await verifyPayment(response);
-
-                    console.log(
-                        "Payment verified successfully:",
-                        verification
-                    );
-
+                    const verification = await verifyPayment(response);
                     showCheckoutSuccess({
-                        id: verification.order_id,
-                        order_number: verification.order_number,
+                        id: verification.order_id || orderId,
+                        order_number: verification.order_number || payment.order_number,
                     });
-
                 } catch (error) {
-                    console.error(
-                        "Payment verification failed:",
-                        error
+                    console.error("Payment verification failed:", error);
+                    showAlert(
+                        "We couldn't confirm your payment yet. Please don't place another order. Check your order status or contact support.",
+                        "error"
                     );
-
-                    alert(
-                        error.message ||
-                        "Payment verification failed. Please contact support."
-                    );
+                    resetOrderButton();
                 }
             },
 
             modal: {
                 ondismiss: function () {
-                    placeOrderButton.disabled = false;
-
-                    placeOrderButton.textContent =
-                        "Continue to Order";
+                    showAlert(
+                        "Payment wasn't completed in the payment window. Check your order status before trying again.",
+                        "error"
+                    );
+                    resetOrderButton();
                 },
             },
 
-            theme: {
-                color: "#b08d57",
-            },
+            theme: { color: "#B89B5E" },
         };
 
         const razorpay = new Razorpay(options);
 
         razorpay.on("payment.failed", function (response) {
-            console.log(
-                "========== RAZORPAY PAYMENT FAILED =========="
+            console.error("Razorpay payment failed:", response.error);
+            showAlert(
+                "Payment failed or was declined. Check your order status before trying again.",
+                "error"
             );
-
-            console.log(
-                "Complete response:",
-                response
-            );
-
-            console.log(
-                "Error object:",
-                response.error
-            );
-
-            console.log(
-                "Error JSON:",
-                JSON.stringify(response.error, null, 2)
-            );
-
-            console.log(
-                "Description:",
-                response.error?.description
-            );
-
-            console.log(
-                "============================================="
-            );
-
-            placeOrderButton.disabled = false;
-
-            placeOrderButton.textContent =
-                "Continue to Order";
+            resetOrderButton();
         });
 
         razorpay.open();
     }
 
-
-    /*
-    --------------------------------------------------
-    PLACE ORDER
-    --------------------------------------------------
-    */
-
     async function placeOrder() {
-
-        /*
-        --------------------------------------------------
-        BASIC FRONTEND VALIDATION
-        --------------------------------------------------
-        */
-
-        if (
-            !selectedAddressId ||
-            !cartHasItems
-        ) {
-
+        if (isSubmittingOrder || !selectedAddressId || !cartHasItems) {
             return;
-
         }
 
+        isSubmittingOrder = true;
+        hideAlert();
+        placeOrderButton.disabled = true;
+        placeOrderButton.textContent = "Preparing secure payment...";
 
-        /*
-        --------------------------------------------------
-        DISABLE BUTTON WHILE REQUEST IS RUNNING
-        --------------------------------------------------
-        */
-
-        placeOrderButton.disabled =
-            true;
-
-
-        placeOrderButton.textContent =
-            "Placing Order...";
-
+        let orderCreated = false;
 
         try {
+            const response = await fetchWithAuth("/api/orders/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ address_id: selectedAddressId }),
+            });
 
-            /*
-            --------------------------------------------------
-            SEND ORDER REQUEST
-            --------------------------------------------------
-            */
-
-            const response =
-                await fetchWithAuth(
-                    "/api/orders/",
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json",
-                        },
-
-                        body:
-                            JSON.stringify({
-                                address_id:
-                                    selectedAddressId,
-                            }),
-                    }
-                );
-
-
-            const data =
-                await response.json();
-
-
-            /*
-            --------------------------------------------------
-            HANDLE BACKEND ERROR
-            --------------------------------------------------
-            */
+            const order = await response.json().catch(() => ({}));
 
             if (!response.ok) {
-
-                console.error(
-                    "Order creation failed:",
-                    data
-                );
-
-
-                throw new Error(
-                    data.detail ||
-                    "Unable to place your order."
-                );
-
+                throw new Error(order.detail || "Unable to create your order.");
             }
-            const payment = await createPayment(data.id);
 
-            openRazorpayCheckout(payment);
-            /*
-            --------------------------------------------------
-            ORDER CREATED SUCCESSFULLY
-            --------------------------------------------------
-            */
-
-            console.log(
-                "Order created successfully:",
-                data
-            );
-
-
-            
-
+            orderCreated = true;
+            const payment = await createPayment(order.id);
+            openRazorpayCheckout(payment, order.id);
         } catch (error) {
+            console.error("Place order error:", error);
 
-            /*
-            --------------------------------------------------
-            HANDLE ORDER CREATION ERROR
-            --------------------------------------------------
-            */
-
-            console.error(
-                "Place order error:",
-                error
+            showAlert(
+                orderCreated
+                    ? "Your order was created, but payment setup failed. Please check your order status before trying again."
+                    : (error.message || "Unable to place your order. Please try again."),
+                "error"
             );
 
-
-            alert(
-                error.message ||
-                "Something went wrong while placing your order."
-            );
-
-
-            /*
-            --------------------------------------------------
-            RESTORE BUTTON
-            --------------------------------------------------
-            */
-
-            placeOrderButton.disabled =
-                false;
-
-
-            placeOrderButton.textContent =
-                "Continue to Order";
-
+            resetOrderButton();
         }
-
     }
 
-
-    /*
-    --------------------------------------------------
-    INITIAL PAGE LOAD
-    --------------------------------------------------
-    */
+    placeOrderButton.addEventListener("click", placeOrder);
 
     loadAddresses();
-
     loadCart();
-
 });

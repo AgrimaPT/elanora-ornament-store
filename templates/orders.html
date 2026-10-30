@@ -4,7 +4,7 @@
 
 
 {% block title %}
-    My Orders | Ornament Store
+    My Orders | Ornament
 {% endblock %}
 
 
@@ -27,170 +27,280 @@
 
 {% block content %}
 
-    <!-- =========================
-         ORDERS PAGE
-    ========================== -->
+<section class="orders-page">
 
-    <section class="orders-page">
-
-        <div class="orders-section">
-
-            <div class="orders-container">
+    <div class="orders-shell">
 
 
-                <!-- =========================
-                     PAGE HEADER
-                ========================== -->
+        <!-- =====================================
+             PAGE INTRO
+        ====================================== -->
 
-                <div class="orders-header">
+        <header class="orders-intro">
 
-                    <p class="orders-eyebrow">
-                        Your Shopping Journey
-                    </p>
+            <div class="orders-intro-copy">
 
-                    <h1 class="orders-title">
-                        My Orders
-                    </h1>
+                <p class="orders-eyebrow">
+                    My Account
+                </p>
 
-                    <p class="orders-subtitle">
-                        View and manage your orders.
-                    </p>
+                <h1 class="orders-title">
+                    Your Orders
+                </h1>
 
-                </div>
+                <p class="orders-subtitle">
+                    Revisit your purchases and keep track of
+                    every piece chosen from our collection.
+                </p>
 
-
-                <!-- =========================
-                     LOADING STATE
-                ========================== -->
-
-                <div
-                    id="orders-loading"
-                    class="orders-state orders-loading"
-                >
-
-                    <div
-                        class="spinner-border"
-                        role="status"
-                    >
-                        <span class="visually-hidden">
-                            Loading...
-                        </span>
-                    </div>
-
-                    <p>
-                        Loading your orders...
-                    </p>
-
-                </div>
+            </div>
 
 
-                <!-- =========================
-                     ERROR STATE
-                ========================== -->
+            <a
+                href="/shop/"
+                class="orders-continue-shopping"
+            >
+                <span>
+                    Continue Shopping
+                </span>
 
-                <div
-                    id="orders-error"
-                    class="orders-state orders-error"
-                    hidden
-                >
+                <i
+                    class="fa-solid fa-arrow-right"
+                    aria-hidden="true"
+                ></i>
+            </a>
 
-                    <div class="orders-state-icon">
+        </header>
 
-                        <i
-                            class="fa-solid fa-circle-exclamation"
-                        ></i>
 
-                    </div>
+        <!-- =====================================
+             ACCOUNT CONTEXT BAR
+        ====================================== -->
 
-                    <h2>
-                        Unable to Load Orders
-                    </h2>
+        <div class="orders-context">
 
-                    <p>
-                        We couldn't load your orders.
-                        Please try again.
-                    </p>
+            <div class="orders-context-item">
 
-                    <button
-                        type="button"
-                        id="orders-retry-button"
-                        class="btn orders-retry-button"
-                    >
-                        Try Again
-                    </button>
+                <span class="orders-context-icon">
+                    <i
+                        class="fa-regular fa-gem"
+                        aria-hidden="true"
+                    ></i>
+                </span>
+
+                <div>
+
+                    <span class="orders-context-label">
+                        Your Collection
+                    </span>
+
+                    <span class="orders-context-text">
+                        Orders placed with Ornament
+                    </span>
 
                 </div>
 
+            </div>
 
-                <!-- =========================
-                     EMPTY STATE
-                ========================== -->
 
-                <div
-                    id="orders-empty"
-                    class="orders-state orders-empty"
-                    hidden
-                >
+            <div class="orders-context-divider"></div>
 
-                    <div class="orders-state-icon">
 
-                        <i
-                            class="fa-solid fa-bag-shopping"
-                        ></i>
+            <div class="orders-context-item">
 
-                    </div>
+                <span class="orders-context-icon">
+                    <i
+                        class="fa-regular fa-clock"
+                        aria-hidden="true"
+                    ></i>
+                </span>
 
-                    <h2>
-                        No Orders Yet
-                    </h2>
+                <div>
 
-                    <p>
-                        You haven't placed any orders yet.
-                    </p>
+                    <span class="orders-context-label">
+                        Order History
+                    </span>
 
-                    <a
-                        href="/shop/"
-                        class="btn orders-shop-button"
-                    >
-                        Continue Shopping
-                    </a>
+                    <span class="orders-context-text">
+                        View your complete purchase history
+                    </span>
 
                 </div>
-
-
-                <!-- =========================
-                     ORDERS LIST
-                ========================== -->
-
-                <section
-                    id="orders-list"
-                    class="orders-list"
-                    aria-live="polite"
-                >
-
-                    <!--
-                        Order cards will be inserted
-                        here by orders.js.
-                    -->
-
-                </section>
-
 
             </div>
 
         </div>
 
-    </section>
+
+        <!-- =====================================
+             LOADING STATE
+        ====================================== -->
+
+        <div
+            id="orders-loading"
+            class="orders-state orders-loading"
+        >
+
+            <div class="orders-loading-card">
+
+                <div class="orders-loading-symbol">
+                    <i
+                        class="fa-regular fa-gem"
+                        aria-hidden="true"
+                    ></i>
+                </div>
+
+                <div>
+
+                    <p class="orders-state-eyebrow">
+                        Please wait
+                    </p>
+
+                    <p class="orders-loading-text">
+                        Loading your orders...
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             ERROR STATE
+        ====================================== -->
+
+        <div
+            id="orders-error"
+            class="orders-state orders-error"
+            hidden
+        >
+
+            <div class="orders-state-card">
+
+                <div class="orders-state-icon">
+                    <i
+                        class="fa-solid fa-circle-exclamation"
+                        aria-hidden="true"
+                    ></i>
+                </div>
+
+                <p class="orders-state-eyebrow">
+                    Something went wrong
+                </p>
+
+                <h2>
+                    Your orders couldn't be loaded
+                </h2>
+
+                <p class="orders-state-description">
+                    We weren't able to retrieve your order
+                    history right now. Please try again.
+                </p>
+
+                <button
+                    type="button"
+                    id="orders-retry-button"
+                    class="orders-state-button"
+                >
+                    <span>Try Again</span>
+
+                    <i
+                        class="fa-solid fa-arrow-right"
+                        aria-hidden="true"
+                    ></i>
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             EMPTY STATE
+        ====================================== -->
+
+        <div
+            id="orders-empty"
+            class="orders-state orders-empty"
+            hidden
+        >
+
+            <div class="orders-empty-card">
+
+                <div class="orders-empty-symbol">
+
+                    <span class="orders-empty-ring"></span>
+
+                    <i
+                        class="fa-regular fa-gem"
+                        aria-hidden="true"
+                    ></i>
+
+                </div>
+
+                <p class="orders-state-eyebrow">
+                    Your collection awaits
+                </p>
+
+                <h2>
+                    No Orders Yet
+                </h2>
+
+                <p class="orders-state-description">
+                    Your favourite pieces will appear here
+                    once you place your first order.
+                </p>
+
+                <a
+                    href="/shop/"
+                    class="orders-state-button"
+                >
+                    <span>
+                        Explore the Collection
+                    </span>
+
+                    <i
+                        class="fa-solid fa-arrow-right"
+                        aria-hidden="true"
+                    ></i>
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             ORDERS LIST
+        ====================================== -->
+
+        <section
+            id="orders-list"
+            class="orders-list"
+            aria-live="polite"
+        >
+
+            <!--
+                Order cards are generated dynamically
+                by orders.js.
+            -->
+
+        </section>
+
+
+    </div>
+
+</section>
 
 {% endblock %}
 
 
 {% block scripts %}
 
-    <!-- Orders JavaScript -->
-
-    <script
-        src="{% static 'js/orders.js' %}"
-    ></script>
+<script
+    src="{% static 'js/orders.js' %}"
+></script>
 
 {% endblock %}

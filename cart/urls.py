@@ -10,7 +10,7 @@ urlpatterns = [
     path(
         "",
         CartAPIView.as_view(),
-        name="cart",
+        name="cart-api",
     ),
 
     path(

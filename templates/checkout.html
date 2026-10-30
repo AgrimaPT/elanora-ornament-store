@@ -1,429 +1,366 @@
 {% extends "base.html" %}
 {% load static %}
 
-
 {% block title %}
-Checkout | Ornament
+Checkout | ELANORA
 {% endblock %}
 
-
 {% block extra_css %}
-
-<link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
->
-
-<link
-    rel="stylesheet"
-    href="{% static 'css/checkout.css' %}"
->
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/checkout.css' %}">
 {% endblock %}
 
 {% block content %}
-
 <section class="checkout-section">
-
     <div class="container">
 
-        <div class="checkout-header">
+        <!-- Checkout heading -->
+        <header class="checkout-header">
+            <span class="section-eyebrow">ELANORA · CHECKOUT</span>
+            <h1>Complete Your Order</h1>
+            <p>A thoughtful finishing touch, delivered to your door.</p>
 
-            <span class="section-eyebrow">
-                CHECKOUT
-            </span>
+            <div class="checkout-progress" aria-label="Checkout steps">
+                <span class="checkout-progress-step is-active">
+                    <span class="progress-number">01</span>
+                    Delivery
+                </span>
+                <span class="progress-line"></span>
+                <span class="checkout-progress-step">
+                    <span class="progress-number">02</span>
+                    Payment
+                </span>
+                <span class="progress-line"></span>
+                <span class="checkout-progress-step">
+                    <span class="progress-number">03</span>
+                    Confirmation
+                </span>
+            </div>
+        </header>
 
-            <h1>
-                Complete Your Order
-            </h1>
-
-            <p>
-                Confirm your delivery details and review your order.
-            </p>
-
-        </div>
-
+        <div id="checkout-alert" class="checkout-alert" role="alert" hidden></div>
 
         <div class="checkout-layout">
 
+            <!-- Main checkout column -->
+            <div class="checkout-main">
 
-            <!-- Delivery Address -->
+                <!-- 01: Delivery address -->
+                <section class="checkout-panel checkout-address-section" aria-labelledby="delivery-heading">
 
-            <section class="checkout-address-section">
+                    <div class="checkout-panel-heading">
+                        <span class="checkout-step-number">01</span>
+                        <div>
+                            <h2 id="delivery-heading">Delivery address</h2>
+                            <p>Where should we send your order?</p>
+                        </div>
+                    </div>
 
-                <div class="checkout-section-header">
+                    <div id="address-loading" class="checkout-state" role="status">
+                        <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i>
+                        Loading your saved addresses...
+                    </div>
 
-                    <h2>
-                        Delivery Address
-                    </h2>
+                    <div id="address-error" class="checkout-state checkout-error" role="alert" hidden></div>
 
-                    <button
-                        type="button"
-                        id="add-address-button"
-                        class="checkout-button checkout-button-secondary"
-                    >
-                        Add New Address
-                    </button>
+                    <!-- Selected address summary -->
+                    <div id="selected-address-card" class="selected-address-card" hidden>
 
-                </div>
+                        <div class="selected-address-icon" aria-hidden="true">
+                            <i class="fa-solid fa-house"></i>
+                        </div>
 
+                        <div class="selected-address-details">
+                            <div class="selected-address-heading">
+                                <span id="selected-address-name" class="selected-address-name"></span>
 
-                <div
-                    id="address-loading"
-                    class="checkout-state"
-                >
-                    Loading your addresses...
-                </div>
+                                <span id="selected-address-badge" class="address-default-badge" hidden>Default</span>
+                            </div>
 
+                            <p id="selected-address-phone"></p>
 
-                <div
-                    id="address-error"
-                    class="checkout-state checkout-error"
-                    hidden
-                >
-                </div>
+                            <p id="selected-address-preview" class="selected-address-preview"></p>
+                        </div>
 
+                        <button type="button" id="change-address-button" class="checkout-text-button">
+                            Change
+                        </button>
+                    </div>
 
-                <div
-                    id="address-empty"
-                    class="checkout-state"
-                    hidden
-                >
+                    <div id="address-empty" class="checkout-empty-address" hidden>
+                        <span class="empty-address-icon">
+                            <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                        </span>
+                        <h3>No delivery address yet</h3>
+                        <p>Add an address to continue with your order.</p>
+                    </div>
 
-                    <h3>
-                        No saved addresses
-                    </h3>
+                    <div class="checkout-address-footer">
+                        <button type="button" id="add-address-button" class="checkout-outline-button">
+                            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                            Add a new address
+                        </button>
+                    </div>
 
-                    <p>
-                        Add a delivery address to continue.
+                </section>
+
+                <!-- 02: Payment information -->
+                <section class="checkout-panel checkout-payment-section" aria-labelledby="payment-heading">
+
+                    <div class="checkout-panel-heading">
+                        <span class="checkout-step-number">02</span>
+                        <div>
+                            <h2 id="payment-heading">Payment</h2>
+                            <p>Complete your purchase securely.</p>
+                        </div>
+                    </div>
+
+                    <div class="payment-method-card">
+                        <span class="payment-method-icon" aria-hidden="true">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </span>
+
+                        <div class="payment-method-details">
+                            <h3>Secure online payment</h3>
+                            <p>
+                                Continue to Razorpay to pay using
+                                the payment options available to you.
+                            </p>
+                        </div>
+
+                        <span class="payment-secure-label">
+                            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                            Secure
+                        </span>
+                    </div>
+
+                    <p class="payment-note">
+                        <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                        Your order will be confirmed after payment
+                        verification.
                     </p>
 
-                </div>
-
-
-                <div
-                    id="address-list"
-                    class="address-list"
-                >
-                </div>
-
-
-                <!-- Add Address Form -->
-
-                <div
-                    id="address-form-container"
-                    class="address-form-container"
-                    hidden
-                >
-
-                    <h3>
-                        Add New Address
-                    </h3>
-
-
-                    <form id="address-form">
-
-
-                        <div class="checkout-form-group">
-
-                            <label for="full-name">
-                                Full Name
-                            </label>
-
-                            <input
-                                type="text"
-                                id="full-name"
-                                name="full_name"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="checkout-form-group">
-
-                            <label for="phone-number">
-                                Phone Number
-                            </label>
-
-                            <input
-                                type="tel"
-                                id="phone-number"
-                                name="phone_number"
-                                maxlength="10"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="checkout-form-group">
-
-                            <label for="address-line-1">
-                                Address Line 1
-                            </label>
-
-                            <input
-                                type="text"
-                                id="address-line-1"
-                                name="address_line_1"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="checkout-form-group">
-
-                            <label for="address-line-2">
-                                Address Line 2
-                            </label>
-
-                            <input
-                                type="text"
-                                id="address-line-2"
-                                name="address_line_2"
-                            >
-
-                        </div>
-
-
-                        <div class="checkout-form-row">
-
-                            <div class="checkout-form-group">
-
-                                <label for="city">
-                                    City
-                                </label>
-
-                                <input
-                                    type="text"
-                                    id="city"
-                                    name="city"
-                                    required
-                                >
-
-                            </div>
-
-
-                            <div class="checkout-form-group">
-
-                                <label for="state">
-                                    State
-                                </label>
-
-                                <input
-                                    type="text"
-                                    id="state"
-                                    name="state"
-                                    required
-                                >
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="checkout-form-group">
-
-                            <label for="pincode">
-                                Pincode
-                            </label>
-
-                            <input
-                                type="text"
-                                id="pincode"
-                                name="pincode"
-                                maxlength="6"
-                                required
-                            >
-
-                        </div>
-
-
-                        <label class="default-address-option">
-
-                            <input
-                                type="checkbox"
-                                id="is-default"
-                                name="is_default"
-                            >
-
-                            <span>
-                                Make this my default address
-                            </span>
-
-                        </label>
-
-
-                        <div class="address-form-actions">
-
-                            <button
-                                type="submit"
-                                class="checkout-button checkout-button-primary"
-                            >
-                                Save Address
-                            </button>
-
-                            <button
-                                type="button"
-                                id="cancel-address-button"
-                                class="checkout-button checkout-button-secondary"
-                            >
-                                Cancel
-                            </button>
-
-                        </div>
-
-
-                    </form>
-
-                </div>
-
-            </section>
-
-
-            <!-- Order Summary -->
-
-            <aside class="checkout-summary">
-
-                <h2>
-                    Order Summary
-                </h2>
-
-
-                <div
-                    id="checkout-items"
-                    class="checkout-items"
-                >
-                </div>
-
-
-                <div class="checkout-summary-row">
-
-                    <span>
-                        Subtotal
-                    </span>
-
-                    <span id="checkout-subtotal">
-                        ₹0
-                    </span>
-
-                </div>
-
-
-                <div class="checkout-summary-row">
-
-                    <span>
-                        Shipping
-                    </span>
-
-                    <span>
-                        Free
-                    </span>
-
-                </div>
-
-
-                <div class="checkout-summary-divider">
-                </div>
-
-
-                <div class="checkout-summary-total">
-
-                    <span>
-                        Total
-                    </span>
-
-                    <span id="checkout-total">
-                        ₹0
-                    </span>
-
-                </div>
-
-
-                <button
-                    type="button"
-                    id="place-order-button"
-                    class="checkout-button checkout-button-primary"
-                    disabled
-                >
-                    Continue to Order
-                </button>
-
-            </aside>
-
-
-        </div>
-
-
-        <!-- Checkout Success State -->
-
-        <section
-            id="checkout-success"
-            class="checkout-result checkout-success"
-            hidden
-        >
-
-            <div class="checkout-result-icon">
-
-                <i class="fa-solid fa-check"></i>
+                </section>
 
             </div>
 
+            <!-- Order summary column -->
+            <aside class="checkout-summary" aria-labelledby="summary-heading">
 
-            <p class="section-eyebrow">
-                ORDER CONFIRMED
-            </p>
+                <div class="checkout-summary-heading">
+                    <span class="section-eyebrow">YOUR SELECTION</span>
+                    <h2 id="summary-heading">Order summary</h2>
+                </div>
 
+                <div id="checkout-items" class="checkout-items">
+                    <div class="checkout-state">
+                        Loading your bag...
+                    </div>
+                </div>
 
-            <h2>
+                <div class="checkout-summary-breakdown">
+                    <div class="checkout-summary-row">
+                        <span>Subtotal</span>
+                        <span id="checkout-subtotal">₹0.00</span>
+                    </div>
+
+                    <div class="checkout-summary-row">
+                        <span>Shipping</span>
+                        <span class="checkout-free-shipping">Free</span>
+                    </div>
+                </div>
+
+                <div class="checkout-summary-total">
+                    <span>Total payable</span>
+                    <span id="checkout-total">₹0.00</span>
+                </div>
+
+                <button type="button" id="place-order-button" class="checkout-button checkout-button-primary" disabled>
+                    <span>Place order &amp; pay</span>
+                    <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                </button>
+
+                <p class="checkout-terms-note">
+                    By continuing, you agree to complete payment
+                    for this order.
+                </p>
+
+                <div class="checkout-trust-note">
+                    <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                    <span>Thank you for choosing ELANORA.</span>
+                </div>
+
+            </aside>
+        </div>
+
+        <!-- Saved address picker dialog -->
+        <dialog id="address-picker-dialog" class="checkout-dialog" aria-labelledby="address-picker-title">
+
+            <div class="checkout-dialog-header">
+                <div>
+                    <span class="section-eyebrow">DELIVERY DETAILS</span>
+                    <h2 id="address-picker-title">Choose an address</h2>
+                    <p>Select where you'd like your order delivered.</p>
+                </div>
+
+                <button type="button" id="close-address-picker" class="checkout-dialog-close"
+                    aria-label="Close address selection">
+                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div id="address-picker-loading" class="checkout-state" hidden>
+                Loading addresses...
+            </div>
+
+            <!-- JavaScript renders selectable saved addresses here -->
+            <div id="address-list" class="address-list"></div>
+
+            <div class="checkout-dialog-footer">
+                <button type="button" id="picker-add-address-button" class="checkout-outline-button">
+                    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    Add new address
+                </button>
+
+                <button type="button" id="confirm-address-button" class="checkout-button checkout-button-primary"
+                    disabled>
+                    Use this address
+                </button>
+            </div>
+        </dialog>
+
+        <!-- Add address dialog -->
+        <dialog id="address-form-dialog" class="checkout-dialog checkout-address-dialog"
+            aria-labelledby="address-form-title">
+
+            <div class="checkout-dialog-header">
+                <div>
+                    <span class="section-eyebrow">DELIVERY DETAILS</span>
+                    <h2 id="address-form-title">Add a new address</h2>
+                    <p>Enter the details for your delivery.</p>
+                </div>
+
+                <button type="button" id="close-address-form" class="checkout-dialog-close"
+                    aria-label="Close address form">
+                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div id="address-form-error" class="checkout-state checkout-error" role="alert" hidden></div>
+
+            <div id="address-form-container" class="address-form-container">
+
+                <form id="address-form">
+
+                    <div class="checkout-form-row">
+                        <div class="checkout-form-group">
+                            <label for="full-name">Full name</label>
+                            <input type="text" id="full-name" name="full_name" autocomplete="name" maxlength="150"
+                                required>
+                        </div>
+
+                        <div class="checkout-form-group">
+                            <label for="phone-number">Phone number</label>
+                            <input type="tel" id="phone-number" name="phone_number" autocomplete="tel" inputmode="tel"
+                                maxlength="15" required>
+                        </div>
+                    </div>
+
+                    <div class="checkout-form-group">
+                        <label for="address-line-1">
+                            House / street address
+                        </label>
+                        <input type="text" id="address-line-1" name="address_line_1" autocomplete="address-line1"
+                            maxlength="255" required>
+                    </div>
+
+                    <div class="checkout-form-group">
+                        <label for="address-line-2">
+                            Apartment, landmark
+                            <span class="optional-label">Optional</span>
+                        </label>
+                        <input type="text" id="address-line-2" name="address_line_2" autocomplete="address-line2"
+                            maxlength="255">
+                    </div>
+
+                    <div class="checkout-form-row">
+                        <div class="checkout-form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" name="city" autocomplete="address-level2" maxlength="100"
+                                required>
+                        </div>
+
+                        <div class="checkout-form-group">
+                            <label for="state">State</label>
+                            <input type="text" id="state" name="state" autocomplete="address-level1" maxlength="100"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="checkout-form-group">
+                        <label for="pincode">PIN code</label>
+                        <input type="text" id="pincode" name="pincode" autocomplete="postal-code" inputmode="numeric"
+                            maxlength="10" required>
+                    </div>
+
+                    <label class="default-address-option">
+                        <input type="checkbox" id="is-default" name="is_default">
+                        <span>Make this my default address</span>
+                    </label>
+
+                    <div class="address-form-actions">
+                        <button type="submit" id="save-address-button" class="checkout-button checkout-button-primary">
+                            Save address
+                        </button>
+
+                        <button type="button" id="cancel-address-button" class="checkout-outline-button">
+                            Cancel
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </dialog>
+
+        <!-- Order confirmation -->
+        <section id="checkout-success" class="checkout-result checkout-success" aria-labelledby="checkout-success-title"
+            hidden>
+
+            <div class="checkout-result-icon">
+                <i class="fa-solid fa-check" aria-hidden="true"></i>
+            </div>
+
+            <p class="section-eyebrow">ORDER CONFIRMED</p>
+
+            <h2 id="checkout-success-title">
                 Your Order Has Been Placed
             </h2>
 
-
             <p class="checkout-result-message">
-                Thank you for your purchase.
-                Your order has been successfully placed.
+                Thank you for choosing ELANORA.
+                Your payment has been verified successfully.
             </p>
-
 
             <p class="checkout-order-number">
-                Order
-                <strong id="success-order-number"></strong>
+                Order <strong id="success-order-number"></strong>
             </p>
 
-
             <div class="checkout-result-actions">
-
-                <a
-                    href="#"
-                    id="view-order-button"
-                    class="checkout-button checkout-button-primary"
-                >
-                    View Order
+                <a href="#" id="view-order-button" class="checkout-button checkout-button-primary">
+                    View order
                 </a>
 
-
-                <a
-                    href="/shop/"
-                    class="checkout-button checkout-button-secondary"
-                >
-                    Continue Shopping
+                <a href="/shop/" class="checkout-outline-button">
+                    Continue shopping
                 </a>
-
             </div>
-
         </section>
 
     </div>
-
 </section>
-
 {% endblock %}
 
-
 {% block scripts %}
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script src="{% static 'js/checkout.js' %}"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="{% static 'js/checkout.js' %}"></script>
 {% endblock %}

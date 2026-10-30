@@ -51,6 +51,7 @@ class Address(models.Model):
         auto_now=True,
     )
 
+
     class Meta:
         constraints = [
             models.UniqueConstraint(

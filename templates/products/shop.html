@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% load static %}
 
@@ -5,13 +6,17 @@
 Shop | Ornament
 {% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/shop.css' %}">
+{% endblock %}
+
 {% block content %}
 
-<!-- Shop Header -->
+<!-- ========================================
+     SHOP HEADER
+======================================== -->
 <section class="shop-header">
-
     <div class="container">
-
         <div class="shop-header-content">
 
             <span class="section-eyebrow">
@@ -29,28 +34,31 @@ Shop | Ornament
             </p>
 
         </div>
-
     </div>
-
 </section>
 
 
-<!-- Shop Content -->
+<!-- ========================================
+     SHOP CONTENT
+======================================== -->
 <section class="shop-content-section">
-
     <div class="container">
 
         <div class="row g-5">
 
-            <!-- Filters -->
+            <!-- ========================================
+                 FILTER SIDEBAR
+            ======================================== -->
             <aside class="col-lg-3">
 
-                <div class="shop-filters">
+                <div
+                    class="shop-filters"
+                    id="shop-filters-panel"
+                >
 
                     <div class="filter-heading">
                         <h2>Filter</h2>
                     </div>
-
 
                     <!-- Search -->
                     <div class="filter-group">
@@ -60,14 +68,14 @@ Shop | Ornament
                         </label>
 
                         <input
-                            type="text"
+                            type="search"
                             id="shop-search"
                             class="shop-filter-input"
                             placeholder="Search jewellery..."
+                            autocomplete="off"
                         >
 
                     </div>
-
 
                     <!-- Categories -->
                     <div class="filter-group">
@@ -81,25 +89,24 @@ Shop | Ornament
                             id="category-options"
                         >
 
+                            <!-- Default category -->
                             <label class="category-option">
-
                                 <input
                                     type="radio"
                                     name="category"
                                     value=""
                                     checked
                                 >
-
                                 <span>All</span>
-
                             </label>
+
+                            <!-- Additional categories are loaded by shop.js -->
 
                         </div>
 
                     </div>
 
-
-                    <!-- Price -->
+                    <!-- Price Range -->
                     <div class="filter-group">
 
                         <label>
@@ -113,6 +120,9 @@ Shop | Ornament
                                 id="min-price"
                                 class="shop-filter-input"
                                 placeholder="Min"
+                                min="0"
+                                step="1"
+                                aria-label="Minimum price"
                             >
 
                             <input
@@ -120,59 +130,183 @@ Shop | Ornament
                                 id="max-price"
                                 class="shop-filter-input"
                                 placeholder="Max"
+                                min="0"
+                                step="1"
+                                aria-label="Maximum price"
                             >
 
                         </div>
 
                     </div>
 
+                    <!-- Mobile Filter Actions -->
+                    <div class="shop-filter-actions">
 
-                    <!-- Filter button -->
-                    <!-- <button
-                        type="button"
-                        class="luxury-btn shop-filter-button"
-                    >
-                        Apply Filters
-                    </button> -->
+                        <button
+                            type="button"
+                            class="shop-clear-filters"
+                            id="shop-clear-filters"
+                        >
+                            Clear all
+                        </button>
+
+                        <button
+                            type="button"
+                            class="shop-apply-filters"
+                            id="shop-apply-filters"
+                        >
+                            Show products
+                        </button>
+
+                    </div>
 
                 </div>
 
             </aside>
 
 
-            <!-- Products -->
+            <!-- ========================================
+                 PRODUCT LISTING
+            ======================================== -->
             <div class="col-lg-9">
 
                 <div class="shop-products">
 
-                    <!-- Toolbar -->
+                    <!-- Product Toolbar -->
                     <div class="shop-toolbar">
 
-                        <p class="shop-product-count">
+                        <p
+                            class="shop-product-count"
+                            aria-live="polite"
+                        >
                             0 Products
                         </p>
 
-                        <select
-                            class="shop-order-select"
-                            aria-label="Sort products"
-                        >
-                            <option value="">
-                                Sort by
-                            </option>
+                        <!-- Custom Sort Dropdown -->
+                        <div class="shop-sort">
 
-                            <option value="price">
-                                Price: Low to High
-                            </option>
+                            <button
+                                type="button"
+                                class="shop-sort-trigger"
+                                id="shop-sort-trigger"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                aria-controls="shop-sort-menu"
+                            >
+                                <span class="shop-sort-label">
 
-                            <option value="-price">
-                                Price: High to Low
-                            </option>
+                                    <span class="shop-sort-caption">
+                                        Sort by
+                                    </span>
 
-                            <option value="name">
-                                Name: A to Z
-                            </option>
+                                    <span id="shop-sort-current">
+                                        Featured
+                                    </span>
 
-                        </select>
+                                </span>
+
+                                <i
+                                    class="bi bi-chevron-down"
+                                    aria-hidden="true"
+                                ></i>
+
+                            </button>
+
+
+                            <!-- Sort Options -->
+                            <div
+                                class="shop-sort-menu"
+                                id="shop-sort-menu"
+                                hidden
+                            >
+
+                                <button
+                                    type="button"
+                                    class="shop-sort-option is-selected"
+                                    data-sort=""
+                                    aria-pressed="true"
+                                >
+                                    <span>Featured</span>
+
+                                    <i
+                                        class="bi bi-check2"
+                                        aria-hidden="true"
+                                    ></i>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="shop-sort-option"
+                                    data-sort="price"
+                                    aria-pressed="false"
+                                >
+                                    <span>Price: Low to High</span>
+
+                                    <i
+                                        class="bi bi-check2"
+                                        aria-hidden="true"
+                                    ></i>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="shop-sort-option"
+                                    data-sort="-price"
+                                    aria-pressed="false"
+                                >
+                                    <span>Price: High to Low</span>
+
+                                    <i
+                                        class="bi bi-check2"
+                                        aria-hidden="true"
+                                    ></i>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="shop-sort-option"
+                                    data-sort="name"
+                                    aria-pressed="false"
+                                >
+                                    <span>Name: A to Z</span>
+
+                                    <i
+                                        class="bi bi-check2"
+                                        aria-hidden="true"
+                                    ></i>
+                                </button>
+
+                            </div>
+
+
+                            <!--
+                                Keep this select for compatibility
+                                with the existing shop.js.
+                                CSS will visually hide it.
+                            -->
+                            <select
+                                class="shop-order-select"
+                                aria-label="Sort products"
+                                tabindex="-1"
+                                aria-hidden="true"
+                            >
+                                <option value="">Featured</option>
+
+                                <option value="price">
+                                    Price: Low to High
+                                </option>
+
+                                <option value="-price">
+                                    Price: High to Low
+                                </option>
+
+                                <option value="name">
+                                    Name: A to Z
+                                </option>
+
+                            </select>
+
+                        </div>
 
                     </div>
 
@@ -182,6 +316,7 @@ Shop | Ornament
                         class="row g-4"
                         id="product-grid"
                     >
+                        <!-- Products are rendered by shop.js -->
                     </div>
 
                 </div>
@@ -191,11 +326,59 @@ Shop | Ornament
         </div>
 
     </div>
-
 </section>
+
+
+<!-- ========================================
+     MOBILE FILTER BACKDROP
+======================================== -->
+<div
+    class="shop-filter-backdrop"
+    id="shop-filter-backdrop"
+    aria-hidden="true"
+></div>
+
+
+<!-- ========================================
+     MOBILE BOTTOM FILTER BAR
+======================================== -->
+<div class="shop-mobile-action-bar">
+
+    <button
+        type="button"
+        id="shop-open-filters"
+        class="shop-mobile-action"
+        aria-controls="shop-filters-panel"
+        aria-expanded="false"
+    >
+        <i
+            class="bi bi-sliders"
+            aria-hidden="true"
+        ></i>
+
+        <span>Filter</span>
+
+        <!-- Shows how many filter types are active -->
+        <span
+            id="shop-filter-count"
+            class="shop-filter-count"
+            aria-label="Active filter count"
+            hidden
+        >
+            0
+        </span>
+
+    </button>
+
+</div>
 
 {% endblock %}
 
+
+<!-- ========================================
+     PAGE SCRIPTS
+======================================== -->
 {% block scripts %}
-    <script src="{% static 'js/shop.js' %}"></script>
+<script src="{% static 'js/shop.js' %}"></script>
+<script src="{% static 'js/shop-mobile.js' %}"></script>
 {% endblock %}

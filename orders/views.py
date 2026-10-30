@@ -21,6 +21,12 @@ from orders.serializers import (
 from products.models import Product, ProductVariant
 from django.utils import timezone
 
+from payments.models import Payment
+from payments.services import (
+    RazorpayService,
+    RazorpayServiceError,
+)
+
 class PlaceOrderAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -77,7 +83,7 @@ class PlaceOrderAPIView(APIView):
                     continue
 
                 if payment.expires_at:
-                    
+
 
                     if payment.expires_at <= timezone.now():
                         continue
@@ -189,7 +195,7 @@ class PlaceOrderAPIView(APIView):
                     OrderSerializer(existing_order).data,
                     status=status.HTTP_200_OK,
                 )
-            
+
             total_amount = Decimal("0.00")
             validated_items = []
 
@@ -357,7 +363,7 @@ class PlaceOrderAPIView(APIView):
                     item["product"].save(
                         update_fields=["stock"]
                     )
-                    
+
             # -----------------------------------------------------
             # 16. Clear cart after successful order creation
             # -----------------------------------------------------
@@ -412,13 +418,17 @@ class OrderDetailAPIView(APIView):
             status=status.HTTP_200_OK,
         )
 
+
 class CancelOrderAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
-        # ---------------------------------------------------------
-        # 1. Find the order belonging to the authenticated user
-        # ---------------------------------------------------------
+        cancellable_statuses = {
+            Order.OrderStatus.PENDING,
+            Order.OrderStatus.CONFIRMED,
+        }
+
+        # Find the order belonging to the authenticated user.
         try:
             order = Order.objects.get(
                 id=pk,
@@ -430,31 +440,31 @@ class CancelOrderAPIView(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        # ---------------------------------------------------------
-        # 2. Check whether the order can be cancelled
-        # ---------------------------------------------------------
-        cancellable_statuses = {
-            Order.OrderStatus.PENDING,
-            Order.OrderStatus.CONFIRMED,
-        }
+        # Get the payment ID before opening the transaction.
+        payment_id = (
+            Payment.objects
+            .filter(order_id=order.pk)
+            .values_list("pk", flat=True)
+            .first()
+        )
 
-        if order.order_status not in cancellable_statuses:
-            return Response(
-                {
-                    "detail": (
-                        "This order cannot be cancelled "
-                        "in its current status."
-                    )
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        refund_payment_id = None
+        refund_amount = None
 
-        # ---------------------------------------------------------
-        # 3. Start database transaction
-        # ---------------------------------------------------------
+        # -------------------------------------------------
+        # 1. Reserve the cancellation/refund attempt.
+        #    Lock payment first, then order.
+        # -------------------------------------------------
         with transaction.atomic():
+            payment = None
 
-            # Re-fetch and lock the order
+            if payment_id is not None:
+                payment = (
+                    Payment.objects
+                    .select_for_update()
+                    .get(pk=payment_id)
+                )
+
             order = (
                 Order.objects
                 .select_for_update()
@@ -464,9 +474,6 @@ class CancelOrderAPIView(APIView):
                 )
             )
 
-            # -----------------------------------------------------
-            # 4. Check status again after acquiring the lock
-            # -----------------------------------------------------
             if order.order_status not in cancellable_statuses:
                 return Response(
                     {
@@ -478,71 +485,206 @@ class CancelOrderAPIView(APIView):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            # -----------------------------------------------------
-            # 5. Get order items
-            # -----------------------------------------------------
-            order_items = order.items.select_related(
-                "product",
-                "variant",
-            )
-
-            # -----------------------------------------------------
-            # 6. Restore stock
-            # -----------------------------------------------------
-            for order_item in order_items:
-
-                if order_item.variant_id:
-
-                    variant = (
-                        ProductVariant.objects
-                        .select_for_update()
-                        .get(
-                            pk=order_item.variant_id
+            if (
+                payment
+                and payment.refund_status
+                in {
+                    Payment.RefundStatus.PENDING,
+                    Payment.RefundStatus.PROCESSING,
+                    Payment.RefundStatus.REFUNDED,
+                    Payment.RefundStatus.UNKNOWN,
+                    Payment.RefundStatus.FAILED,
+                }
+            ):
+                return Response(
+                    {
+                        "detail": (
+                            "A refund has already been attempted "
+                            "or requires review. Please contact support."
                         )
+                    },
+                    status=status.HTTP_409_CONFLICT,
+                )
+
+            if (
+                payment
+                and payment.status == Payment.PaymentStatus.PAID
+            ):
+                if not payment.razorpay_payment_id:
+                    return Response(
+                        {
+                            "detail": (
+                                "Payment information is incomplete. "
+                                "Please contact support."
+                            )
+                        },
+                        status=status.HTTP_400_BAD_REQUEST,
                     )
 
-                    variant.stock += order_item.quantity
+                # Reserve the refund attempt before calling Razorpay.
+                payment.refund_status = Payment.RefundStatus.PROCESSING
+                payment.refund_error = ""
+                payment.refund_updated_at = timezone.now()
+                payment.save(
+                    update_fields=[
+                        "refund_status",
+                        "refund_error",
+                        "refund_updated_at",
+                        "updated_at",
+                    ]
+                )
 
-                    variant.save(
-                        update_fields=["stock"]
+                refund_payment_id = payment.razorpay_payment_id
+                refund_amount = payment.amount
+
+        # -------------------------------------------------
+        # 2. Call Razorpay OUTSIDE the database transaction.
+        # -------------------------------------------------
+        refund_result = None
+        refund_error = ""
+
+        if refund_payment_id:
+            try:
+                refund_result = RazorpayService().refund_payment(
+                    refund_payment_id,
+                    refund_amount,
+                )
+            except RazorpayServiceError:
+                # The outcome may be uncertain. Never retry blindly.
+                refund_error = (
+                    "Refund outcome could not be confirmed. "
+                    "Reconciliation is required."
+                )
+
+        # Determine the refund outcome without assuming success.
+        final_refund_status = None
+        refund_id = None
+
+        if refund_payment_id:
+            if not isinstance(refund_result, dict):
+                final_refund_status = Payment.RefundStatus.UNKNOWN
+
+                if not refund_error:
+                    refund_error = (
+                        "Razorpay returned an invalid refund response. "
+                        "Reconciliation is required."
+                    )
+            else:
+                refund_id = refund_result.get("id")
+                gateway_status = refund_result.get("status")
+
+                if (
+                    refund_id
+                    and gateway_status in {"processed", "completed"}
+                ):
+                    final_refund_status = Payment.RefundStatus.REFUNDED
+
+                elif refund_id and gateway_status == "pending":
+                    final_refund_status = Payment.RefundStatus.PROCESSING
+
+                elif gateway_status in {"failed", "cancelled"}:
+                    final_refund_status = Payment.RefundStatus.FAILED
+                    refund_error = (
+                        f"Razorpay refund status: {gateway_status}"
                     )
 
                 else:
+                    final_refund_status = Payment.RefundStatus.UNKNOWN
+                    refund_error = (
+                        "Refund status or refund ID could not be confirmed. "
+                        "Reconciliation is required."
+                    )
 
+        # -------------------------------------------------
+        # 3. Save the outcome and cancel the order atomically.
+        # -------------------------------------------------
+        with transaction.atomic():
+            payment = None
+
+            if payment_id is not None:
+                payment = (
+                    Payment.objects
+                    .select_for_update()
+                    .get(pk=payment_id)
+                )
+
+            order = (
+                Order.objects
+                .select_for_update()
+                .get(
+                    id=pk,
+                    user=request.user,
+                )
+            )
+
+            # Do not restore stock twice.
+            if order.order_status not in cancellable_statuses:
+                return Response(
+                    {
+                        "detail": (
+                            "The order status changed during cancellation. "
+                            "Please check the current order status."
+                        )
+                    },
+                    status=status.HTTP_409_CONFLICT,
+                )
+
+            if payment and final_refund_status:
+                payment.refund_status = final_refund_status
+                payment.razorpay_refund_id = refund_id
+                payment.refund_error = refund_error
+                payment.refund_updated_at = timezone.now()
+
+                if final_refund_status == Payment.RefundStatus.REFUNDED:
+                    payment.status = Payment.PaymentStatus.REFUNDED
+                    order.payment_status = Order.PaymentStatus.REFUNDED
+
+                payment.save(
+                    update_fields=[
+                        "status",
+                        "refund_status",
+                        "razorpay_refund_id",
+                        "refund_error",
+                        "refund_updated_at",
+                        "updated_at",
+                    ]
+                )
+
+            # Restore stock only while transitioning this order
+            # from a cancellable state to CANCELLED.
+            order_items = order.items.all()
+
+            for order_item in order_items:
+                if order_item.variant_id:
+                    variant = (
+                        ProductVariant.objects
+                        .select_for_update()
+                        .get(pk=order_item.variant_id)
+                    )
+                    variant.stock += order_item.quantity
+                    variant.save(update_fields=["stock"])
+                else:
                     product = (
                         Product.objects
                         .select_for_update()
-                        .get(
-                            pk=order_item.product_id
-                        )
+                        .get(pk=order_item.product_id)
                     )
-
                     product.stock += order_item.quantity
+                    product.save(update_fields=["stock"])
 
-                    product.save(
-                        update_fields=["stock"]
-                    )
-
-            # -----------------------------------------------------
-            # 7. Mark order as cancelled
-            # -----------------------------------------------------
             order.order_status = Order.OrderStatus.CANCELLED
-
             order.save(
                 update_fields=[
                     "order_status",
+                    "payment_status",
                     "updated_at",
                 ]
             )
 
-        # ---------------------------------------------------------
-        # 8. Return updated order
-        # ---------------------------------------------------------
         return Response(
             OrderSerializer(order).data,
             status=status.HTTP_200_OK,
         )
-    
 
 class UpdateOrderStatusAPIView(APIView):
     permission_classes = [IsAdminUser]
@@ -578,7 +720,7 @@ class UpdateOrderStatusAPIView(APIView):
             OrderSerializer(order).data,
             status=status.HTTP_200_OK,
         )
-    
+
 
 from django.shortcuts import render
 

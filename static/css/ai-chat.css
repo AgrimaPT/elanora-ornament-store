@@ -73,8 +73,7 @@
     visibility: hidden;
 
     transform:
-        translateY(15px)
-        scale(0.97);
+        translateY(15px) scale(0.97);
 
     transition:
         opacity 0.25s ease,
@@ -90,8 +89,7 @@
     visibility: visible;
 
     transform:
-        translateY(0)
-        scale(1);
+        translateY(0) scale(1);
 }
 
 
@@ -547,4 +545,392 @@
 
 .ai-product-card:hover .ai-product-view i {
     transform: translateX(3px);
+}
+
+
+/* =========================================================
+   FLOATING CHAT BUTTON
+   ========================================================= */
+
+.ai-chat-toggle {
+    width: 62px;
+    height: 62px;
+
+    border: 1px solid rgba(184, 155, 94, 0.65);
+    border-radius: 50%;
+
+    background: var(--color-dark);
+    color: var(--color-gold);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 1.65rem;
+
+    box-shadow:
+        0 8px 24px rgba(43, 37, 32, 0.25),
+        0 0 0 5px rgba(184, 155, 94, 0.10);
+
+    transition: all 0.3s ease;
+}
+
+.ai-chat-toggle:hover {
+    transform: translateY(-4px);
+
+    color: var(--color-white);
+
+    box-shadow:
+        0 12px 30px rgba(43, 37, 32, 0.3),
+        0 0 0 6px rgba(184, 155, 94, 0.14);
+}
+
+.ai-chat-toggle:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 5px;
+}
+
+@media (max-width: 575.98px) {
+    .ai-chat-toggle {
+        width: 56px;
+        height: 56px;
+    }
+}
+
+
+
+/* =========================================================
+   ELANORA — REFINED AI SHOPPING ASSISTANT
+   ========================================================= */
+
+/* Chat window */
+.ai-chat-window {
+    width: 380px;
+    max-width: calc(100vw - 32px);
+
+    border: 1px solid rgba(184, 155, 94, 0.35);
+    border-radius: 12px;
+
+    background: var(--color-white);
+
+    box-shadow:
+        0 18px 55px rgba(43, 37, 32, 0.20),
+        0 3px 12px rgba(43, 37, 32, 0.06);
+}
+
+/* Chat header */
+.ai-chat-header {
+    position: relative;
+
+    padding: 21px 20px;
+
+    background:
+        linear-gradient(135deg,
+            var(--color-dark),
+            var(--color-espresso));
+
+    color: var(--color-white);
+}
+
+/* Small gold accent */
+.ai-chat-header::after {
+    content: "";
+
+    position: absolute;
+
+    left: 20px;
+    bottom: 0;
+
+    width: 42px;
+    height: 2px;
+
+    background: var(--color-gold);
+}
+
+.ai-chat-title {
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 1.12rem;
+    font-weight: 500;
+
+    letter-spacing: 0.025em;
+}
+
+.ai-chat-subtitle {
+    margin-top: 5px;
+
+    color: rgba(239, 232, 220, 0.82);
+
+    font-size: 0.73rem;
+    letter-spacing: 0.035em;
+}
+
+.ai-chat-close {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    color: var(--color-champagne);
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.ai-chat-close:hover {
+    background: rgba(255, 255, 255, 0.09);
+    color: var(--color-gold);
+}
+
+/* Messages area */
+.ai-chat-messages {
+    height: 370px;
+
+    padding: 22px 17px;
+
+    background:
+        linear-gradient(180deg,
+            #FAF8F4 0%,
+            var(--color-ivory) 100%);
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-champagne) transparent;
+}
+
+/* AI message */
+.ai-message {
+    margin-bottom: 16px;
+}
+
+.ai-message-bubble {
+    max-width: 88%;
+
+    padding: 13px 15px;
+
+    background: var(--color-white);
+
+    border: 1px solid rgba(184, 155, 94, 0.22);
+    border-radius: 3px 13px 13px 13px;
+
+    color: var(--color-espresso);
+
+    font-size: 0.87rem;
+    line-height: 1.65;
+
+    box-shadow: 0 3px 12px rgba(43, 37, 32, 0.045);
+}
+
+/* Customer message */
+.user-message {
+    margin-bottom: 16px;
+}
+
+.user-message-bubble {
+    max-width: 85%;
+
+    padding: 12px 15px;
+
+    background: var(--color-dark);
+
+    border: 1px solid rgba(184, 155, 94, 0.18);
+    border-radius: 13px 3px 13px 13px;
+
+    color: var(--color-white);
+
+    font-size: 0.87rem;
+    line-height: 1.65;
+
+    box-shadow: 0 3px 10px rgba(43, 37, 32, 0.10);
+}
+
+/* Input area */
+.ai-chat-input-area {
+    padding: 15px;
+
+    background: var(--color-white);
+
+    border-top: 1px solid rgba(184, 155, 94, 0.18);
+}
+
+#aiChatForm {
+    gap: 9px;
+    align-items: stretch;
+}
+
+.ai-chat-input {
+    min-height: 45px;
+
+    padding: 11px 14px;
+
+    border: 1px solid #E8E0D3;
+    border-radius: 5px;
+
+    background: #FAF8F4;
+
+    color: var(--color-espresso);
+
+    font-size: 0.85rem;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.ai-chat-input:focus {
+    border-color: var(--color-gold);
+
+    background: var(--color-white);
+
+    box-shadow: 0 0 0 3px rgba(184, 155, 94, 0.10);
+}
+
+.ai-chat-input::placeholder {
+    color: #958A7D;
+}
+
+.ai-chat-send {
+    flex: 0 0 46px;
+
+    width: 46px;
+    min-height: 45px;
+
+    border: 1px solid var(--color-dark);
+    border-radius: 5px;
+
+    background: var(--color-dark);
+    color: var(--color-gold);
+
+    font-size: 1rem;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.ai-chat-send:hover {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+
+    color: var(--color-dark);
+
+    transform: translateY(-1px);
+}
+
+/* Typing indicator */
+.ai-typing {
+    padding: 3px 2px;
+    gap: 5px;
+}
+
+.ai-typing span {
+    width: 6px;
+    height: 6px;
+}
+
+/* Product recommendations */
+.ai-product-cards {
+    gap: 12px;
+    margin-top: 13px;
+}
+
+.ai-product-card {
+    border: 1px solid rgba(184, 155, 94, 0.25);
+    border-radius: 8px;
+
+    background: var(--color-white);
+
+    box-shadow: 0 3px 12px rgba(43, 37, 32, 0.055);
+}
+
+.ai-product-card:hover {
+    border-color: var(--color-gold);
+
+    box-shadow: 0 8px 20px rgba(43, 37, 32, 0.10);
+
+    transform: translateY(-2px);
+}
+
+.ai-product-image {
+    height: 175px;
+
+    background: var(--color-champagne);
+}
+
+.ai-product-info {
+    padding: 14px 15px 15px;
+}
+
+.ai-product-name {
+    margin-bottom: 7px;
+
+    font-size: 1rem;
+    font-weight: 500;
+
+    line-height: 1.4;
+}
+
+.ai-product-price {
+    color: #9B7C42;
+
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.ai-product-variant {
+    font-size: 0.78rem;
+    line-height: 1.5;
+}
+
+.ai-product-view {
+    margin-top: 12px;
+
+    color: #8C7855;
+
+    font-size: 0.68rem;
+    letter-spacing: 0.09em;
+}
+
+/* Mobile refinement */
+@media (max-width: 575.98px) {
+    .ai-chat-window {
+        width: calc(100vw - 32px);
+
+        border-radius: 10px;
+    }
+
+    .ai-chat-header {
+        padding: 18px 17px;
+    }
+
+    .ai-chat-messages {
+        height: 340px;
+
+        padding: 18px 14px;
+    }
+
+    .ai-chat-input-area {
+        padding: 12px;
+    }
+
+    .ai-product-image {
+        height: 155px;
+    }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+
+    .ai-chat-window,
+    .ai-chat-toggle,
+    .ai-chat-close,
+    .ai-chat-send,
+    .ai-product-card {
+        transition: none;
+    }
+
+    .ai-typing span {
+        animation: none;
+    }
 }

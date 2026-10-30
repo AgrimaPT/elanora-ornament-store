@@ -20,156 +20,158 @@ from payments.serializers import (
     VerifyPaymentSerializer,
 )
 from payments.services import (
+    LateCaptureRefundService,
     RazorpayService,
     RazorpayServiceError,
 )
 
-
 class CreatePaymentAPIView(APIView):
-
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-
-        
-
         serializer = CreatePaymentSerializer(
             data=request.data,
-            context={
-                "request": request,
-            },
+            context={"request": request},
         )
+        serializer.is_valid(raise_exception=True)
+        order = serializer.validated_data["order_id"]
 
-        serializer.is_valid(
-            raise_exception=True
-        )
-
-        order = serializer.validated_data[
-            "order_id"
-        ]
-
-        existing_payment = (
-            Payment.objects
-            .filter(order=order)
-            .first()
-        )
-
-        # ---------------------------------------------------------
-        # Reuse existing Razorpay payment for an unpaid order
-        # ---------------------------------------------------------
-        if (
-            existing_payment
-            and existing_payment.razorpay_order_id
-        ):
-
-            return Response(
-                {
-                    "payment_id": existing_payment.id,
-                    "order_id": order.id,
-                    "order_number": (
-                        order.order_number
-                    ),
-                    "razorpay_order_id": (
-                        existing_payment
-                        .razorpay_order_id
-                    ),
-                    "amount": str(
-                        existing_payment.amount
-                    ),
-                    "amount_in_paise": (
-                        RazorpayService
-                        .amount_to_paise(
-                            existing_payment.amount
-                        )
-                    ),
-                    "currency": "INR",
-                    "key_id": (
-                        settings.RAZORPAY_KEY_ID
-                    ),
-                    "expires_at": (
-                        existing_payment.expires_at
-                    ),
-                },
-                status=status.HTTP_200_OK,
+        # Lock the order while checking payment eligibility.
+        with transaction.atomic():
+            order = (
+                Order.objects
+                .select_for_update()
+                .get(pk=order.pk)
             )
 
-        # ---------------------------------------------------------
-        # Create a new Razorpay order
-        # ---------------------------------------------------------
-        service = RazorpayService()
+            if order.payment_status == Order.PaymentStatus.PAID:
+                return Response(
+                    {"detail": "This order has already been paid."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
-        try:
+            if order.order_status != Order.OrderStatus.PENDING:
+                return Response(
+                    {"detail": "This order is no longer eligible for payment."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
-            razorpay_order = (
-                service.create_order(order)
+            existing_payment = (
+                Payment.objects
+                .select_for_update()
+                .filter(order=order)
+                .first()
             )
 
-        except RazorpayServiceError:
-
-            return Response(
-                {
-                    "detail": (
-                        "Unable to create payment "
-                        "order. Please try again."
+            if existing_payment:
+                if existing_payment.status == Payment.PaymentStatus.PAID:
+                    return Response(
+                        {"detail": "This order has already been paid."},
+                        status=status.HTTP_400_BAD_REQUEST,
                     )
-                },
-                status=status.HTTP_502_BAD_GATEWAY,
+
+                if existing_payment.status == Payment.PaymentStatus.EXPIRED:
+                    return Response(
+                        {
+                            "detail": (
+                                "This payment has expired. "
+                                "Please start a new checkout."
+                            )
+                        },
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+                if (
+                    existing_payment.expires_at
+                    and existing_payment.expires_at <= timezone.now()
+                ):
+                    return Response(
+                        {
+                            "detail": (
+                                "This payment has expired. "
+                                "Please start a new checkout."
+                            )
+                        },
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+                if existing_payment.status == Payment.PaymentStatus.FAILED:
+                    return Response(
+                        {
+                            "detail": (
+                                "This payment attempt failed. "
+                                "Please check its status before retrying."
+                            )
+                        },
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+                if existing_payment.razorpay_order_id:
+                    return Response(
+                        {
+                            "payment_id": existing_payment.id,
+                            "order_id": order.id,
+                            "order_number": order.order_number,
+                            "razorpay_order_id": (
+                                existing_payment.razorpay_order_id
+                            ),
+                            "amount": str(existing_payment.amount),
+                            "amount_in_paise": (
+                                RazorpayService.amount_to_paise(
+                                    existing_payment.amount
+                                )
+                            ),
+                            "currency": "INR",
+                            "key_id": settings.RAZORPAY_KEY_ID,
+                            "expires_at": existing_payment.expires_at,
+                        },
+                        status=status.HTTP_200_OK,
+                    )
+
+            # Create the Razorpay order while no local payment exists.
+            service = RazorpayService()
+
+            try:
+                razorpay_order = service.create_order(order)
+            except RazorpayServiceError:
+                return Response(
+                    {
+                        "detail": (
+                            "Unable to create payment order. "
+                            "Please try again."
+                        )
+                    },
+                    status=status.HTTP_502_BAD_GATEWAY,
+                )
+
+            expires_at = (
+                timezone.now()
+                + timedelta(
+                    minutes=settings.PAYMENT_EXPIRY_MINUTES
+                )
             )
 
-        # ---------------------------------------------------------
-        # Calculate payment expiration
-        # ---------------------------------------------------------
-        expires_at = (
-            timezone.now()
-            + timedelta(
-                minutes=settings.PAYMENT_EXPIRY_MINUTES
+            payment = Payment.objects.create(
+                order=order,
+                razorpay_order_id=razorpay_order["id"],
+                amount=order.total_amount,
+                status=Payment.PaymentStatus.CREATED,
+                expires_at=expires_at,
             )
-        )
 
-        # ---------------------------------------------------------
-        # Create local Payment record
-        # ---------------------------------------------------------
-        payment = Payment.objects.create(
-            order=order,
-            razorpay_order_id=(
-                razorpay_order["id"]
-            ),
-            amount=order.total_amount,
-            status=(
-                Payment.PaymentStatus.CREATED
-            ),
-            expires_at=expires_at,
-        )
-
-        # ---------------------------------------------------------
-        # Return payment information
-        # ---------------------------------------------------------
         return Response(
             {
                 "payment_id": payment.id,
                 "order_id": order.id,
-                "order_number": (
-                    order.order_number
-                ),
-                "razorpay_order_id": (
-                    payment.razorpay_order_id
-                ),
-                "amount": str(
-                    payment.amount
-                ),
+                "order_number": order.order_number,
+                "razorpay_order_id": payment.razorpay_order_id,
+                "amount": str(payment.amount),
                 "amount_in_paise": (
-                    RazorpayService
-                    .amount_to_paise(
-                        payment.amount
-                    )
+                    RazorpayService.amount_to_paise(payment.amount)
                 ),
                 "currency": "INR",
-                "key_id": (
-                    settings.RAZORPAY_KEY_ID
-                ),
-                "expires_at": (
-                    payment.expires_at
-                ),
+                "key_id": settings.RAZORPAY_KEY_ID,
+                "expires_at": payment.expires_at,
             },
             status=status.HTTP_201_CREATED,
         )
@@ -454,6 +456,22 @@ class VerifyPaymentAPIView(APIView):
                     },
                     status=status.HTTP_400_BAD_REQUEST,
                 )
+
+
+            # Prevent finalizing a payment after its deadline.
+            if (
+                payment.expires_at is not None
+                and payment.expires_at <= timezone.now()
+            ):
+                return Response(
+                    {
+                        "detail": (
+                            "This payment has expired."
+                        )
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
 
             # -----------------------------------------------------
             # 8.6 Get order items
@@ -874,37 +892,78 @@ class RazorpayWebhookAPIView(APIView):
                     status=status.HTTP_200_OK,
                 )
 
+
             # -----------------------------------------------------
-            # 12.5 Do not resurrect expired payment
+            # 12.5 Handle a late capture for an expired payment
             # -----------------------------------------------------
             if (
                 payment.status
                 == Payment.PaymentStatus.EXPIRED
             ):
+                recorded = (
+                    LateCaptureRefundService.record_late_capture(
+                        payment_id=payment.id,
+                        razorpay_payment_id=razorpay_payment_id,
+                    )
+                )
+
+                if recorded:
+                    # Initiate the refund only after the webhook
+                    # transaction has committed.
+                    transaction.on_commit(
+                        lambda payment_id=payment.id:
+                            LateCaptureRefundService.process_refund(
+                                payment_id
+                            )
+                    )
 
                 return Response(
                     {
                         "detail": (
-                            "Payment received for "
-                            "an expired payment."
+                            "Late payment received. "
+                            "Refund processing has been scheduled."
+                            if recorded
+                            else
+                            "Payment received for an expired payment."
                         )
                     },
                     status=status.HTTP_200_OK,
                 )
 
+
+
             # -----------------------------------------------------
-            # 12.6 Do not resurrect cancelled order
+            # 12.6 Handle a late capture for a cancelled order
             # -----------------------------------------------------
             if (
                 order.order_status
                 == Order.OrderStatus.CANCELLED
             ):
+                recorded = (
+                    LateCaptureRefundService.record_late_capture(
+                        payment_id=payment.id,
+                        razorpay_payment_id=razorpay_payment_id,
+                    )
+                )
+
+                if recorded:
+                    # Initiate the refund only after the outer
+                    # webhook transaction has committed.
+                    transaction.on_commit(
+                        lambda payment_id=payment.id:
+                            LateCaptureRefundService.process_refund(
+                                payment_id
+                            )
+                    )
 
                 return Response(
                     {
                         "detail": (
-                            "Payment received for "
-                            "a cancelled order."
+                            "Late payment received. "
+                            "Refund processing has been scheduled."
+                            if recorded
+                            else
+                            "Payment received for a cancelled order."
                         )
                     },
                     status=status.HTTP_200_OK,

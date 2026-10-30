@@ -5,14 +5,32 @@ from orders.models import Order, OrderItem
 from products.models import Product, ProductVariant
 
 
+
 class OrderProductSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
     class Meta:
         model = Product
         fields = (
             "id",
             "name",
             "slug",
+            "image",
         )
+
+    def get_image(self, obj):
+        request = self.context.get("request")
+        product_image = obj.images.first()
+
+        if not product_image or not product_image.image:
+            return None
+
+        image_url = product_image.image.url
+
+        if request:
+            return request.build_absolute_uri(image_url)
+
+        return image_url
 
 
 class OrderVariantSerializer(serializers.ModelSerializer):
@@ -64,6 +82,7 @@ class OrderShippingAddressSerializer(serializers.Serializer):
     )
 
 
+
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(
         many=True,
@@ -75,6 +94,13 @@ class OrderSerializer(serializers.ModelSerializer):
         read_only=True
     )
 
+    refund_status = serializers.CharField(
+        source="payment.refund_status",
+        read_only=True,
+        allow_null=True,
+        default=None,
+    )
+
     class Meta:
         model = Order
         fields = (
@@ -82,13 +108,13 @@ class OrderSerializer(serializers.ModelSerializer):
             "order_number",
             "order_status",
             "payment_status",
+            "refund_status",
             "total_amount",
             "shipping_address",
             "items",
             "created_at",
             "updated_at",
         )
-
 
 class PlaceOrderSerializer(serializers.Serializer):
     address_id = serializers.PrimaryKeyRelatedField(

@@ -1,122 +1,127 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}
-Login | Ornament
-{% endblock %}
+{% block title %}Login | ELANORA{% endblock %}
 
 {% block extra_css %}
 
-<link
-    rel="stylesheet"
-    href="{% static 'css/login.css' %}"
->
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
 {% endblock %}
 
 {% block content %}
 
 <section class="login-section">
 
-<div class="container">
+    <div class="container">
 
-    <div class="login-container">
+        <div class="login-container">
 
-        <div class="login-header">
+            <div class="login-header">
 
-            <span class="section-eyebrow">
-                WELCOME BACK
-            </span>
+                <span class="section-eyebrow">
+                    WELCOME BACK
+                </span>
 
-            <h1>
-                Login to your account.
-            </h1>
+                <h1>
+                    Login to your account.
+                </h1>
 
-            <p>
-                Sign in to continue your jewellery journey.
-            </p>
-
-        </div>
-
-
-        <form
-            id="login-form"
-            class="login-form"
-        >
-
-            <div class="login-field">
-
-                <label for="login-email">
-                    Email
-                </label>
-
-                <input
-                    type="email"
-                    id="login-email"
-                    name="email"
-                    placeholder="Enter your email"
-                    required
-                >
+                <p>
+                    Sign in to continue your jewellery journey.
+                </p>
 
             </div>
 
 
-            <div class="login-field">
+            <form id="login-form" class="login-form">
 
-                <label for="login-password">
-                    Password
-                </label>
+                <div class="login-field">
 
-                <input
-                    type="password"
-                    id="login-password"
-                    name="password"
-                    placeholder="Enter your password"
-                    required
-                >
+                    <label for="login-email">
+                        Email
+                    </label>
 
+                    <input type="email" id="login-email" name="email" placeholder="Enter your email"
+                        autocomplete="email" required>
+
+                </div>
+
+                <div class="login-field">
+                    <label for="login-password">Password</label>
+
+                    <div class="login-password-wrapper">
+                        <input type="password" id="login-password" name="password" placeholder="Enter your password"
+                            autocomplete="current-password" required>
+
+                        <button type="button" class="login-password-toggle" id="login-password-toggle"
+                            aria-label="Show password" aria-pressed="false">
+                            <svg class="login-eye-icon" viewBox="0 0 24 24" width="21" height="21" fill="none"
+                                stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
+                                aria-hidden="true">
+                                <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+
+
+                <div id="login-message" class="login-message">
+                </div>
+
+
+                <button type="submit" class="login-button" id="login-button">
+                    Login
+                </button>
+
+            </form>
+
+
+
+            <div class="login-register-link">
+                <p>
+                    <a href="{% url 'password_reset' %}">Forgot password?</a>
+                </p>
+                <p>
+                    Don't have an account?
+                    <a href="/register/">Create an account</a>
+                </p>
             </div>
 
-
-            <div
-                id="login-message"
-                class="login-message"
-            >
-            </div>
-
-
-            <button
-                type="submit"
-                class="login-button"
-                id="login-button"
-            >
-                Login
-            </button>
-
-        </form>
-
-
-        <div class="login-register-link">
-
-            <p>
-                Don't have an account?
-                <a href="/register/">
-                    Create an account
-                </a>
-            </p>
 
         </div>
 
     </div>
-
-</div>
 
 
 </section>
 
 {% endblock %}
 
-{% block scripts %}
 
+{% block scripts %}
 <script src="{% static 'js/login.js' %}"></script>
 
+<script>
+    const loginPassword = document.getElementById("login-password");
+    const loginPasswordToggle = document.getElementById("login-password-toggle");
+
+    if (loginPassword && loginPasswordToggle) {
+        loginPasswordToggle.addEventListener("click", function () {
+            const showPassword = loginPassword.type === "password";
+
+            loginPassword.type = showPassword ? "text" : "password";
+            loginPasswordToggle.setAttribute("aria-pressed", String(showPassword));
+            loginPasswordToggle.setAttribute(
+                "aria-label",
+                showPassword ? "Hide password" : "Show password"
+            );
+
+            loginPasswordToggle.innerHTML = showPassword
+                ? '<svg class="login-eye-icon" viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6a2 2 0 002.8 2.8"/><path d="M9.9 5.2A10.9 10.9 0 0112 5c6.4 0 10 7 10 7a16 16 0 01-3.1 3.9"/><path d="M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7a10 10 0 003.1-.5"/></svg>'
+                : '<svg class="login-eye-icon" viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>';
+        });
+    }
+</script>
 {% endblock %}

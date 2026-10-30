@@ -2,168 +2,170 @@
 {% load static %}
 
 {% block title %}
-Cart | Ornament
+Shopping Cart | ELANORA
 {% endblock %}
 
 {% block extra_css %}
-
 <link
     rel="stylesheet"
     href="{% static 'css/cart.css' %}"
 >
-
 {% endblock %}
 
 {% block content %}
-
 <section class="cart-section">
+    <div class="container">
 
+        <!-- Page Header -->
+        <header class="cart-header">
+            <span class="section-eyebrow">YOUR SELECTION</span>
+            <h1 class="cart-title">Shopping Cart</h1>
+            <p class="cart-subtitle">Review your chosen jewellery before proceeding to checkout.</p>
+        </header>
 
-<div class="container">
+        <!-- Cart Layout -->
+        <div class="cart-layout" id="cart-layout">
 
-    <!-- Page Header -->
+            <!-- Cart Items Container -->
+            <div class="cart-items-container">
 
-    <div class="cart-header">
+                <!-- Loading State -->
+                <div
+                    id="cart-loading"
+                    class="cart-state cart-loading"
+                    role="status"
+                    aria-live="polite"
+                >
+                    <div class="cart-loading-icon" aria-hidden="true">
+                        <i class="bi bi-gem"></i>
+                    </div>
+                    <p class="cart-loading-text">Loading your shopping bag...</p>
+                </div>
 
-        <span class="section-eyebrow">
-            YOUR CART
-        </span>
+                <!-- Error State -->
+                <div
+                    id="cart-error"
+                    class="cart-state cart-error"
+                    role="alert"
+                    hidden
+                >
+                    <div class="cart-error-icon" aria-hidden="true">
+                        <i class="bi bi-exclamation-circle"></i>
+                    </div>
+                    <h2 class="cart-error-title">Unable to load your cart</h2>
+                    <p id="cart-error-message" class="cart-error-message">
+                        We encountered an issue retrieving your items. Please try again.
+                    </p>
+                    <button
+                        type="button"
+                        id="cart-retry-button"
+                        class="cart-button cart-button-secondary"
+                    >
+                        Try Again
+                    </button>
+                </div>
 
-        <h1>
-            Shopping Cart
-        </h1>
+                <!-- Empty State -->
+                <div
+                    id="cart-empty"
+                    class="cart-state cart-empty"
+                    hidden
+                >
+                    <div class="cart-empty-icon" aria-hidden="true">
+                        <i class="bi bi-bag"></i>
+                    </div>
+                    <h2>Your shopping bag is empty</h2>
+                    <p>Discover timeless jewellery pieces to cherish or gift.</p>
+                    <a
+                        href="/shop/"
+                        class="cart-button cart-button-primary"
+                    >
+                        Explore the Collection
+                    </a>
+                </div>
 
-        <p>
-            Review your selected jewellery before checkout.
-        </p>
+                <!-- Live Cart Items List -->
+                <div
+                    id="cart-items"
+                    class="cart-items"
+                    role="list"
+                >
+                    <!-- Populated dynamically via cart.js -->
+                </div>
 
-    </div>
+                <!-- Continue Shopping link -->
+                <div
+                    id="cart-footer-actions"
+                    class="cart-footer-actions"
+                    hidden
+                >
+                    <a
+                        href="/shop/"
+                        class="cart-continue-link"
+                    >
+                        <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                        <span>Continue Shopping</span>
+                    </a>
+                </div>
 
-
-    <!-- Cart Layout -->
-
-    <div class="cart-layout">
-
-        <!-- Cart Items -->
-
-        <div class="cart-items-container">
-
-            <div
-                id="cart-loading"
-                class="cart-state"
-            >
-                Loading your cart...
             </div>
 
-
-            <div
-                id="cart-error"
-                class="cart-state cart-error"
+            <!-- Cart Summary Sidebar -->
+            <aside
+                class="cart-summary"
+                id="cart-summary"
+                aria-labelledby="cart-summary-heading"
             >
-            </div>
-
-
-            <div
-                id="cart-empty"
-                class="cart-state cart-empty"
-                hidden
-            >
-
-                <h2>
-                    Your cart is empty
+                <h2 id="cart-summary-heading" class="cart-summary-title">
+                    Order Summary
                 </h2>
 
-                <p>
-                    Discover something beautiful for your collection.
-                </p>
+                <div class="cart-summary-rows">
+                    <div class="cart-summary-row">
+                        <span>Subtotal</span>
+                        <span id="cart-subtotal">₹0</span>
+                    </div>
+
+                    <div class="cart-summary-row">
+                        <span>Shipping</span>
+                        <span class="cart-shipping-badge">Free</span>
+                    </div>
+                </div>
+
+                <div class="cart-summary-divider" role="separator"></div>
+
+                <div class="cart-summary-total">
+                    <span>Estimated Total</span>
+                    <strong id="cart-total">₹0</strong>
+                </div>
 
                 <a
-                    href="/shop/"
-                    class="cart-button cart-button-primary"
+                    href="/checkout/"
+                    id="cart-checkout-button"
+                    class="cart-button cart-button-primary cart-checkout-button"
                 >
-                    Browse Jewellery
+                    Proceed to Checkout
                 </a>
 
-            </div>
-
-
-            <div
-                id="cart-items"
-                class="cart-items"
-            >
-            </div>
+                <!-- Trust Reassurance Strip -->
+                <div class="cart-trust-reassurance">
+                    <div class="cart-trust-item">
+                        <i class="bi bi-shield-check" aria-hidden="true"></i>
+                        <span>Secure Checkout with Razorpay</span>
+                    </div>
+                    <div class="cart-trust-item">
+                        <i class="bi bi-box2-heart" aria-hidden="true"></i>
+                        <span>Complimentary Signature Packaging</span>
+                    </div>
+                </div>
+            </aside>
 
         </div>
 
-
-        <!-- Cart Summary -->
-
-        <aside class="cart-summary">
-
-            <h2>
-                Order Summary
-            </h2>
-
-            <div class="cart-summary-row">
-
-                <span>
-                    Subtotal
-                </span>
-
-                <span id="cart-subtotal">
-                    ₹0
-                </span>
-
-            </div>
-
-            <div class="cart-summary-row">
-
-                <span>
-                    Shipping
-                </span>
-
-                <span>
-                    Free
-                </span>
-
-            </div>
-
-            <div class="cart-summary-divider">
-            </div>
-
-            <div class="cart-summary-total">
-
-                <span>
-                    Total
-                </span>
-
-                <span id="cart-total">
-                    ₹0
-                </span>
-
-            </div>
-
-            <a
-                href="/checkout/"
-                class="cart-button cart-button-primary cart-checkout-button"
-            >
-                Proceed to Checkout
-            </a>
-
-        </aside>
-
     </div>
-
-</div>
-
 </section>
-
 {% endblock %}
 
 {% block scripts %}
-
-<script
-    src="{% static 'js/cart.js' %}">
-</script>
-
+<script src="{% static 'js/cart.js' %}"></script>
 {% endblock %}

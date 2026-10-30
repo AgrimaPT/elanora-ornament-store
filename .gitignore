@@ -2,7 +2,30 @@ venv/
 __pycache__/
 *.pyc
 db.sqlite3
+
+# Environment variables
 .env
+.env.*
+!.env.example
+
+# IDE settings
 .vscode/
 .idea/
+
+# Uploaded media
 media/
+
+# Collected static files
+staticfiles/
+
+# Local database backups and data exports
+*.backup
+*.dump
+*.sqlite3-*
+data-export*.json
+*.pre-deployment-backup
+media/
+
+# Temporary development backups
+*.before_cancel_refactor.py
+requirements.backup.txt

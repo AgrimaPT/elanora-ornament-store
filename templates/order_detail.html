@@ -1,299 +1,139 @@
 {% extends "base.html" %}
-
 {% load static %}
 
-
-{% block title %}
-    Order Details | Ornament Store
-{% endblock %}
-
+{% block title %}Order Details | ELANORA{% endblock %}
 
 {% block extra_css %}
-
-    <!-- Font Awesome -->
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    >
-
-    <!-- Orders CSS -->
-    <link
-        rel="stylesheet"
-        href="{% static 'css/orders.css' %}"
-    >
-
+<link rel="stylesheet" href="{% static 'css/orders.css' %}">
 {% endblock %}
-
 
 {% block content %}
-
-    <!-- =========================
-         ORDER DETAILS PAGE
-    ========================== -->
-
-    <section class="order-detail-page">
-
-        <div class="order-detail-section">
-
-            <div class="order-detail-container">
-
-
-                <!-- =========================
-                     BACK TO ORDERS
-                ========================== -->
-
-                <a
-                    href="/orders/"
-                    class="order-back-link"
-                >
-
-                    <i class="fa-solid fa-arrow-left"></i>
-
-                    <span>
-                        My Orders
-                    </span>
-
-                </a>
-
-
-                <!-- =========================
-                     LOADING STATE
-                ========================== -->
-
-                <div
-                    id="order-detail-loading"
-                    class="order-detail-state"
-                >
-
-                    <div
-                        class="spinner-border"
-                        role="status"
-                    >
-                        <span class="visually-hidden">
-                            Loading...
-                        </span>
-                    </div>
-
-                    <p>
-                        Loading order details...
-                    </p>
-
-                </div>
-
-
-                <!-- =========================
-                     ERROR STATE
-                ========================== -->
-
-                <div
-                    id="order-detail-error"
-                    class="order-detail-state"
-                    hidden
-                >
-
-                    <div class="order-detail-state-icon">
-
-                        <i
-                            class="fa-solid fa-circle-exclamation"
-                        ></i>
-
-                    </div>
-
-                    <h2>
-                        Unable to Load Order
-                    </h2>
-
-                    <p>
-                        We couldn't load this order.
-                        Please try again.
-                    </p>
-
-                    <button
-                        type="button"
-                        id="order-detail-retry-button"
-                        class="btn order-retry-button"
-                    >
-                        Try Again
-                    </button>
-
-                </div>
-
-
-                <!-- =========================
-                     ORDER CONTENT
-                ========================== -->
-
-                <section
-                    id="order-detail-content"
-                    hidden
-                >
-
-
-                    <!-- =========================
-                         ORDER HEADER
-                    ========================== -->
-
-                    <div class="order-detail-header">
-
-                        <div>
-
-                            <p class="order-label">
-                                Order
-                            </p>
-
-                            <h1
-                                id="order-number"
-                                class="order-detail-number"
-                            ></h1>
-
-                            <p
-                                id="order-date"
-                                class="order-date"
-                            ></p>
-
-                        </div>
-
-                        <span
-                            id="order-status"
-                            class="order-status"
-                        ></span>
-
-                    </div>
-
-
-                    <!-- =========================
-                         ORDER ITEMS
-                    ========================== -->
-
-                    <section class="order-detail-card">
-
-                        <div class="order-detail-card-header">
-
-                            <h2>
-                                Items
-                            </h2>
-
-                        </div>
-
-                        <div
-                            id="order-items"
-                            class="order-detail-items"
-                        >
-                            <!-- Items inserted by JavaScript -->
-                        </div>
-
-                    </section>
-
-
-                    <!-- =========================
-                         ORDER SUMMARY
-                    ========================== -->
-
-                    <section class="order-detail-card">
-
-                        <div class="order-detail-card-header">
-
-                            <h2>
-                                Order Summary
-                            </h2>
-
-                        </div>
-
-                        <div class="order-summary-row">
-
-                            <span>
-                                Total
-                            </span>
-
-                            <strong
-                                id="order-total"
-                            ></strong>
-
-                        </div>
-
-                        <div class="order-summary-row">
-
-                            <span>
-                                Payment Status
-                            </span>
-
-                            <span
-                                id="payment-status"
-                            ></span>
-
-                        </div>
-
-                    </section>
-
-
-                    <!-- =========================
-                         SHIPPING ADDRESS
-                    ========================== -->
-
-                    <section class="order-detail-card">
-
-                        <div class="order-detail-card-header">
-
-                            <h2>
-                                Shipping Address
-                            </h2>
-
-                        </div>
-
-                        <div
-                            id="shipping-address"
-                            class="shipping-address"
-                        >
-                            <!-- Address inserted by JavaScript -->
-                        </div>
-
-                    </section>
-
-
-                    <!-- =========================
-                         CANCELLATION
-                    ========================== -->
-
-                    <section
-                        id="order-actions"
-                        class="order-detail-actions"
-                        hidden
-                    >
-
-                        <button
-                            type="button"
-                            id="cancel-order-button"
-                            class="btn cancel-order-button"
-                        >
-
-                            <i
-                                class="fa-solid fa-xmark"
-                            ></i>
-
-                            Cancel Order
-
-                        </button>
-
-                    </section>
-
-
-                </section>
-
-            </div>
-
+<main class="order-detail-page">
+    <div class="order-detail-container">
+
+        <a href="/profile/#orders" class="order-back-link">
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            <span>My orders</span>
+        </a>
+
+        <div id="order-detail-loading" class="order-detail-state">
+            <span class="order-loader" aria-hidden="true"></span>
+            <p>Preparing your order details...</p>
         </div>
 
-    </section>
+        <div id="order-detail-error" class="order-detail-state" hidden>
+            <div class="order-state-icon">
+                <i class="fa-regular fa-circle-exclamation" aria-hidden="true"></i>
+            </div>
+            <h2>We couldn't load your order</h2>
+            <p id="order-detail-error-message">
+                Please check your connection and try again.
+            </p>
+            <button id="order-detail-retry-button" class="luxury-button" type="button">
+                Try again
+            </button>
+        </div>
 
+        <div id="order-detail-content" class="order-detail-content" hidden>
+
+            <header class="order-detail-hero">
+                <div class="order-detail-hero-copy">
+                    <span class="order-detail-eyebrow">YOUR ELANORA ORDER</span>
+                    <h1>Order <span id="order-number"></span></h1>
+                    <p class="order-detail-date">
+                        Placed on <span id="order-date"></span>
+                    </p>
+                </div>
+
+                <div class="order-hero-decoration" aria-hidden="true">
+                    <span class="order-hero-decoration-line"></span>
+                    <i class="fa-solid fa-box-open" aria-hidden="true"></i>
+                </div>
+            </header>
+
+            <section id="order-update-card" class="order-update-card">
+                <div id="order-update-icon" class="order-update-icon" aria-hidden="true">
+                    <i class="fa-solid fa-box"></i>
+                </div>
+                <div class="order-update-copy">
+                    <span class="section-kicker">ORDER UPDATE</span>
+                    <h2 id="order-update-title">Your order is being prepared</h2>
+                    <p id="order-update-message"></p>
+                </div>
+            </section>
+
+            <div class="order-detail-layout">
+
+                <div class="order-detail-main">
+
+                    <section class="order-detail-panel order-progress-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <span class="section-kicker">THE JOURNEY</span>
+                                <h2>Order progress</h2>
+                            </div>
+                            <span class="panel-heading-gem" aria-hidden="true">
+                                <i class="fa-solid fa-route"></i>
+                            </span>
+                        </div>
+
+                        <div id="order-status-timeline" class="order-status-timeline"></div>
+                    </section>
+
+                    <section class="order-detail-panel order-purchase-section">
+                        <div class="panel-heading">
+                            <div>
+                                <span class="section-kicker">YOUR SELECTION</span>
+                                <h2>Items in your order</h2>
+                            </div>
+                            <span class="order-item-count" id="order-item-count"></span>
+                        </div>
+
+                        <div id="order-items" class="order-detail-items"></div>
+
+                        <div class="order-purchase-total">
+                            <div>
+                                <span class="total-label">Total amount</span>
+                                <span class="total-caption">For this order</span>
+                            </div>
+                            <strong id="order-total">₹0.00</strong>
+                        </div>
+                    </section>
+
+                </div>
+
+                <aside class="order-detail-sidebar">
+                    <section class="order-detail-panel order-delivery-section">
+                        <div class="panel-heading">
+                            <div>
+                                <span class="section-kicker">DELIVERY DETAILS</span>
+                                <h2>Shipping address</h2>
+                            </div>
+                            <span class="panel-heading-gem" aria-hidden="true">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </span>
+                        </div>
+
+                        <div id="shipping-address" class="shipping-address-content"></div>
+                    </section>
+
+                    <section id="order-actions" class="order-actions-panel" hidden>
+                        <div class="order-action-copy">
+                            <h3>Need to change your mind?</h3>
+                            <p>You can cancel this order while it is still eligible.</p>
+                        </div>
+                        <button id="cancel-order-button" class="order-cancel-button" type="button">
+                            Cancel order
+                        </button>
+                    </section>
+                </aside>
+
+            </div>
+        </div>
+    </div>
+</main>
 {% endblock %}
 
-
 {% block scripts %}
-
-    <!-- Order Detail JavaScript -->
-
-    <script
-        src="{% static 'js/order-detail.js' %}"
-    ></script>
-
+<script src="{% static 'js/order-detail.js' %}"></script>
 {% endblock %}

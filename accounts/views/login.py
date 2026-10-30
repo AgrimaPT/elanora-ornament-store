@@ -1,12 +1,16 @@
+
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.throttling import ScopedRateThrottle
 
 from accounts.serializers.login import LoginSerializer
 from accounts.serializers.user import UserSerializer
 
 
 class LoginAPIView(APIView):
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "login"
 
     def post(self, request):
         serializer = LoginSerializer(data=request.data)

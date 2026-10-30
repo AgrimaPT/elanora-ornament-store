@@ -1,356 +1,313 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}
-Profile | Ornament
-{% endblock %}
+{% block title %}My Account | ELANORA{% endblock %}
 
 {% block extra_css %}
-
-<link
-    rel="stylesheet"
-    href="{% static 'css/profile.css' %}"
->
-
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
 {% endblock %}
 
 {% block content %}
-
-<section class="profile-section">
-
+<section class="account-page">
     <div class="container">
 
-        <div class="profile-container">
+        <header class="account-page-header">
+            <span class="section-eyebrow">THE ELANORA EXPERIENCE</span>
+            <h1>My <em>account</em></h1>
+            <p>A little space for everything that matters to you.</p>
+        </header>
 
-            <div class="profile-header">
+        <div id="profile-message" class="account-notice" role="status" aria-live="polite"></div>
 
-                <span class="section-eyebrow">
-                    MY ACCOUNT
-                </span>
+        <div class="account-layout">
 
-                <h1>
-                    Your profile.
-                </h1>
+            <!-- ACCOUNT SIDEBAR -->
+            <aside class="account-sidebar" aria-label="Account navigation">
 
-                <p>
-                    Manage your account details and preferences.
-                </p>
-
-            </div>
-
-            <div
-                id="profile-message"
-                class="profile-message"
-            >
-            </div>
-
-            <div class="profile-card">
-
-                <div class="profile-card-header">
-
-                    <h2>
-                        Personal Information
-                    </h2>
-
+                <div class="account-welcome">
+                    <span class="account-welcome-label">WELCOME BACK</span>
+                    <h2 id="account-customer-name">Your account</h2>
+                    <p>Manage your details and discover your purchases.</p>
                 </div>
 
-                
-                <div
-                    class="profile-details"
-                    id="profile-details"
-                >
+                <nav class="account-nav">
+                    <span class="account-nav-label">YOUR ACCOUNT</span>
 
-                    <div class="profile-field">
+                    <button type="button" class="account-nav-link is-active" data-account-view="details"
+                        aria-current="page">
+                        <i class="bi bi-person" aria-hidden="true"></i>
+                        <span>Personal details</span>
+                        <i class="bi bi-arrow-right account-nav-arrow" aria-hidden="true"></i>
+                    </button>
 
-                        <span class="profile-field-label">
-                            First Name
-                        </span>
+                    <button type="button" class="account-nav-link" data-account-view="security">
+                        <i class="bi bi-shield-lock" aria-hidden="true"></i>
+                        <span>Password &amp; security</span>
+                        <i class="bi bi-arrow-right account-nav-arrow" aria-hidden="true"></i>
+                    </button>
 
-                        <span
-                            class="profile-field-value"
-                            id="profile-first-name"
-                        >
-                            —
-                        </span>
+                    <button type="button" class="account-nav-link" data-account-view="orders">
+                        <i class="bi bi-bag" aria-hidden="true"></i>
+                        <span>My orders</span>
+                        <i class="bi bi-arrow-right account-nav-arrow" aria-hidden="true"></i>
+                    </button>
+                </nav>
 
-                    </div>
-
-                    <div class="profile-field">
-
-                        <span class="profile-field-label">
-                            Last Name
-                        </span>
-
-                        <span
-                            class="profile-field-value"
-                            id="profile-last-name"
-                        >
-                            —
-                        </span>
-
-                    </div>
-
-                    <div class="profile-field">
-
-                        <span class="profile-field-label">
-                            Email
-                        </span>
-
-                        <span
-                            class="profile-field-value"
-                            id="profile-email"
-                        >
-                            —
-                        </span>
-
-                    </div>
-
-                    <div class="profile-field">
-
-                        <span class="profile-field-label">
-                            Phone Number
-                        </span>
-
-                        <span
-                            class="profile-field-value"
-                            id="profile-phone"
-                        >
-                            —
-                        </span>
-
-                    </div>
-
+                <div class="account-sidebar-footer">
+                    <button type="button" id="logout-button" class="account-signout">
+                        <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+                        Sign out
+                    </button>
                 </div>
 
-                <form
-                    id="edit-profile-form"
-                    class="edit-profile-form"
-                    hidden
-                >
+            </aside>
 
-                    <div class="edit-profile-field">
+            <!-- MAIN ACCOUNT CONTENT -->
+            <main class="account-main">
 
-                        <label for="edit-first-name">
-                            First Name
-                        </label>
+                <!-- PERSONAL DETAILS -->
+                <section class="account-view" id="account-view-details" aria-labelledby="details-heading">
 
-                        <input
-                            type="text"
-                            id="edit-first-name"
-                            required
-                        >
-
+                    <div class="account-view-header">
+                        <span class="account-overline">YOUR INFORMATION</span>
+                        <h2 id="details-heading">Personal details</h2>
+                        <p>Keep your contact information up to date.</p>
                     </div>
 
-                    <div class="edit-profile-field">
+                    <div class="account-content">
 
-                        <label for="edit-last-name">
-                            Last Name
-                        </label>
+                        <div id="profile-details" class="account-detail-list">
 
-                        <input
-                            type="text"
-                            id="edit-last-name"
-                            required
-                        >
+                            <div class="account-detail-row">
+                                <span>First name</span>
+                                <strong id="profile-first-name">—</strong>
+                            </div>
 
-                    </div>
+                            <div class="account-detail-row">
+                                <span>Last name</span>
+                                <strong id="profile-last-name">—</strong>
+                            </div>
 
-                    <div class="edit-profile-field">
+                            <div class="account-detail-row">
+                                <span>Email address</span>
+                                <strong id="profile-email">—</strong>
+                            </div>
 
-                        <label for="edit-email">
-                            Email
-                        </label>
+                            <div class="account-detail-row">
+                                <span>Phone number</span>
+                                <strong id="profile-phone">—</strong>
+                            </div>
 
-                        <input
-                            type="email"
-                            id="edit-email"
-                            readonly
-                        >
+                            <div class="account-inline-action">
+                                <button type="button" class="account-primary-button" id="edit-profile-button">
+                                    Edit details
+                                    <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
+                                </button>
+                            </div>
 
-                    </div>
+                        </div>
 
-                    <div class="edit-profile-field">
+                        <form id="edit-profile-form" class="account-form" hidden>
 
-                        <label for="edit-phone">
-                            Phone Number
-                        </label>
+                            <div class="account-form-grid">
 
-                        <input
-                            type="tel"
-                            id="edit-phone"
-                            maxlength="10"
-                            required
-                        >
+                                <div class="account-input-group">
+                                    <label for="edit-first-name">First name</label>
+                                    <input type="text" class="account-luxury-input" id="edit-first-name"
+                                        autocomplete="given-name" required>
+                                </div>
 
-                    </div>
+                                <div class="account-input-group">
+                                    <label for="edit-last-name">Last name</label>
+                                    <input type="text" class="account-luxury-input" id="edit-last-name"
+                                        autocomplete="family-name" required>
+                                </div>
 
-                    <div
-                        id="edit-profile-message"
-                        class="edit-profile-message"
-                    >
-                    </div>
+                                <div class="account-input-group account-full-width">
+                                    <label for="edit-email">Email address</label>
+                                    <input type="email" class="account-luxury-input" id="edit-email"
+                                        autocomplete="email" readonly>
+                                    <small>Your email address cannot be changed here.</small>
+                                </div>
 
-                    <div class="edit-profile-actions">
+                                <div class="account-input-group account-full-width">
+                                    <label for="edit-phone">Phone number</label>
+                                    <input type="tel" class="account-luxury-input" id="edit-phone" maxlength="10"
+                                        autocomplete="tel" required>
+                                </div>
 
-                        <button
-                            type="submit"
-                            class="profile-action-button"
-                        >
-                            Save Changes
-                        </button>
+                            </div>
 
-                        <button
-                            type="button"
-                            class="profile-action-button"
-                            id="cancel-edit-button"
-                        >
-                            Cancel
-                        </button>
+                            <div id="edit-profile-message" class="account-form-message" role="status"
+                                aria-live="polite"></div>
 
-                    </div>
+                            <div class="account-form-actions">
+                                <button type="submit" class="account-primary-button">
+                                    Save changes
+                                </button>
 
-                </form>
+                                <button type="button" class="account-text-button" id="cancel-edit-button">
+                                    Cancel
+                                </button>
+                            </div>
 
-
-
-            </div>
-
-            <div class="profile-actions">
-
-                <button
-                    type="button"
-                    class="profile-action-button"
-                    id="edit-profile-button"
-                >
-                    Edit Profile
-                </button>
-
-                <button
-                    type="button"
-                    class="profile-action-button"
-                    id="change-password-button"
-                >
-                    Change Password
-                </button>
-
-                <button
-                    type="button"
-                    class="profile-action-button"
-                    id="logout-button"
-                >
-                    Logout
-                </button>
-
-            </div>
-
-            
-            <div
-                class="change-password-card"
-                id="change-password-card"
-                hidden
-            >
-
-                <div class="change-password-header">
-
-                    <h2>
-                        Change Password
-                    </h2>
-
-                    <p>
-                        Choose a new password for your account.
-                    </p>
-
-                </div>
-
-                <form
-                    id="change-password-form"
-                    class="change-password-form"
-                >
-
-                    <div class="change-password-field">
-
-                        <label for="current-password">
-                            Current Password
-                        </label>
-
-                        <input
-                            type="password"
-                            id="current-password"
-                            required
-                        >
+                        </form>
 
                     </div>
+                </section>
 
-                    <div class="change-password-field">
+                <!-- PASSWORD & SECURITY -->
+                <section class="account-view" id="account-view-security" aria-labelledby="security-heading" hidden>
 
-                        <label for="new-password">
-                            New Password
-                        </label>
-
-                        <input
-                            type="password"
-                            id="new-password"
-                            required
-                        >
-
+                    <div class="account-view-header">
+                        <span class="account-overline">YOUR PRIVACY</span>
+                        <h2 id="security-heading">Password &amp; security</h2>
+                        <p>Protect your account with a strong, private password.</p>
                     </div>
 
-                    <div class="change-password-field">
+                    <div class="account-content">
 
-                        <label for="confirm-password">
-                            Confirm New Password
-                        </label>
+                        <div class="security-intro">
+                            <span class="security-symbol">
+                                <i class="bi bi-shield-check" aria-hidden="true"></i>
+                            </span>
 
-                        <input
-                            type="password"
-                            id="confirm-password"
-                            required
-                        >
+                            <div>
+                                <h3>Keep your account secure</h3>
+                                <p>Choose a password you do not use on other websites.</p>
+                            </div>
+                        </div>
+
+                        <form id="change-password-form" class="account-form">
+
+                            <div class="account-password-fields">
+
+                                <!-- CURRENT PASSWORD -->
+                                <div class="account-input-group">
+                                    <label for="current-password">Current password</label>
+
+                                    <div class="password-field-wrapper">
+                                        <input type="password" class="account-luxury-input" id="current-password"
+                                            name="current_password" autocomplete="current-password" required>
+
+                                        <button type="button" class="password-toggle"
+                                            data-password-target="current-password" aria-label="Show current password"
+                                            aria-pressed="false">
+                                            <i class="bi bi-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- NEW PASSWORD -->
+                                <div class="account-input-group">
+                                    <label for="new-password">
+                                        New password
+                                    </label>
+
+                                    <div class="password-field-wrapper">
+                                        <input type="password" class="account-luxury-input" id="new-password"
+                                            autocomplete="new-password" required>
+
+                                        <button type="button" class="password-toggle"
+                                            data-password-target="new-password" aria-label="Show new password"
+                                            aria-pressed="false">
+                                            <i class="bi bi-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- CONFIRM PASSWORD -->
+                                <div class="account-input-group">
+                                    <label for="confirm-password">
+                                        Confirm new password
+                                    </label>
+
+                                    <div class="password-field-wrapper">
+                                        <input type="password" class="account-luxury-input" id="confirm-password"
+                                            autocomplete="new-password" required>
+
+                                        <button type="button" class="password-toggle"
+                                            data-password-target="confirm-password"
+                                            aria-label="Show confirmation password" aria-pressed="false">
+                                            <i class="bi bi-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div id="change-password-message" class="account-form-message" role="status"
+                                aria-live="polite"></div>
+
+                            <div class="account-form-actions">
+                                <button type="submit" class="account-primary-button">
+                                    Update password
+                                </button>
+
+                                <button type="button" class="account-text-button" id="cancel-password-button">
+                                    Clear fields
+                                </button>
+                            </div>
+
+                        </form>
 
                     </div>
+                </section>
 
-                    <div
-                        id="change-password-message"
-                        class="change-password-message"
-                    >
+                <!-- ORDER HISTORY -->
+                <section class="account-view" id="account-view-orders" aria-labelledby="orders-heading" hidden>
+
+                    <div class="account-view-header">
+                        <span class="account-overline">YOUR ELANORA PURCHASES</span>
+                        <h2 id="orders-heading">My orders</h2>
+                        <p>Your purchases, all in one place.</p>
                     </div>
 
-                    <div class="change-password-actions">
+                    <div class="account-content">
 
-                        <button
-                            type="submit"
-                            class="profile-action-button"
-                        >
-                            Change Password
-                        </button>
+                        <div id="orders-message" class="account-form-message" role="status" aria-live="polite"></div>
 
-                        <button
-                            type="button"
-                            class="profile-action-button"
-                            id="cancel-password-button"
-                        >
-                            Cancel
-                        </button>
+                        <div id="orders-list" class="account-orders-list"></div>
+
+                        <div id="orders-pagination" class="account-orders-pagination" hidden></div>
 
                     </div>
+                </section>
 
-                </form>
-
-            </div>
-
-
+            </main>
         </div>
-
     </div>
-
 </section>
-
 {% endblock %}
 
 {% block scripts %}
-
 <script src="{% static 'js/profile.js' %}"></script>
 
-{% endblock %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".password-toggle").forEach(function (button) {
+            button.addEventListener("click", function () {
+                const targetId = button.dataset.passwordTarget;
+                const input = document.getElementById(targetId);
+                const icon = button.querySelector("i");
 
+                if (!input || !icon) return;
+
+                const shouldShow = input.type === "password";
+
+                input.type = shouldShow ? "text" : "password";
+
+                icon.classList.toggle("bi-eye", !shouldShow);
+                icon.classList.toggle("bi-eye-slash", shouldShow);
+
+                const label = shouldShow
+                    ? "Hide " + targetId.replaceAll("-", " ")
+                    : "Show " + targetId.replaceAll("-", " ");
+
+                button.setAttribute("aria-label", label);
+                button.setAttribute("aria-pressed", String(shouldShow));
+            });
+        });
+    });
+</script>
+{% endblock %}

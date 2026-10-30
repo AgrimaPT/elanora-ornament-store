@@ -14,6 +14,16 @@ class Payment(models.Model):
         EXPIRED = "EXPIRED", "Expired"
         REFUNDED = "REFUNDED", "Refunded"
 
+
+    class RefundStatus(models.TextChoices):
+        NOT_REQUIRED = "NOT_REQUIRED", "Not required"
+        PENDING = "PENDING", "Pending"
+        PROCESSING = "PROCESSING", "Processing"
+        REFUNDED = "REFUNDED", "Refunded"
+        FAILED = "FAILED", "Failed"
+        UNKNOWN = "UNKNOWN", "Unknown outcome"
+
+
     order = models.OneToOneField(
         Order,
         on_delete=models.PROTECT,
@@ -56,6 +66,31 @@ class Payment(models.Model):
         blank=True,
         db_index=True,
     )
+
+
+    refund_status = models.CharField(
+        max_length=20,
+        choices=RefundStatus.choices,
+        default=RefundStatus.NOT_REQUIRED,
+        db_index=True,
+    )
+
+    razorpay_refund_id = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        unique=True,
+    )
+
+    refund_error = models.TextField(
+        blank=True,
+    )
+
+    refund_updated_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
 
 
     created_at = models.DateTimeField(auto_now_add=True)

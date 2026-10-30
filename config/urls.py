@@ -1,9 +1,4 @@
-"""
-URL configuration for config project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-https://docs.djangoproject.com/en/5.2/topics/http/urls/
-"""
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -24,7 +19,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path(
-        "api/auth/", 
+        "api/auth/",
         include("accounts.urls")),
 
     path(
@@ -53,7 +48,7 @@ urlpatterns = [
         include("accounts.frontend_urls"),
     ),
 
-    path("", 
+    path("",
          include("cart.frontend_urls")
     ),
 

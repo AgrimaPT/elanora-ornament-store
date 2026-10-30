@@ -1,3 +1,4 @@
+
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
@@ -9,7 +10,6 @@ class Command(BaseCommand):
     help = "Expire unpaid payments and release reserved stock."
 
     def handle(self, *args, **options):
-
         now = timezone.now()
 
         payment_ids = list(
@@ -20,22 +20,16 @@ class Command(BaseCommand):
                 ],
                 expires_at__isnull=False,
                 expires_at__lte=now,
-            ).values_list(
-                "id",
-                flat=True,
-            )
+            ).values_list("id", flat=True)
         )
 
         expired_count = 0
 
         for payment_id in payment_ids:
-
             try:
-                expired = (
-                    PaymentExpirationService
-                    .expire_payment(payment_id)
+                expired = PaymentExpirationService.expire_payment(
+                    payment_id
                 )
-
             except Payment.DoesNotExist:
                 continue
 
@@ -44,7 +38,6 @@ class Command(BaseCommand):
 
         self.stdout.write(
             self.style.SUCCESS(
-                f"Expired payments processed: "
-                f"{expired_count}"
+                f"Expired payments processed: {expired_count}"
             )
         )

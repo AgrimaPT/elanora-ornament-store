@@ -1,6 +1,7 @@
 from django.urls import path
 
-from .views import  RegisterAPIView,UserListAPIView,LoginAPIView,ProfileAPIView,UpdateProfileAPIView,ChangePasswordAPIView,LogoutAPIView
+from .views import  RegisterAPIView,LoginAPIView,ProfileAPIView,UpdateProfileAPIView,ChangePasswordAPIView,LogoutAPIView
+from accounts.views.user import UserListAPIView
 from accounts.views.address import AddressListCreateAPIView
 from accounts.views.address_detail import AddressDetailAPIView
 

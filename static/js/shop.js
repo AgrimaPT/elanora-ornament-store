@@ -2,14 +2,58 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const productGrid = document.getElementById("product-grid");
 
-    const productCount =document.querySelector(".shop-product-count");
+    const productCount = document.querySelector(".shop-product-count");
 
     let allProducts = [];
-    let selectedCategory = "";
+    const PRODUCTS_PER_PAGE = 10;
+    let currentPage = 1;
+    const urlParams = new URLSearchParams(window.location.search);
+
+    let selectedCategory = urlParams.get("category") || "";
     let searchTerm = "";
     let sortOption = "";
     let minPrice = "";
     let maxPrice = "";
+
+
+
+    function updateFilterIndicator() {
+        const filterCountElement =
+            document.getElementById("shop-filter-count");
+
+        const openFiltersButton =
+            document.getElementById("shop-open-filters");
+
+        if (!filterCountElement) {
+            return;
+        }
+
+        // Count active filter types, not individual fields.
+        // Min and max price together count as one price filter.
+        let activeFilterCount = 0;
+
+        if (selectedCategory !== "") {
+            activeFilterCount++;
+        }
+
+        if (searchTerm.trim() !== "") {
+            activeFilterCount++;
+        }
+
+        if (minPrice !== "" || maxPrice !== "") {
+            activeFilterCount++;
+        }
+
+        filterCountElement.textContent = activeFilterCount;
+        filterCountElement.hidden = activeFilterCount === 0;
+
+        if (openFiltersButton) {
+            openFiltersButton.classList.toggle(
+                "has-active-filters",
+                activeFilterCount > 0
+            );
+        }
+    }
 
     async function loadCategories() {
 
@@ -40,62 +84,130 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+
+
     async function loadProducts() {
-
         try {
+            let nextUrl = "/api/products/";
+            const products = [];
 
-            const response = await fetch("/api/products/");
+            // Fetch every page of products from the API.
+            while (nextUrl) {
+                const response = await fetch(nextUrl);
 
-            if (!response.ok) {
-                throw new Error("Failed to fetch products");
+                if (!response.ok) {
+                    throw new Error(
+                        `Failed to fetch products: ${response.status} ${response.statusText}`
+                    );
+                }
+
+                const data = await response.json();
+
+                // Handle Django REST Framework's paginated response.
+                if (Array.isArray(data.results)) {
+                    products.push(...data.results);
+
+                    // Fix HTTP/HTTPS mismatch in the pagination URL.
+                    if (data.next) {
+                        const nextPageUrl = new URL(
+                            data.next,
+                            window.location.origin
+                        );
+
+                        // Preserve the current protocol for same-host requests.
+                        if (nextPageUrl.host === window.location.host) {
+                            nextPageUrl.protocol = window.location.protocol;
+                        }
+
+                        nextUrl = nextPageUrl.href;
+                    } else {
+                        nextUrl = null;
+                    }
+                } else if (Array.isArray(data)) {
+                    // Also support an unpaginated API response.
+                    products.push(...data);
+                    nextUrl = null;
+                } else {
+                    throw new Error("Unexpected products API response");
+                }
             }
 
-            const data = await response.json();
+            // Store the complete product catalogue.
+            allProducts = products;
 
-            console.log(data);
+            console.log("Total products loaded:", allProducts.length);
 
-            allProducts = data.results;
-
-            displayProducts(allProducts);
+            // Apply existing search, filters, and sorting to all products.
+            filterProducts();
 
         } catch (error) {
-
             console.error("Error loading products:", error);
-
         }
     }
 
 
     function displayProducts(products) {
-
         console.log("Displaying products:", products);
 
-        productCount.textContent =
-            `${products.length} ${
-                products.length === 1
-                    ? "Product"
-                    : "Products"
-            }`;
+        const totalProducts = products.length;
+        const totalPages = Math.ceil(totalProducts / PRODUCTS_PER_PAGE);
+
+        // Keep the current page within the valid range.
+        if (totalPages === 0) {
+            currentPage = 1;
+        } else if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+
+        const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+        const endIndex = Math.min(
+            startIndex + PRODUCTS_PER_PAGE,
+            totalProducts
+        );
+
+        // Display only the products for the current page.
+        const pageProducts = products.slice(startIndex, endIndex);
+
+        productCount.textContent = totalProducts === 0
+            ? "0 Products"
+            : `Showing ${startIndex + 1}–${endIndex} of ${totalProducts} Products`;
 
         productGrid.innerHTML = "";
 
-        if (products.length === 0) {
+        // Create the pagination container once.
+        let paginationContainer =
+            document.getElementById("product-pagination");
 
+        if (!paginationContainer) {
+            paginationContainer = document.createElement("nav");
+            paginationContainer.id = "product-pagination";
+            paginationContainer.className =
+                "d-flex justify-content-center mt-4 mb-4";
+            paginationContainer.setAttribute(
+                "aria-label",
+                "Product pages"
+            );
+
+            productGrid.insertAdjacentElement(
+                "afterend",
+                paginationContainer
+            );
+        }
+
+        paginationContainer.innerHTML = "";
+
+        // Show the existing empty state when no products match.
+        if (totalProducts === 0) {
             productGrid.innerHTML = `
-
                 <div class="col-12">
-
                     <div class="no-products">
-
                         <span class="no-products-line"></span>
 
                         <p class="no-products-label">
                             YOUR COLLECTION
                         </p>
 
-                        <h3>
-                            No pieces found.
-                        </h3>
+                        <h3>No pieces found.</h3>
 
                         <p class="no-products-message">
                             We couldn't find anything matching
@@ -109,81 +221,139 @@ document.addEventListener("DOMContentLoaded", () => {
                         >
                             Clear all filters
                         </button>
-
                     </div>
-
                 </div>
-
             `;
 
-            const resetButton =
-                document.getElementById("reset-filters");
-
-
-            resetButton.addEventListener(
-                "click",
-                resetFilters
-            );
+            document
+                .getElementById("reset-filters")
+                .addEventListener("click", resetFilters);
 
             return;
         }
 
-        products.forEach(product => {
-
+        // Render product cards using your existing design.
+        pageProducts.forEach(product => {
             const productColumn = document.createElement("div");
-
             productColumn.className = "col-6 col-md-4";
 
-
             productColumn.innerHTML = `
-
                 <div class="product-card">
-
                     <a
                         href="/product/${product.slug}/"
                         class="product-card-link"
                     >
-
                         <div class="product-card-image">
-
                             <img
                                 src="${product.image || '/static/images/product-placeholder.jpg'}"
                                 alt="${product.name}"
                             >
-
                         </div>
 
-
                         <div class="product-card-content">
-
                             <span class="product-card-category">
                                 ${product.category.name}
                             </span>
 
-                            <h3>
-                                ${product.name}
-                            </h3>
+                            <h3>${product.name}</h3>
 
                             <p>
                                 ₹${Number(product.price).toLocaleString("en-IN")}
                             </p>
-
                         </div>
-
                     </a>
-
                 </div>
-
             `;
 
             productGrid.appendChild(productColumn);
-
         });
+
+        // No pagination controls are needed for a single page.
+        if (totalPages <= 1) {
+            return;
+        }
+
+        // Build Previous, numbered pages, and Next controls.
+        let paginationHTML = `
+            <ul class="pagination mb-0">
+                <li class="page-item ${currentPage === 1 ? "disabled" : ""}">
+                    <button
+                        type="button"
+                        class="page-link"
+                        data-page="${currentPage - 1}"
+                        ${currentPage === 1 ? "disabled" : ""}
+                        aria-label="Previous page"
+                    >
+                        <span class="pagination-arrow pagination-arrow-left"
+                            aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous page</span>
+                    </button>
+                </li>
+        `;
+
+        for (let page = 1; page <= totalPages; page++) {
+            paginationHTML += `
+                <li class="page-item ${page === currentPage ? "active" : ""}">
+                    <button
+                        type="button"
+                        class="page-link"
+                        data-page="${page}"
+                        ${page === currentPage ? 'aria-current="page"' : ""}
+                    >
+                        ${page}
+                    </button>
+                </li>
+            `;
+        }
+
+        paginationHTML += `
+                <li class="page-item ${currentPage === totalPages ? "disabled" : ""}">
+                    <button
+                        type="button"
+                        class="page-link"
+                        data-page="${currentPage + 1}"
+                        ${currentPage === totalPages ? "disabled" : ""}
+                        aria-label="Next page"
+                    >
+                        <span class="pagination-arrow pagination-arrow-right"
+                            aria-hidden="true"></span>
+                        <span class="visually-hidden">Next page</span>
+                    </button>
+                </li>
+            </ul>
+        `;
+
+        paginationContainer.innerHTML = paginationHTML;
+
+        // Handle page changes without resetting the selected page.
+        paginationContainer
+            .querySelectorAll("button[data-page]")
+            .forEach(button => {
+                button.addEventListener("click", () => {
+                    const requestedPage = Number(button.dataset.page);
+
+                    if (
+                        requestedPage >= 1 &&
+                        requestedPage <= totalPages &&
+                        requestedPage !== currentPage
+                    ) {
+                        currentPage = requestedPage;
+                        filterProducts(false);
+
+                        // Return to the product listing after changing pages.
+                        productGrid.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start"
+                        });
+                    }
+                });
+            });
     }
 
-
-    function filterProducts() {
-
+    function filterProducts(resetPage = true) {
+        if (resetPage) {
+            currentPage = 1;
+        }
         //let filteredProducts = allProducts;
         let filteredProducts = [...allProducts];  //... is the spread operator.It creates a new array containing the same products.This prevents our sorting operation from accidentally changing the original allProducts order.
 
@@ -264,6 +434,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         displayProducts(filteredProducts);
+        updateFilterIndicator();
     }
 
     function displayCategories(categories) {
@@ -287,8 +458,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     type="radio"
                     name="category"
                     value="${category.slug}"
+                    ${category.slug === selectedCategory ? "checked" : ""}
                 >
-
                 <span>
                     ${category.name}
                 </span>
@@ -450,7 +621,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // Show all products again
         filterProducts();
     }
-
+    // Allow the mobile filter interface to reset all filters.
+    document.addEventListener("shop:reset-filters", resetFilters);
 
     loadProducts();
     loadCategories();

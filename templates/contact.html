@@ -2,233 +2,176 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}
-Contact | Ornament
-{% endblock %}
+{% block title %}Contact Us | ELANORA{% endblock %}
 
 {% block extra_css %}
-
-<link
-    rel="stylesheet"
-    href="{% static 'css/contact.css' %}"
->
-
+<link rel="stylesheet" href="{% static 'css/contact.css' %}">
 {% endblock %}
 
-
 {% block content %}
-
 <section class="contact-section">
-
     <div class="container">
 
-        <div class="contact-header">
-
-            <span class="section-eyebrow">
-                GET IN TOUCH
-            </span>
-
-            <h1>
-                We'd love to hear from you.
-            </h1>
-
+        <!-- Page introduction -->
+        <header class="contact-header">
+            <span class="section-eyebrow">WE'RE HERE FOR YOU</span>
+            <h1>Let's start a <em>conversation.</em></h1>
             <p>
-                Have a question about our jewellery?
-                Send us a message and we'll be happy to help.
+                A question about a piece, an order, or simply looking
+                for a little guidance? We'd love to hear from you.
             </p>
-
-        </div>
-
+        </header>
 
         <div class="contact-layout">
 
-
-            <!-- Contact Information -->
-
-            <div class="contact-information">
-
-                <h2>
-                    Contact Information
-                </h2>
-
-                <p class="contact-intro">
-                    Whether you have a question about a product,
-                    an order, or anything else, we're here to help.
-                </p>
-
+            <!-- Contact information -->
+            <aside class="contact-information">
+                <div class="contact-information-heading">
+                    <span class="contact-overline">GET IN TOUCH</span>
+                    <h2>A personal touch<br>makes all the difference.</h2>
+                    <p class="contact-intro">
+                        We're happy to help you find the information you
+                        need, so you can enjoy every moment with ELANORA.
+                    </p>
+                </div>
 
                 <div class="contact-details">
 
                     <div class="contact-detail">
-
-                        <span class="contact-detail-label">
-                            Email
-                        </span>
-
-                        <a href="mailto:hello@ornament.com">
-                            hello@ornament.com
-                        </a>
-
+                        <span class="contact-detail-number">01</span>
+                        <div class="contact-detail-content">
+                            <span class="contact-detail-label">WRITE TO US</span>
+                            <a href="mailto:agrimarzr@gmail.com">
+                                agrimarzr@gmail.com
+                            </a>
+                        </div>
+                        <i class="bi bi-envelope" aria-hidden="true"></i>
                     </div>
 
-
                     <div class="contact-detail">
-
-                        <span class="contact-detail-label">
-                            Phone
-                        </span>
-
-                        <a href="tel:+919876543210">
-                            +91 98765 43210
-                        </a>
-
+                        <span class="contact-detail-number">02</span>
+                        <div class="contact-detail-content">
+                            <span class="contact-detail-label">GIVE US A CALL</span>
+                            <a href="tel:+919876543210">
+                                +91 98765 43210
+                            </a>
+                        </div>
+                        <i class="bi bi-arrow-up-right" aria-hidden="true"></i>
                     </div>
 
-
                     <div class="contact-detail">
-
-                        <span class="contact-detail-label">
-                            Location
-                        </span>
-
-                        <span>
-                            Ernakulam, Kerala
-                        </span>
-
+                        <span class="contact-detail-number">03</span>
+                        <div class="contact-detail-content">
+                            <span class="contact-detail-label">FIND US</span>
+                            <span>Ernakulam, Kerala, India</span>
+                        </div>
+                        <i class="bi bi-geo-alt" aria-hidden="true"></i>
                     </div>
 
-
                     <div class="contact-detail">
-
-                        <span class="contact-detail-label">
-                            Business Hours
-                        </span>
-
-                        <span>
-                            Monday – Saturday<br>
-                            10:00 AM – 6:00 PM
-                        </span>
-
+                        <span class="contact-detail-number">04</span>
+                        <div class="contact-detail-content">
+                            <span class="contact-detail-label">WHEN WE'RE AVAILABLE</span>
+                            <span>Monday – Saturday</span>
+                            <span class="contact-detail-secondary">
+                                10:00 AM – 6:00 PM
+                            </span>
+                        </div>
+                        <i class="bi bi-clock" aria-hidden="true"></i>
                     </div>
 
                 </div>
 
-            </div>
+                <p class="contact-note">
+                    Every message matters. We look forward to hearing from you.
+                </p>
+            </aside>
 
+            <!-- Message form -->
+            <div class="contact-form-area">
+                <div class="contact-form-heading">
+                    <span class="contact-overline">SEND US A NOTE</span>
+                    <h2>How can we help?</h2>
+                    <p>
+                        Fill in the details below and tell us what's on your mind.
+                    </p>
+                </div>
 
-            <!-- Contact Form -->
-
-            <div class="contact-form-card">
-
-                <h2>
-                    Send us a message
-                </h2>
-
-                <form
-                    id="contact-form"
-                    class="contact-form"
-                >
+                <form id="contact-form" class="contact-form">
 
                     <div class="contact-form-row">
-
                         <div class="contact-field">
-
-                            <label for="contact-name">
-                                Name
-                            </label>
-
+                            <label for="contact-name">Your name</label>
                             <input
                                 type="text"
                                 id="contact-name"
                                 name="name"
-                                placeholder="Your name"
+                                placeholder="Enter your name"
+                                autocomplete="name"
                                 required
                             >
-
                         </div>
 
-
                         <div class="contact-field">
-
-                            <label for="contact-email">
-                                Email
-                            </label>
-
+                            <label for="contact-email">Email address</label>
                             <input
                                 type="email"
                                 id="contact-email"
                                 name="email"
-                                placeholder="Your email"
+                                placeholder="you@example.com"
+                                autocomplete="email"
                                 required
                             >
-
                         </div>
-
                     </div>
 
-
                     <div class="contact-field">
-
-                        <label for="contact-subject">
-                            Subject
-                        </label>
-
+                        <label for="contact-subject">Subject</label>
                         <input
                             type="text"
                             id="contact-subject"
                             name="subject"
-                            placeholder="How can we help?"
+                            placeholder="Product enquiry, order support..."
                             required
                         >
-
                     </div>
 
-
                     <div class="contact-field">
-
-                        <label for="contact-message">
-                            Message
-                        </label>
-
+                        <label for="contact-message">Your message</label>
                         <textarea
                             id="contact-message"
                             name="message"
-                            rows="6"
-                            placeholder="Write your message..."
+                            rows="5"
+                            placeholder="Tell us how we can help..."
                             required
                         ></textarea>
-
                     </div>
-
 
                     <div
                         id="contact-form-message"
                         class="contact-form-message"
-                    >
+                        role="status"
+                        aria-live="polite"
+                    ></div>
+
+                    <div class="contact-submit-row">
+                        <p>
+                            We’ll use your details to respond to your enquiry.
+                        </p>
+                        <button type="submit" class="contact-submit-button">
+                            Send message
+                            <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                        </button>
                     </div>
 
-
-                    <button
-                        type="submit"
-                        class="contact-submit-button"
-                    >
-                        Send Message
-                    </button>
-
                 </form>
-
             </div>
 
         </div>
-
     </div>
-
 </section>
-
 {% endblock %}
 
 {% block scripts %}
-
 <script src="{% static 'js/contact.js' %}"></script>
-
 {% endblock %}

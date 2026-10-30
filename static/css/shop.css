@@ -1,0 +1,1213 @@
+/* ========================================
+   ELANORA — Luxury Shop Header
+======================================== */
+
+.shop-header {
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 0 5.25rem;
+    background:
+        radial-gradient(ellipse at 50% 0%,
+            rgba(255, 255, 255, 0.72) 0%,
+            transparent 65%),
+        linear-gradient(180deg,
+            var(--color-champagne) 0%,
+            var(--color-ivory) 100%);
+    text-align: center;
+}
+
+.shop-header-content {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.shop-header .section-eyebrow {
+    display: inline-block;
+    margin-bottom: 1.25rem;
+    color: var(--color-gold);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+}
+
+.shop-title {
+    margin: 0 0 1.5rem;
+    color: var(--color-espresso);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(3rem, 5.5vw, 4.8rem);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+}
+
+.shop-title span {
+    display: block;
+    margin-top: 0.12em;
+    color: var(--color-gold);
+    font-style: italic;
+    font-weight: 400;
+}
+
+.shop-description {
+    max-width: 500px;
+    margin: 0 auto;
+    color: var(--color-muted);
+    font-size: 0.94rem;
+    line-height: 1.9;
+}
+
+/* Mobile header refinement */
+@media (max-width: 575.98px) {
+    .shop-header {
+        padding: 4.25rem 1.25rem 3.75rem;
+    }
+
+    .shop-header .section-eyebrow {
+        margin-bottom: 1rem;
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+    }
+
+    .shop-title {
+        font-size: clamp(2.65rem, 10vw, 3.35rem);
+        line-height: 1.13;
+    }
+
+    .shop-description {
+        max-width: 340px;
+        font-size: 0.88rem;
+        line-height: 1.8;
+    }
+}
+
+/* ========================================
+   SHOP CONTENT LAYOUT
+======================================== */
+
+.shop-content-section {
+    padding: 4rem 0 6rem;
+    background-color: var(--color-white);
+}
+
+.shop-content-section>.container>.row {
+    --bs-gutter-x: 3rem;
+    --bs-gutter-y: 2rem;
+}
+
+/* ========================================
+   MOBILE FILTER TOGGLE
+======================================== */
+
+.shop-filter-toggle {
+    display: none;
+}
+
+/* ========================================
+   FILTER SIDEBAR
+======================================== */
+
+.shop-filters {
+    position: sticky;
+    top: 2rem;
+}
+
+
+.filter-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0;
+    margin-bottom: 1.75rem;
+    border-bottom: none;
+}
+
+.filter-heading h2 {
+    margin: 0;
+    color: var(--color-espresso);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+.filter-group {
+    margin-bottom: 1.75rem;
+}
+
+.filter-group>label {
+    display: block;
+    margin-bottom: 0.8rem;
+    color: var(--color-espresso);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.09rem;
+    text-transform: uppercase;
+}
+
+
+.shop-filter-input {
+    width: 100%;
+    min-width: 0;
+    padding: 0.8rem 0.9rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background-color: var(--color-white);
+    color: var(--color-espresso);
+    font: inherit;
+    font-size: 0.82rem;
+    box-shadow: 0 2px 10px rgba(43, 37, 32, 0.055);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.shop-filter-input::placeholder {
+    color: #9a9188;
+}
+
+.shop-filter-input:focus,
+.shop-order-select:focus {
+    border-color: var(--color-gold);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(184, 155, 94, 0.12);
+}
+
+
+.shop-filter-input::-webkit-inner-spin-button,
+.shop-filter-input::-webkit-outer-spin-button {
+    margin: 0;
+}
+
+.category-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.category-option {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.category-option:hover {
+    color: var(--color-espresso);
+}
+
+.category-option input {
+    width: 15px;
+    height: 15px;
+    margin: 0;
+    accent-color: var(--color-gold);
+    cursor: pointer;
+}
+
+.price-inputs {
+    display: flex;
+    gap: 0.6rem;
+}
+
+/* ========================================
+   FILTER BUTTON (if enabled later)
+======================================== */
+
+.shop-filter-button {
+    width: 100%;
+    border-radius: 6px;
+}
+
+/* ========================================
+   PRODUCT TOOLBAR
+======================================== */
+
+.shop-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1.75rem;
+    border-bottom: 1px solid rgba(43, 37, 32, 0.13);
+}
+
+.shop-product-count {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.82rem;
+}
+
+.shop-order-select {
+    max-width: 100%;
+    padding: 0.7rem 2.25rem 0.7rem 0.85rem;
+    border: 1px solid rgba(43, 37, 32, 0.17);
+    border-radius: 6px;
+    background-color: var(--color-white);
+    color: var(--color-espresso);
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* ========================================
+   SHOP PRODUCT CARDS
+   Scoped to the Shop product grid
+======================================== */
+
+#product-grid>[class*="col-"] {
+    min-width: 0;
+}
+
+#product-grid .product-card {
+    height: 100%;
+    overflow: hidden;
+    border: 0;
+    border-radius: 10px;
+    background-color: var(--color-white);
+    box-shadow: none;
+    transition: transform 0.25s ease;
+}
+
+#product-grid .product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: none;
+}
+
+#product-grid .product-card-link {
+    display: block;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+#product-grid .product-card-image {
+    position: relative;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 10px;
+    background-color: var(--color-ivory);
+    color: var(--color-muted);
+}
+
+#product-grid .product-card-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.45s ease;
+}
+
+#product-grid .product-card:hover .product-card-image img {
+    transform: scale(1.035);
+}
+
+#product-grid .product-card-content {
+    padding: 1.1rem 0.15rem 1.25rem;
+}
+
+#product-grid .product-card-category {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: var(--color-gold);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.11rem;
+    text-transform: uppercase;
+}
+
+#product-grid .product-card-content h3 {
+    margin: 0 0 0.45rem;
+    color: var(--color-espresso);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.12rem;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+#product-grid .product-card-content p {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.88rem;
+}
+
+/* Keyboard accessibility */
+#product-grid .product-card-link:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 4px;
+    border-radius: 6px;
+}
+
+/* ========================================
+   NO PRODUCTS STATE
+======================================== */
+
+.shop-content-section .no-products {
+    padding: 5rem 1.5rem;
+    text-align: center;
+}
+
+.shop-content-section .no-products-reset {
+    border-radius: 6px;
+}
+
+.shop-content-section .no-products-reset:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 991.98px) {
+    .shop-content-section {
+        padding: 2.5rem 0 4.5rem;
+    }
+
+    .shop-filters {
+        position: static;
+    }
+
+    .shop-filter-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0.9rem 1rem;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(43, 37, 32, 0.16);
+        border-radius: 6px;
+        background-color: var(--color-ivory);
+        color: var(--color-espresso);
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.07rem;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+
+    .shop-filter-toggle:hover {
+        border-color: var(--color-gold);
+    }
+
+    .shop-filters.is-mobile-collapsed {
+        display: none;
+    }
+
+    .shop-filters:not(.is-mobile-collapsed) {
+        display: block;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(43, 37, 32, 0.1);
+        border-radius: 8px;
+        background-color: var(--color-white);
+    }
+
+    .filter-heading {
+        margin-bottom: 1.25rem;
+    }
+
+    .shop-content-section>.container>.row {
+        --bs-gutter-x: 1.5rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .shop-filter-toggle {
+        display: none;
+    }
+
+    .shop-filters.is-mobile-collapsed {
+        display: block;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .shop-header {
+        padding: 3.5rem 1rem 3rem;
+    }
+
+    .shop-title {
+        font-size: clamp(2.5rem, 11vw, 3.2rem);
+    }
+
+    .shop-description {
+        font-size: 0.9rem;
+    }
+
+    .shop-content-section {
+        padding: 2rem 0 4rem;
+    }
+
+    .shop-toolbar {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        margin-bottom: 1.25rem;
+    }
+
+    .shop-order-select {
+        max-width: 190px;
+        font-size: 0.75rem;
+    }
+
+    #product-grid .product-card-image {
+        aspect-ratio: 4 / 5;
+    }
+
+    #product-grid .product-card-content {
+        padding: 0.9rem 0.05rem 1rem;
+    }
+
+    #product-grid .product-card-content h3 {
+        font-size: 1rem;
+    }
+
+    #product-grid .product-card-content p {
+        font-size: 0.82rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    #product-grid .product-card,
+    #product-grid .product-card-image img {
+        transition: none;
+    }
+}
+
+
+
+/* ========================================
+   MOBILE FILTER BOTTOM SHEET
+======================================== */
+
+/* Hidden on desktop */
+.shop-mobile-action-bar,
+.shop-filter-backdrop,
+.shop-filter-actions {
+    display: none;
+}
+
+
+/* Mobile and tablet layout */
+@media (max-width: 991.98px) {
+
+    /* Give the page space for the fixed bottom action bar */
+    .shop-content-section {
+        padding-bottom: 100px;
+    }
+
+    /* Keep the desktop sidebar column from reserving space */
+    .shop-content-section aside {
+        display: contents;
+    }
+
+    /* Fixed Filter / Sort action bar */
+    .shop-mobile-action-bar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1040;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+
+        min-height: 64px;
+        padding: 8px 16px;
+        padding-bottom: max(8px, env(safe-area-inset-bottom));
+
+        background: var(--color-white, #FFFFFF);
+        border-top: 1px solid rgba(43, 37, 32, 0.12);
+        box-shadow: 0 -4px 18px rgba(43, 37, 32, 0.07);
+    }
+
+    .shop-mobile-action {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+
+        flex: 1;
+        min-height: 44px;
+
+        border: 0;
+        background: transparent;
+        color: var(--color-espresso, #2B2520);
+
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 600;
+
+        cursor: pointer;
+    }
+
+    .shop-mobile-action i {
+        font-size: 17px;
+    }
+
+    .shop-mobile-action:focus-visible {
+        outline: 2px solid var(--color-gold, #B89B5E);
+        outline-offset: 3px;
+    }
+
+    .shop-mobile-action-divider {
+        width: 1px;
+        height: 26px;
+        background: rgba(43, 37, 32, 0.15);
+    }
+
+
+    /* Backdrop behind the filter sheet */
+    .shop-filter-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 1050;
+
+        display: block;
+        background: rgba(33, 28, 24, 0.48);
+
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+
+        transition:
+            opacity 0.25s ease,
+            visibility 0.25s ease;
+    }
+
+    .shop-filter-backdrop.is-visible {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+
+    /* Filter panel becomes a bottom sheet */
+    .shop-filters {
+        position: fixed !important;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1060;
+
+        width: 100%;
+        max-height: 85vh;
+        max-height: 85dvh;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+
+        padding: 24px 20px;
+        padding-bottom: max(24px, env(safe-area-inset-bottom));
+
+        margin: 0 !important;
+
+        background: var(--color-ivory, #F8F5EF);
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -8px 32px rgba(33, 28, 24, 0.15);
+
+        transform: translateY(105%);
+        visibility: hidden;
+        pointer-events: none;
+
+        transition:
+            transform 0.3s ease,
+            visibility 0.3s ease;
+    }
+
+    .shop-filters.is-open {
+        transform: translateY(0);
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .shop-filters .filter-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        margin-bottom: 22px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid rgba(43, 37, 32, 0.12);
+    }
+
+    .shop-filters .filter-heading h2 {
+        margin: 0;
+        color: var(--color-espresso, #2B2520);
+        font-family: Georgia, serif;
+        font-size: 24px;
+    }
+
+    /* Filter action buttons inside the sheet */
+    .shop-filter-actions {
+        position: sticky;
+        bottom: -24px;
+
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        margin: 24px -20px -24px;
+        padding: 16px 20px;
+        padding-bottom: max(16px, env(safe-area-inset-bottom));
+
+        background: var(--color-ivory, #F8F5EF);
+        border-top: 1px solid rgba(43, 37, 32, 0.12);
+    }
+
+    .shop-clear-filters,
+    .shop-apply-filters {
+        min-height: 46px;
+        padding: 11px 16px;
+
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 600;
+
+        cursor: pointer;
+        transition:
+            background-color 0.2s ease,
+            color 0.2s ease;
+    }
+
+    .shop-clear-filters {
+        flex: 0 0 auto;
+
+        color: var(--color-espresso, #2B2520);
+        background: transparent;
+
+        border: 1px solid rgba(43, 37, 32, 0.3);
+        border-radius: 6px;
+    }
+
+    .shop-clear-filters:hover {
+        background: var(--color-champagne, #EFE8DC);
+    }
+
+    .shop-apply-filters {
+        flex: 1;
+
+        color: var(--color-white, #FFFFFF);
+        background: var(--color-espresso, #2B2520);
+
+        border: 1px solid var(--color-espresso, #2B2520);
+        border-radius: 6px;
+    }
+
+    .shop-apply-filters:hover {
+        background: var(--color-gold, #B89B5E);
+        border-color: var(--color-gold, #B89B5E);
+    }
+
+
+    /* Sort dropdown opens in the existing toolbar */
+    .shop-toolbar {
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .shop-order-select {
+        max-width: 175px;
+        min-height: 40px;
+        font-size: 13px;
+    }
+}
+
+
+/* Small mobile screens */
+@media (max-width: 575.98px) {
+
+    .shop-content-section .container {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .shop-content-section .row {
+        --bs-gutter-x: 16px;
+        --bs-gutter-y: 20px;
+    }
+
+    .shop-product-count {
+        font-size: 13px;
+    }
+
+    #product-grid {
+        --bs-gutter-x: 12px;
+        --bs-gutter-y: 20px;
+    }
+
+    .shop-filters {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .shop-filter-actions {
+        margin-left: -16px;
+        margin-right: -16px;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+
+    .shop-filters,
+    .shop-filter-backdrop {
+        transition: none;
+    }
+}
+
+
+/* Mobile: Filter-only bottom bar */
+@media (max-width: 991.98px) {
+    .shop-mobile-action-bar {
+        justify-content: center;
+    }
+
+    .shop-mobile-action {
+        flex: 1;
+        width: 100%;
+    }
+
+    .shop-mobile-action-divider {
+        display: none;
+    }
+}
+
+
+
+/* ========================================
+   CUSTOM SORT DROPDOWN
+======================================== */
+
+.shop-sort {
+    position: relative;
+    display: inline-block;
+    min-width: 190px;
+    z-index: 20;
+}
+
+.shop-sort-trigger {
+    width: 100%;
+    min-height: 46px;
+    padding: 9px 13px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    color: var(--color-espresso, #2B2520);
+    background: var(--color-white, #FFFFFF);
+
+    border: 1px solid #DED5C7;
+    border-radius: 7px;
+
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.shop-sort-trigger:hover,
+.shop-sort-trigger[aria-expanded="true"] {
+    border-color: var(--color-gold, #B89B5E);
+    box-shadow: 0 3px 12px rgba(43, 37, 32, 0.06);
+}
+
+.shop-sort-trigger:focus-visible,
+.shop-sort-option:focus-visible {
+    outline: 2px solid var(--color-gold, #B89B5E);
+    outline-offset: 3px;
+}
+
+.shop-sort-label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.shop-sort-caption {
+    color: var(--color-muted, #756B61);
+    font-size: 10px;
+    line-height: 1.2;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+#shop-sort-current {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.shop-sort-trigger>i {
+    font-size: 12px;
+    transition: transform 0.2s ease;
+}
+
+.shop-sort-trigger[aria-expanded="true"]>i {
+    transform: rotate(180deg);
+}
+
+
+/* Dropdown menu */
+.shop-sort-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+
+    width: max-content;
+    min-width: 235px;
+    max-width: min(290px, calc(100vw - 32px));
+
+    padding: 7px;
+    background: var(--color-white, #FFFFFF);
+
+    border: 1px solid #E8E0D4;
+    border-radius: 10px;
+    box-shadow: 0 12px 32px rgba(43, 37, 32, 0.13);
+
+    z-index: 1080;
+    animation: shop-sort-appear 0.16s ease-out;
+}
+
+.shop-sort-menu[hidden] {
+    display: none !important;
+}
+
+.shop-sort-option {
+    width: 100%;
+    min-height: 43px;
+    padding: 10px 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+
+    color: var(--color-espresso, #2B2520);
+    background: transparent;
+
+    border: 0;
+    border-radius: 6px;
+
+    font: inherit;
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+
+    transition:
+        background-color 0.18s ease,
+        color 0.18s ease;
+}
+
+.shop-sort-option:hover {
+    background: var(--color-ivory, #F8F5EF);
+}
+
+.shop-sort-option.is-selected {
+    color: var(--color-espresso, #2B2520);
+    background: var(--color-champagne, #EFE8DC);
+    font-weight: 600;
+}
+
+.shop-sort-option>i {
+    color: var(--color-gold, #B89B5E);
+    font-size: 16px;
+    visibility: hidden;
+}
+
+.shop-sort-option.is-selected>i {
+    visibility: visible;
+}
+
+/* Keep the original select available to shop.js, but not visible. */
+.shop-sort .shop-order-select {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+@keyframes shop-sort-appear {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ========================================
+   ACTIVE FILTER BADGE
+======================================== */
+
+.shop-filter-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 21px;
+    height: 21px;
+    padding: 0 6px;
+
+    color: var(--color-white, #FFFFFF);
+    background: var(--color-gold, #B89B5E);
+
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.shop-filter-count[hidden] {
+    display: none !important;
+}
+
+
+/* Slightly tighter sort control on mobile */
+@media (max-width: 575.98px) {
+    .shop-sort {
+        min-width: 165px;
+    }
+
+    .shop-sort-trigger {
+        min-height: 42px;
+        padding: 8px 10px;
+    }
+
+    .shop-sort-menu {
+        min-width: 220px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .shop-sort-trigger,
+    .shop-sort-trigger>i,
+    .shop-sort-option {
+        transition: none;
+    }
+
+    .shop-sort-menu {
+        animation: none;
+    }
+}
+
+
+/* Indicate that filters are currently active */
+.shop-mobile-action.has-active-filters {
+    color: var(--color-espresso, #2B2520);
+}
+
+.shop-mobile-action.has-active-filters>i {
+    color: var(--color-gold, #B89B5E);
+}
+
+.shop-mobile-action.has-active-filters .shop-filter-count {
+    box-shadow: 0 0 0 2px var(--color-white, #FFFFFF);
+}
+
+
+
+/* ========================================
+   ELANORA — Luxury Product Pagination
+======================================== */
+
+#product-pagination {
+    width: 100%;
+    margin: 48px 0 56px;
+    padding: 0 16px;
+}
+
+#product-pagination .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+}
+
+/* Individual page controls */
+#product-pagination .page-item {
+    margin: 0;
+}
+
+#product-pagination .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px 14px;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.2;
+
+    color: #2B2520;
+    background: transparent;
+    border: 1px solid #D9CDBB;
+    border-radius: 0;
+
+    text-decoration: none;
+    box-shadow: none;
+    transition:
+        color 0.25s ease,
+        background-color 0.25s ease,
+        border-color 0.25s ease;
+}
+
+/* Hover — understated gold */
+#product-pagination .page-item:not(.active):not(.disabled) .page-link:hover {
+    color: #2B2520;
+    background: #EFE8DC;
+    border-color: #B89B5E;
+}
+
+/* Active page — signature ELANORA gold */
+#product-pagination .page-item.active .page-link {
+    color: #FFFFFF;
+    background: #B89B5E;
+    border-color: #B89B5E;
+    font-weight: 600;
+}
+
+/* Keyboard focus */
+#product-pagination .page-link:focus-visible {
+    outline: 2px solid #B89B5E;
+    outline-offset: 3px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Disabled Previous / Next */
+#product-pagination .page-item.disabled .page-link {
+    color: #A69B8D;
+    background: transparent;
+    border-color: #E5DDD1;
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+/* Mobile refinement */
+@media (max-width: 576px) {
+    #product-pagination {
+        margin: 32px 0 40px;
+        padding: 0 8px;
+    }
+
+    #product-pagination .pagination {
+        gap: 5px;
+    }
+
+    #product-pagination .page-link {
+        min-width: 38px;
+        min-height: 40px;
+        padding: 9px 10px;
+        font-size: 12px;
+    }
+}
+
+#product-pagination .page-link[aria-label="Previous page"],
+#product-pagination .page-link[aria-label="Next page"] {
+    min-width: 44px;
+    padding: 10px;
+    font-size: 12px;
+}
+
+#product-pagination .page-link i {
+    font-size: 11px;
+}
+
+/* Minimal pagination arrows — no icon library required */
+#product-pagination .pagination-arrow {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-top: 1.5px solid currentColor;
+    border-right: 1.5px solid currentColor;
+    flex-shrink: 0;
+}
+
+#product-pagination .pagination-arrow-left {
+    transform: rotate(-135deg);
+    margin-left: 3px;
+}
+
+#product-pagination .pagination-arrow-right {
+    transform: rotate(45deg);
+    margin-right: 3px;
+}
+
+#product-pagination .page-link[aria-label="Previous page"],
+#product-pagination .page-link[aria-label="Next page"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+}
+
+
+/* ELANORA — Tighter Shop Header Spacing */
+
+.shop-header {
+    padding: 3.5rem 0 3rem;
+}
+
+.shop-header .section-eyebrow {
+    margin-bottom: 0.75rem;
+}
+
+.shop-title {
+    margin: 0 0 1rem;
+    line-height: 1.08;
+}
+
+.shop-title span {
+    margin-top: 0.05em;
+}
+
+.shop-description {
+    line-height: 1.7;
+}
+
+@media (max-width: 575.98px) {
+    .shop-header {
+        padding: 2.75rem 1rem 2.5rem;
+    }
+
+    .shop-header .section-eyebrow {
+        margin-bottom: 0.65rem;
+    }
+
+    .shop-title {
+        margin-bottom: 0.85rem;
+    }
+}

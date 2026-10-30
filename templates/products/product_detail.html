@@ -2,49 +2,39 @@
 {% load static %}
 
 {% block title %}
-Product | Ornament
+Jewellery Collection | ELANORA
 {% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/product_detail.css' %}">
+{% endblock %}
 
 {% block content %}
 
 <section class="product-detail-section">
-
     <div class="container">
-
-        <div
-            class="product-detail"
-            id="product-detail"
-        >
-
+        <div class="product-detail" id="product-detail">
             <!-- Loading state -->
-            <div class="product-detail-loading">
-
+            <div class="product-detail-loading" role="status" aria-live="polite">
+                <div class="product-detail-loading-mark" aria-hidden="true">
+                    <i class="bi bi-gem"></i>
+                </div>
                 <span class="section-eyebrow">
                     THE COLLECTION
                 </span>
-
                 <h2>
                     Loading your piece...
                 </h2>
-
             </div>
-
         </div>
-
     </div>
-
 </section>
 
 {% endblock %}
 
-
 {% block scripts %}
-
 <script>
     const productSlug = "{{ slug }}";
 </script>
-
 <script src="{% static 'js/product_detail.js' %}"></script>
-
 {% endblock %}

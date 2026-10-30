@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-About | Ornament
+About | ELANORA
 {% endblock %}
 
 ```django
@@ -28,8 +28,8 @@ About | Ornament
             </h1>
 
             <p class="about-hero-description">
-                We believe the jewellery you wear should feel
-                personal, timeless, and uniquely yours.
+                We believe the most beautiful pieces are the ones that feel personal — chosen to express your style,
+                celebrate a moment, or simply make you feel like yourself.
             </p>
 
         </div>
@@ -54,11 +54,8 @@ About | Ornament
 
                 <div class="about-story-image-wrapper">
 
-                    <img
-                        src="{% static 'images/brand-story.jpg' %}"
-                        alt="Elegant jewellery craftsmanship"
-                        class="about-story-image"
-                    >
+                    <img src="{% static 'images/brand-story.jpg' %}" alt="Elegant jewellery craftsmanship"
+                        class="about-story-image" loading="lazy">
 
                 </div>
 
@@ -80,23 +77,18 @@ About | Ornament
                     </h2>
 
                     <p>
-                        Jewellery has always carried a meaning beyond
-                        its beauty. It marks celebrations, memories,
-                        milestones, and the quiet moments that become
-                        meaningful over time.
+                        Some pieces catch your eye. Others become part of your story — a gift for someone special, a
+                        reminder of a milestone, or a little something chosen just for you.
                     </p>
 
                     <p>
-                        Ornament was created with this belief at its
-                        heart — to bring together timeless design,
-                        thoughtful craftsmanship, and pieces that feel
-                        personal to the people who wear them.
+                        At ELANORA, we believe jewellery is a personal expression of style and feeling. Our collection
+                        brings together pieces to complement your everyday moments and the occasions you want to
+                        remember.
                     </p>
 
                     <p>
-                        From something chosen for yourself to a piece
-                        gifted to someone special, every ornament has
-                        the opportunity to become part of a story.
+                        Because sometimes, the smallest details become the most meaningful.
                     </p>
 
                 </div>
@@ -131,9 +123,7 @@ About | Ornament
             </h2>
 
             <p>
-                We believe great jewellery doesn't need to follow
-                every trend. It should feel beautiful today and
-                meaningful for years to come.
+                Beautiful pieces, personal style, meaningful moments.
             </p>
 
         </div>
@@ -152,13 +142,12 @@ About | Ornament
                     </div>
 
                     <h3>
-                        Crafted with care
+                        Chosen with care
                     </h3>
 
                     <p>
-                        Every piece is selected with attention to
-                        detail, finish, and the feeling it creates
-                        when you wear it.
+                        Discover pieces selected to complement your style and bring something special to your
+                        collection.
                     </p>
 
                 </div>
@@ -176,13 +165,11 @@ About | Ornament
                     </div>
 
                     <h3>
-                        Timeless design
+                        Style beyond trends
                     </h3>
 
                     <p>
-                        We look beyond fleeting trends to discover
-                        pieces that remain elegant and effortless
-                        through changing seasons.
+                        Explore jewellery for everyday expression, special occasions, and everything in between.
                     </p>
 
                 </div>
@@ -204,9 +191,7 @@ About | Ornament
                     </h3>
 
                     <p>
-                        The most beautiful jewellery is the piece
-                        that means something to you — a memory,
-                        a milestone, or simply yourself.
+                        Whether it's a gift or a treat for yourself, let each piece reflect what makes you uniquely you.
                     </p>
 
                 </div>
@@ -241,8 +226,7 @@ About | Ornament
             </h2>
 
             <p>
-                Explore thoughtfully selected pieces designed
-                to become part of your most meaningful moments.
+                Discover pieces that complement your style and make everyday moments feel a little more special.
             </p>
 
             <a href="{% url 'shop' %}" class="luxury-btn">
@@ -261,4 +245,3 @@ About | Ornament
 
 
 {% endblock %}
-
