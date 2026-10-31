@@ -9,14 +9,6 @@ from ai.services import (
     get_product_details,
 )
 
-# --------------------------------
-# Gemini client
-# --------------------------------
-
-client = genai.Client(
-    api_key=settings.GEMINI_API_KEY
-)
-
 
 # --------------------------------
 # Catalogue search tool
@@ -240,7 +232,30 @@ def chat_with_catalogue(
     user_message,
     previous_interaction_id=None,
 ):
+    # Check Gemini configuration
+    if not settings.GEMINI_API_KEY:
+        return {
+            "response": (
+                "Our shopping assistant is temporarily unavailable. "
+                "Please try again later or browse our jewellery collection."
+            ),
+            "products": [],
+            "interaction_id": previous_interaction_id,
+        }
 
+    try:
+        client = genai.Client(
+            api_key=settings.GEMINI_API_KEY
+        )
+    except Exception:
+        return {
+            "response": (
+                "Our shopping assistant is temporarily unavailable. "
+                "Please try again later."
+            ),
+            "products": [],
+            "interaction_id": previous_interaction_id,
+        }
     # --------------------------------
     # Handle vague recommendations
     # --------------------------------
