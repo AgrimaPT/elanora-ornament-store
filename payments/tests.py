@@ -12,6 +12,7 @@ from payments.services import (
     LateCaptureRefundService,
     PaymentExpirationService,
 )
+from cart.models import Cart, CartItem
 from products.models import Category, Product, ProductVariant
 from django.core.files.uploadedfile import SimpleUploadedFile
 from io import BytesIO
@@ -480,7 +481,130 @@ class LateCapturedWebhookTests(PaymentExpirationServiceTests):
             1,
         )
 
+    @patch(
+        "payments.views.RazorpayService.verify_webhook_signature"
+    )
+    def test_normal_payment_webhook_is_idempotent(
+        self,
+        mock_verify_signature,
+    ):
+        # Arrange: prepare a normal pending payment.
+        self.payment.razorpay_order_id = (
+            "order_test_normal_webhook_001"
+        )
+        self.payment.expires_at = (
+            timezone.now() + timedelta(minutes=10)
+        )
+        self.payment.save(
+            update_fields=[
+                "razorpay_order_id",
+                "expires_at",
+            ]
+        )
 
+        mock_verify_signature.return_value = None
+
+        # Create a cart containing the purchased item.
+        cart = Cart.objects.create(user=self.user)
+
+        cart_item = CartItem.objects.create(
+            cart=cart,
+            product=self.product,
+            variant=self.variant,
+            quantity=3,
+        )
+
+        payload = {
+            "event": "payment.captured",
+            "payload": {
+                "payment": {
+                    "entity": {
+                        "id": "pay_test_normal_webhook_001",
+                        "order_id": (
+                            "order_test_normal_webhook_001"
+                        ),
+                        "amount": 30000,
+                        "currency": "INR",
+                        "status": "captured",
+                    }
+                }
+            },
+        }
+
+        factory = APIRequestFactory()
+
+        def send_webhook():
+            request = factory.post(
+                "/api/payment/webhook/",
+                payload,
+                format="json",
+                HTTP_X_RAZORPAY_SIGNATURE="mock-signature",
+                HTTP_X_RAZORPAY_EVENT_ID=(
+                    "evt_test_normal_webhook_001"
+                ),
+            )
+
+            return RazorpayWebhookAPIView.as_view()(request)
+
+        # Act 1: first delivery.
+        first_response = send_webhook()
+
+        self.assertEqual(first_response.status_code, 200)
+        self.assertEqual(
+            first_response.data["detail"],
+            "Webhook processed successfully.",
+        )
+
+        self.payment.refresh_from_db()
+        self.order.refresh_from_db()
+
+        self.assertEqual(
+            self.payment.status,
+            Payment.PaymentStatus.PAID,
+        )
+        self.assertEqual(
+            self.order.payment_status,
+            Order.PaymentStatus.PAID,
+        )
+        self.assertEqual(
+            self.order.order_status,
+            Order.OrderStatus.CONFIRMED,
+        )
+
+        # The purchased cart item should be removed.
+        self.assertFalse(
+            CartItem.objects.filter(pk=cart_item.pk).exists()
+        )
+
+        # Act 2: deliver the same event again.
+        second_response = send_webhook()
+
+        self.assertEqual(second_response.status_code, 200)
+        self.assertEqual(
+            second_response.data["detail"],
+            "Webhook event already processed.",
+        )
+
+        # Assert: the event exists only once.
+        self.assertEqual(
+            WebhookEvent.objects.filter(
+                event_id="evt_test_normal_webhook_001"
+            ).count(),
+            1,
+        )
+
+        self.payment.refresh_from_db()
+        self.order.refresh_from_db()
+
+        # The payment and order must remain in their final states.
+        self.assertEqual(
+            self.payment.status,
+            Payment.PaymentStatus.PAID,
+        )
+        self.assertEqual(
+            self.order.order_status,
+            Order.OrderStatus.CONFIRMED,
+        )
 
     def test_record_late_capture_marks_refund_pending(self):
         # Expire the payment and cancel the order first.
