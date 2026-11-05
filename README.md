@@ -144,6 +144,15 @@ API endpoints were also tested using Postman.
 - Razorpay payment verification is handled on the backend.
 - HTTPS is enabled in the production deployment.
 
+## 👩‍💻 Author
+
+**Agrima P T**
+
+Python / Django Developer
+
+- GitHub: [AgrimaPT](https://github.com/AgrimaPT)
+- LinkedIn: [Agrima P T](https://www.linkedin.com/in/contactagrima/)
+
 ## Application Screenshots
 
 ### Home Page
@@ -167,11 +176,3 @@ API endpoints were also tested using Postman.
 ### Payment
 ![Payment Page](screenshots/paymentpage.png)
 
-## 👩‍💻 Author
-
-**Agrima P T**
-
-Python / Django Developer
-
-- GitHub: [AgrimaPT](https://github.com/AgrimaPT)
-- LinkedIn: [Agrima P T](https://www.linkedin.com/in/contactagrima/)
