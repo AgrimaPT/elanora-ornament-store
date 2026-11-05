@@ -144,6 +144,29 @@ API endpoints were also tested using Postman.
 - Razorpay payment verification is handled on the backend.
 - HTTPS is enabled in the production deployment.
 
+## Application Screenshots
+
+### Home Page
+![ELANORA Homepage](screenshots/homepage.png)
+
+### Home Page – Categories
+![Home Categories](screenshots/home-category.png)
+
+### Shop Page
+![Shop Page](screenshots/shoppage.png)
+
+### Product Details
+![Product Details](screenshots/product-detail.png)
+
+### Shopping Cart
+![Shopping Cart](screenshots/cartpage.png)
+
+### Checkout
+![Checkout Page](screenshots/checkoutpage.png)
+
+### Payment
+![Payment Page](screenshots/paymentpage.png)
+
 ## 👩‍💻 Author
 
 **Agrima P T**
