@@ -4,6 +4,7 @@ A full-stack jewellery e-commerce web application built using **Python, Django, 
 
 ELANORA brings together product discovery, secure authentication, shopping cart management, online payments, order processing, and an AI-powered shopping assistant in one platform.
 
+The application is deployed on AWS EC2 using Gunicorn and Nginx, with PostgreSQL for database management and HTTPS for secure access.
 ## ✨ Key Features
 
 - **User Authentication:** Secure registration, login, and JWT-based authentication.
