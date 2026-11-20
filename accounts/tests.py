@@ -14,6 +14,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.cache import cache
 from django.test import override_settings
 
+from django.core import mail
+from unittest.mock import patch
+
+
 class UserListPermissionTests(APITestCase):
     def setUp(self):
         self.url = reverse("user-list")
@@ -288,3 +292,364 @@ class LoginThrottleTests(APITestCase):
 
     def tearDown(self):
         cache.clear()
+
+
+class ChangePasswordTests(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="change_password_user",
+            email="changepassword@example.com",
+            password="TestPassword123!",
+            phone_number="9876500031",
+        )
+
+        self.url = reverse("change-password")
+
+    def test_user_can_change_password_successfully(self):
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.put(
+            self.url,
+            {
+                "old_password": "TestPassword123!",
+                "new_password": "AnotherStrongPassword456!",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.user.refresh_from_db()
+        self.assertTrue(
+            self.user.check_password("AnotherStrongPassword456!")
+        )
+        self.assertFalse(
+            self.user.check_password("TestPassword123!")
+        )
+
+    def test_incorrect_old_password_is_rejected(self):
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.put(
+            self.url,
+            {
+                "old_password": "WrongPassword123!",
+                "new_password": "AnotherStrongPassword456!",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+        self.user.refresh_from_db()
+        self.assertTrue(
+            self.user.check_password("TestPassword123!")
+        )
+
+    def test_weak_password_is_rejected(self):
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.put(
+            self.url,
+            {
+                "old_password": "TestPassword123!",
+                "new_password": "12345678",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+        self.user.refresh_from_db()
+        self.assertTrue(
+            self.user.check_password("TestPassword123!")
+        )
+
+    def test_same_password_is_rejected(self):
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.put(
+            self.url,
+            {
+                "old_password": "TestPassword123!",
+                "new_password": "TestPassword123!",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+    def test_unauthenticated_user_cannot_change_password(self):
+        response = self.client.put(
+            self.url,
+            {
+                "old_password": "TestPassword123!",
+                "new_password": "AnotherStrongPassword456!",
+            },
+            format="json",
+        )
+
+        self.assertIn(
+            response.status_code,
+            [
+                status.HTTP_401_UNAUTHORIZED,
+                status.HTTP_403_FORBIDDEN,
+            ],
+        )
+
+
+
+    def test_password_change_blacklists_existing_refresh_tokens(self):
+        refresh = RefreshToken.for_user(self.user)
+
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.put(
+            self.url,
+            {
+                "old_password": "TestPassword123!",
+                "new_password": "AnotherStrongPassword456!",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        refresh_response = self.client.post(
+            reverse("token_refresh"),
+            {"refresh": str(refresh)},
+            format="json",
+        )
+
+        self.assertEqual(
+            refresh_response.status_code,
+            status.HTTP_401_UNAUTHORIZED,
+        )
+
+
+class RegistrationLoginTests(APITestCase):
+    def setUp(self):
+        cache.clear()
+        self.register_url = reverse("api-register")
+        self.login_url = reverse("api-login")
+
+        self.registration_data = {
+            "first_name": "Agrima",
+            "last_name": "Test",
+            "email": "newcustomer@example.com",
+            "phone_number": "9876500041",
+            "password": "StrongPassword!2026",
+        }
+
+        self.existing_user = User.objects.create_user(
+            username="existing_customer",
+            first_name="Existing",
+            last_name="Customer",
+            email="existing@example.com",
+            phone_number="9876500042",
+            password="ExistingStrong!2026",
+        )
+
+    def tearDown(self):
+        cache.clear()
+
+    def test_user_can_register_successfully(self):
+        response = self.client.post(
+            self.register_url,
+            self.registration_data,
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED,
+        )
+
+        user = User.objects.get(
+            email="newcustomer@example.com"
+        )
+
+        self.assertTrue(
+            user.check_password("StrongPassword!2026")
+        )
+
+        self.assertNotEqual(
+            user.password,
+            "StrongPassword!2026",
+        )
+
+        self.assertNotIn("password", response.data)
+
+    def test_registration_rejects_duplicate_email(self):
+        data = {
+            **self.registration_data,
+            "email": "existing@example.com",
+        }
+
+        response = self.client.post(
+            self.register_url,
+            data,
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+    def test_registration_rejects_duplicate_phone(self):
+        data = {
+            **self.registration_data,
+            "phone_number": "9876500042",
+        }
+
+        response = self.client.post(
+            self.register_url,
+            data,
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+    def test_registration_rejects_invalid_phone_number(self):
+        data = {
+            **self.registration_data,
+            "phone_number": "98765ABCDE",
+        }
+
+        response = self.client.post(
+            self.register_url,
+            data,
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+    def test_registration_rejects_weak_password(self):
+        data = {
+            **self.registration_data,
+            "password": "12345678",
+        }
+
+        response = self.client.post(
+            self.register_url,
+            data,
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+        self.assertIn("password", response.data)
+
+    def test_user_can_login_successfully(self):
+        response = self.client.post(
+            self.login_url,
+            {
+                "email": "existing@example.com",
+                "password": "ExistingStrong!2026",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+        )
+
+        self.assertIn("access", response.data)
+        self.assertIn("refresh", response.data)
+        self.assertEqual(
+            response.data["user"]["email"],
+            "existing@example.com",
+        )
+
+    def test_login_rejects_incorrect_password(self):
+        response = self.client.post(
+            self.login_url,
+            {
+                "email": "existing@example.com",
+                "password": "WrongPassword123!",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+    def test_login_rejects_unknown_email(self):
+        response = self.client.post(
+            self.login_url,
+            {
+                "email": "unknown@example.com",
+                "password": "SomeStrongPassword!2026",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+    @override_settings(
+        EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend"
+    )
+    def test_registration_sends_welcome_email(self):
+        with self.captureOnCommitCallbacks(execute=True):
+            response = self.client.post(
+                self.register_url,
+                self.registration_data,
+                format="json",
+            )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(len(mail.outbox), 1)
+
+        email = mail.outbox[0]
+
+        self.assertEqual(email.subject, "Welcome to ELANORA")
+        self.assertEqual(email.to, ["newcustomer@example.com"])
+        self.assertIn("Agrima", email.body)
+        self.assertIn("ELANORA", email.body)
+
+    @override_settings(
+        EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend"
+    )
+    def test_registration_succeeds_if_welcome_email_fails(self):
+        with patch(
+            "accounts.views.register.send_mail",
+            side_effect=Exception("SMTP connection failed"),
+        ):
+            with self.captureOnCommitCallbacks(execute=True):
+                response = self.client.post(
+                    self.register_url,
+                    self.registration_data,
+                    format="json",
+                )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(
+            User.objects.filter(
+                email="newcustomer@example.com"
+            ).exists()
+        )

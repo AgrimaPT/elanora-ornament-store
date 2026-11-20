@@ -1,0 +1,14 @@
+Welcome to ELANORA, {{ first_name }}!
+
+Thank you for becoming a part of ELANORA.
+
+We're delighted to have you with us. Explore our collection of thoughtfully selected ornaments and find something special for every occasion.
+
+Discover our collection:
+{{ store_url }}
+
+Thank you for choosing ELANORA.
+
+Warm regards,
+Team ELANORA
+{{ store_url }}

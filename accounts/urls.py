@@ -7,8 +7,8 @@ from accounts.views.address_detail import AddressDetailAPIView
 
 urlpatterns = [
     path("users/", UserListAPIView.as_view(), name="user-list"),
-    path("register/", RegisterAPIView.as_view(), name="register"),
-    path("login/",LoginAPIView.as_view(),name="login"),
+    path("register/", RegisterAPIView.as_view(), name="api-register"),
+    path("login/",LoginAPIView.as_view(),name="api-login"),
     path("profile/",ProfileAPIView.as_view(),name="profile"),
     path("profile/update/",UpdateProfileAPIView.as_view(),name="update-profile"),
     path("change-password/",ChangePasswordAPIView.as_view(),name="change-password"),

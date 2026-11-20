@@ -1,6 +1,8 @@
+
 from rest_framework import serializers
 from accounts.models import User
-from django.core.validators import RegexValidator
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError as DjangoValidationError
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -10,7 +12,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = [
             "first_name",
             "last_name",
-            
             "email",
             "phone_number",
             "password",
@@ -29,7 +30,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             )
         return value
 
-
     def validate_phone_number(self, value):
         if User.objects.filter(phone_number=value).exists():
             raise serializers.ValidationError(
@@ -47,7 +47,20 @@ class RegisterSerializer(serializers.ModelSerializer):
             )
 
         return value
-    
+
+    def validate(self, attrs):
+        # Validate password using Django's configured validators.
+        user = User(**attrs)
+
+        try:
+            validate_password(attrs["password"], user=user)
+        except DjangoValidationError as error:
+            raise serializers.ValidationError({
+                "password": error.messages
+            })
+
+        return attrs
+
     def create(self, validated_data):
         email = validated_data["email"]
 
@@ -69,5 +82,3 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
 
         return user
-    
-    

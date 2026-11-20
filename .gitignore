@@ -29,3 +29,7 @@ media/
 # Temporary development backups
 *.before_cancel_refactor.py
 requirements.backup.txt
+
+# Coverage reports
+.coverage
+htmlcov/
