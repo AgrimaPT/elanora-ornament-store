@@ -714,15 +714,6 @@ The final application should demonstrate:
 
 ---
 
-# Main Learning Goal
-
-I do not want to simply finish the project.
-
-I want to understand **why the code works**, why a particular architecture is chosen, how Django and DRF work internally, and how the different parts of an e-commerce application communicate with each other.
-
-The project should therefore be built incrementally and explained like a professional development project rather than a copy-paste tutorial.
-
----
 
 # Current Position
 
@@ -746,34 +737,3 @@ Production Improvements ⏳
 
 * [ ] Build About Page
 
-```
-
-### One thing to change from your old context
-
-Your old document says:
-
-> **Current Feature: Building Custom Login API**
-
-That should definitely be removed. We're **far beyond that point now**.
-
-Your two files should now have different jobs:
-
-- **`PROJECT_CONTEXT.md`** → explains the project's architecture, decisions, current state, and important development context.
-- **`PROJECT_ROADMAP.md`** → tracks the complete feature-by-feature checklist.
-
-That separation will make it much easier for us to continue the project without the context file becoming messy.
-```
-
-
-
-"We're continuing my Ornament Store project. Here's my PROJECT_CONTEXT.md and PROJECT_ROADMAP.md. Continue exactly from where we left off."
-
-
-One thing I can promise
-
-From the conversations we've had, I understand your broader goal:
-
-You're aiming to become job-ready as a Python/Django developer.
-You want to understand concepts deeply, not just copy code.
-You want to build a portfolio-quality e-commerce project that you can confidently explain in interviews.
-You plan to start with Django templates and later migrate the frontend to React while keeping the same DRF APIs.
