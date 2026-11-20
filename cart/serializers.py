@@ -1,4 +1,8 @@
+
 from rest_framework import serializers
+
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema_field
 
 from cart.models import Cart, CartItem
 from products.models import Product, ProductVariant
@@ -18,6 +22,7 @@ class CartProductSerializer(serializers.ModelSerializer):
             "image",
         )
 
+    @extend_schema_field(serializers.URLField(allow_null=True))
     def get_image(self, obj):
 
         image = obj.images.order_by("order").first()
@@ -64,11 +69,14 @@ class CartItemSerializer(serializers.ModelSerializer):
 
         return obj.product.price
 
+    @extend_schema_field(OpenApiTypes.DECIMAL)
     def get_unit_price(self, obj):
         return self.get_effective_price(obj)
 
+    @extend_schema_field(OpenApiTypes.DECIMAL)
     def get_subtotal(self, obj):
         return self.get_effective_price(obj) * obj.quantity
+
 
 class CartSerializer(serializers.ModelSerializer):
 

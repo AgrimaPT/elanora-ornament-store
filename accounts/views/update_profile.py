@@ -1,7 +1,10 @@
+
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from drf_spectacular.utils import extend_schema, OpenApiResponse
 
 from accounts.serializers.update_profile import UpdateProfileSerializer
 
@@ -9,6 +12,16 @@ from accounts.serializers.update_profile import UpdateProfileSerializer
 class UpdateProfileAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        request=UpdateProfileSerializer,
+        responses={
+            200: UpdateProfileSerializer,
+            400: OpenApiResponse(
+                description="Profile validation failed."
+            ),
+        },
+        description="Update the authenticated user's profile information.",
+    )
     def put(self, request):
         serializer = UpdateProfileSerializer(
             request.user,
@@ -17,8 +30,7 @@ class UpdateProfileAPIView(APIView):
         )
 
         if serializer.is_valid():
-            serializer.save()   ##Because you passed:request.user DRF automatically calls:update instead of create
-
+            serializer.save()   ##Because you passed: request.user, DRF automatically calls update instead of create.
             return Response(
                 serializer.data,
                 status=status.HTTP_200_OK,

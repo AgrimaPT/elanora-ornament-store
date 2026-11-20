@@ -7,7 +7,6 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -24,10 +23,66 @@ from payments.services import (
     RazorpayService,
     RazorpayServiceError,
 )
+from rest_framework import serializers, status
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import (
+    OpenApiParameter,
+    OpenApiResponse,
+    extend_schema,
+)
+
+class PaymentErrorResponseSerializer(serializers.Serializer):
+    detail = serializers.CharField()
+
+
+class CreatePaymentResponseSerializer(serializers.Serializer):
+    payment_id = serializers.IntegerField()
+    order_id = serializers.IntegerField()
+    order_number = serializers.CharField()
+    razorpay_order_id = serializers.CharField()
+    amount = serializers.CharField()
+    amount_in_paise = serializers.IntegerField()
+    currency = serializers.CharField()
+    key_id = serializers.CharField()
+    expires_at = serializers.DateTimeField()
+
+
+class VerifyPaymentResponseSerializer(serializers.Serializer):
+    detail = serializers.CharField()
+    payment_id = serializers.IntegerField(required=False)
+    order_id = serializers.IntegerField(required=False)
+    order_number = serializers.CharField(required=False)
+    status = serializers.CharField(required=False)
+    payment_status = serializers.CharField(required=False)
+    order_status = serializers.CharField(required=False)
+
+
+class WebhookResponseSerializer(serializers.Serializer):
+    detail = serializers.CharField()
+    payment_id = serializers.IntegerField(required=False)
+    order_id = serializers.IntegerField(required=False)
+    order_number = serializers.CharField(required=False)
+    payment_status = serializers.CharField(required=False)
+    order_status = serializers.CharField(required=False)
 
 class CreatePaymentAPIView(APIView):
     permission_classes = [IsAuthenticated]
-
+    @extend_schema(
+        operation_id="payments_create",
+        request=CreatePaymentSerializer,
+        responses={
+            200: CreatePaymentResponseSerializer,
+            201: CreatePaymentResponseSerializer,
+            400: OpenApiResponse(
+                description="The order is not eligible for payment.",
+            ),
+            502: PaymentErrorResponseSerializer,
+        },
+        description=(
+            "Create or retrieve a Razorpay payment order "
+            "for the authenticated user's pending order."
+        ),
+    )
     def post(self, request):
         serializer = CreatePaymentSerializer(
             data=request.data,
@@ -180,7 +235,23 @@ class CreatePaymentAPIView(APIView):
 class VerifyPaymentAPIView(APIView):
 
     permission_classes = [IsAuthenticated]
-
+    @extend_schema(
+        operation_id="payments_verify",
+        request=VerifyPaymentSerializer,
+        responses={
+            200: VerifyPaymentResponseSerializer,
+            400: OpenApiResponse(
+                description="Payment verification failed or the payment expired.",
+            ),
+            403: PaymentErrorResponseSerializer,
+            404: PaymentErrorResponseSerializer,
+        },
+        description=(
+            "Verify a Razorpay payment using its order ID, "
+            "payment ID and signature. Successful verification "
+            "confirms the order and updates inventory-related cart state."
+        ),
+    )
     def post(self, request):
 
         # ---------------------------------------------------------
@@ -591,7 +662,37 @@ class RazorpayWebhookAPIView(APIView):
 
     authentication_classes = []
     permission_classes = []
-
+    @extend_schema(
+        operation_id="payments_razorpay_webhook",
+        request=OpenApiTypes.OBJECT,
+        parameters=[
+            OpenApiParameter(
+                name="X-Razorpay-Signature",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.HEADER,
+                required=True,
+                description="Razorpay webhook signature.",
+            ),
+            OpenApiParameter(
+                name="X-Razorpay-Event-Id",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.HEADER,
+                required=True,
+                description="Unique Razorpay webhook event ID.",
+            ),
+        ],
+        responses={
+            200: WebhookResponseSerializer,
+            400: PaymentErrorResponseSerializer,
+            404: PaymentErrorResponseSerializer,
+        },
+        description=(
+            "Receives Razorpay webhook events as raw JSON. "
+            "Verifies the webhook signature, handles captured payments, "
+            "prevents duplicate event processing and schedules refunds "
+            "for eligible late captures."
+        ),
+    )
     def post(self, request):
 
         # ---------------------------------------------------------

@@ -1,7 +1,10 @@
+
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from drf_spectacular.utils import extend_schema
 
 from accounts.serializers.address import AddressSerializer
 
@@ -12,6 +15,9 @@ class AddressListCreateAPIView(APIView):
         IsAuthenticated
     ]
 
+    @extend_schema(
+        responses={200: AddressSerializer(many=True)}
+    )
     def get(self, request):
 
         addresses = request.user.addresses.all()
@@ -26,6 +32,10 @@ class AddressListCreateAPIView(APIView):
             status=status.HTTP_200_OK
         )
 
+    @extend_schema(
+        request=AddressSerializer,
+        responses={201: AddressSerializer}
+    )
     def post(self, request):
 
         serializer = AddressSerializer(
@@ -40,7 +50,6 @@ class AddressListCreateAPIView(APIView):
         )
 
         address = serializer.save()
-          
 
         response_serializer = AddressSerializer(
             address

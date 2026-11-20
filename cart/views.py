@@ -1,9 +1,12 @@
+
 from django.shortcuts import get_object_or_404, render
 
-from rest_framework import status
+from rest_framework import serializers, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from drf_spectacular.utils import extend_schema, OpenApiResponse
 
 from cart.models import Cart, CartItem
 from cart.serializers import (
@@ -14,12 +17,26 @@ from cart.serializers import (
 )
 
 
+class CartActionResponseSerializer(serializers.Serializer):
+    detail = serializers.CharField()
+
+
 class AddToCartAPIView(APIView):
 
     permission_classes = [
         IsAuthenticated
     ]
 
+    @extend_schema(
+        request=AddToCartSerializer,
+        responses={
+            201: CartItemSerializer,
+            400: OpenApiResponse(
+                description="Invalid input or requested quantity exceeds available stock."
+            ),
+        },
+        description="Add a product or product variant to the authenticated user's cart.",
+    )
     def post(self, request):
 
         serializer = AddToCartSerializer(
@@ -134,6 +151,16 @@ class CartItemAPIView(APIView):
         )
 
 
+    @extend_schema(
+        request=UpdateCartItemSerializer,
+        responses={
+            200: CartItemSerializer,
+            400: OpenApiResponse(
+                description="Invalid quantity or requested quantity exceeds available stock."
+            ),
+        },
+        description="Update the quantity of an item in the authenticated user's cart.",
+    )
     def patch(
         self,
         request,
@@ -196,6 +223,12 @@ class CartItemAPIView(APIView):
         )
 
 
+    @extend_schema(
+        responses={
+            200: CartActionResponseSerializer,
+        },
+        description="Remove an item from the authenticated user's cart.",
+    )
     def delete(
         self,
         request,
@@ -227,6 +260,10 @@ class CartAPIView(APIView):
     ]
 
 
+    @extend_schema(
+        responses={200: CartSerializer},
+        description="Retrieve the authenticated user's cart.",
+    )
     def get(self, request):
 
         cart, created = Cart.objects.get_or_create(
@@ -242,6 +279,12 @@ class CartAPIView(APIView):
         )
 
 
+    @extend_schema(
+        responses={
+            200: CartActionResponseSerializer,
+        },
+        description="Remove all items from the authenticated user's cart.",
+    )
     def delete(self, request):
 
         cart = get_object_or_404(

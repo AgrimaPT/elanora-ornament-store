@@ -1,7 +1,7 @@
 
 from django.db import transaction
 
-from rest_framework import status
+from rest_framework import status, serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -11,12 +11,31 @@ from rest_framework_simplejwt.token_blacklist.models import (
     BlacklistedToken,
 )
 
+from drf_spectacular.utils import extend_schema, OpenApiResponse
+
 from accounts.serializers.change_password import ChangePasswordSerializer
+
+
+class ChangePasswordResponseSerializer(serializers.Serializer):
+    message = serializers.CharField()
 
 
 class ChangePasswordAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        request=ChangePasswordSerializer,
+        responses={
+            200: ChangePasswordResponseSerializer,
+            400: OpenApiResponse(
+                description="Invalid input or incorrect old password."
+            ),
+        },
+        description=(
+            "Change the authenticated user's password and blacklist "
+            "all existing refresh tokens."
+        ),
+    )
     def put(self, request):
         serializer = ChangePasswordSerializer(
             data=request.data,

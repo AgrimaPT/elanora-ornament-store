@@ -26,6 +26,11 @@ from payments.services import (
     RazorpayService,
     RazorpayServiceError,
 )
+from drf_spectacular.utils import extend_schema, OpenApiResponse
+from rest_framework import status, serializers
+
+class OrderErrorResponseSerializer(serializers.Serializer):
+    detail = serializers.CharField()
 
 class PlaceOrderAPIView(APIView):
     permission_classes = [IsAuthenticated]
@@ -106,7 +111,18 @@ class PlaceOrderAPIView(APIView):
                 return order
 
         return None
-
+    @extend_schema(
+        request=PlaceOrderSerializer,
+        responses={
+            200: OrderSerializer,
+            201: OrderSerializer,
+            400: OrderErrorResponseSerializer,
+        },
+        description=(
+            "Create an order from the authenticated user's cart. "
+            "Validates product availability, stock and current prices."
+        ),
+    )
     def post(self, request):
         # ---------------------------------------------------------
         # 1. Validate the request data
@@ -381,7 +397,10 @@ class PlaceOrderAPIView(APIView):
 
 class OrderListAPIView(APIView):
     permission_classes = [IsAuthenticated]
-
+    @extend_schema(
+        responses={200: OrderSerializer(many=True)},
+        description="Retrieve the authenticated user's orders.",
+    )
     def get(self, request):
         orders = Order.objects.filter(
             user=request.user
@@ -398,6 +417,14 @@ class OrderListAPIView(APIView):
 
 class OrderDetailAPIView(APIView):
     permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        responses={
+            200: OrderSerializer,
+            404: OrderErrorResponseSerializer,
+        },
+        description="Retrieve a specific order belonging to the authenticated user.",
+    )
 
     def get(self, request, pk):
         try:
@@ -421,7 +448,20 @@ class OrderDetailAPIView(APIView):
 
 class CancelOrderAPIView(APIView):
     permission_classes = [IsAuthenticated]
-
+    @extend_schema(
+        request=None,
+        responses={
+            200: OrderSerializer,
+            400: OrderErrorResponseSerializer,
+            404: OrderErrorResponseSerializer,
+            409: OrderErrorResponseSerializer,
+        },
+        description=(
+            "Cancel an order belonging to the authenticated user. "
+            "For paid orders, the refund outcome is recorded and may "
+            "require reconciliation if it cannot be confirmed."
+        ),
+    )
     def post(self, request, pk):
         cancellable_statuses = {
             Order.OrderStatus.PENDING,
@@ -688,7 +728,15 @@ class CancelOrderAPIView(APIView):
 
 class UpdateOrderStatusAPIView(APIView):
     permission_classes = [IsAdminUser]
-
+    @extend_schema(
+        request=UpdateOrderStatusSerializer,
+        responses={
+            200: OrderSerializer,
+            400: OpenApiResponse(description="Invalid order status."),
+            404: OrderErrorResponseSerializer,
+        },
+        description="Update an order's status. Admin access required.",
+    )
     def patch(self, request, pk):
         try:
             order = Order.objects.get(pk=pk)

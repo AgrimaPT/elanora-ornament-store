@@ -1,17 +1,28 @@
+
 from django.shortcuts import render
 from products.models import Category
 import logging
 
 from django.conf import settings
 from django.core.mail import EmailMessage
-from rest_framework import status
+
+from rest_framework import status, serializers
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.throttling import ScopedRateThrottle
+
+from drf_spectacular.utils import extend_schema
+
 from .serializers import ContactMessageSerializer
 
+
 logger = logging.getLogger(__name__)
+
+
+class ContactMessageResponseSerializer(serializers.Serializer):
+    message = serializers.CharField()
+    email_sent = serializers.BooleanField()
 
 
 def home(request):
@@ -36,15 +47,19 @@ def checkout(request):
     return render(request, "checkout.html")
 
 
-
-
 class ContactMessageCreateView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = "contact"
 
-
+    @extend_schema(
+        request=ContactMessageSerializer,
+        responses={
+            201: ContactMessageResponseSerializer,
+        },
+        description="Submit a contact enquiry and send an email notification.",
+    )
     def post(self, request):
         serializer = ContactMessageSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

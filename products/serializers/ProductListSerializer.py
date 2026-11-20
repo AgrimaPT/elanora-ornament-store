@@ -3,7 +3,7 @@ from rest_framework import serializers
 from products.models import Product
 
 from .category import CategorySerializer
-
+from drf_spectacular.utils import extend_schema_field
 
 class ProductListSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
@@ -20,7 +20,7 @@ class ProductListSerializer(serializers.ModelSerializer):
             "category",
             "image",
         )
-
+    @extend_schema_field(serializers.URLField(allow_null=True))
     def get_image(self, obj):
         image = obj.images.order_by("order").first()
 

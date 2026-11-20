@@ -9,12 +9,71 @@ from products.serializers import (
 )
 
 from products.pagination.product_pagination import ProductPagination
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from rest_framework import serializers
 
 
+class ProductListPaginatedSerializer(serializers.Serializer):
+    count = serializers.IntegerField()
+    next = serializers.URLField(allow_null=True)
+    previous = serializers.URLField(allow_null=True)
+    results = ProductListSerializer(many=True)
 class ProductListAPIView(APIView):
 
     pagination_class = ProductPagination
-
+    @extend_schema(
+        operation_id="products_list",
+        parameters=[
+            OpenApiParameter(
+                name="page",
+                type=int,
+                location=OpenApiParameter.QUERY,
+                description="Page number (10 products per page).",
+            ),
+            OpenApiParameter(
+                name="search",
+                type=str,
+                location=OpenApiParameter.QUERY,
+                description="Search products by name.",
+            ),
+            OpenApiParameter(
+                name="category",
+                type=str,
+                location=OpenApiParameter.QUERY,
+                description="Filter products by category slug.",
+            ),
+            OpenApiParameter(
+                name="featured",
+                type=bool,
+                location=OpenApiParameter.QUERY,
+                description="Filter featured products.",
+            ),
+            OpenApiParameter(
+                name="min_price",
+                type=float,
+                location=OpenApiParameter.QUERY,
+                description="Minimum product price.",
+            ),
+            OpenApiParameter(
+                name="max_price",
+                type=float,
+                location=OpenApiParameter.QUERY,
+                description="Maximum product price.",
+            ),
+            OpenApiParameter(
+                name="ordering",
+                type=str,
+                location=OpenApiParameter.QUERY,
+                enum=["price", "-price", "name", "-name"],
+                description="Sort products by price or name.",
+            ),
+        ],
+        responses=ProductListPaginatedSerializer,
+        description=(
+            "Retrieve active products with search, category, "
+            "featured, price filters and pagination."
+        ),
+    )
     def get(self, request):
 
         # -------------------------

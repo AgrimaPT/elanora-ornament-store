@@ -121,6 +121,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'drf_spectacular',
     "rest_framework_simplejwt.token_blacklist",
     'core',
     'accounts',
@@ -135,6 +136,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 
     "DEFAULT_THROTTLE_RATES": {
         "contact": "5/minute",
@@ -144,6 +146,13 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.ScopedRateThrottle",
     ],
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "ELANORA API",
+    "DESCRIPTION": "API documentation for the ELANORA Ornament Store.",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 SIMPLE_JWT = {

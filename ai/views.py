@@ -1,11 +1,31 @@
+
+from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from drf_spectacular.utils import extend_schema
 
 from ai.gemini_service import chat_with_catalogue
 
 
+class AIChatRequestSerializer(serializers.Serializer):
+    message = serializers.CharField()
+
+
+class AIChatResponseSerializer(serializers.Serializer):
+    response = serializers.CharField()
+    products = serializers.ListField(
+        child=serializers.DictField(),
+        required=False,
+    )
+
+
 class AIChatAPIView(APIView):
 
+    @extend_schema(
+        request=AIChatRequestSerializer,
+        responses={200: AIChatResponseSerializer},
+        description="Chat with the ELANORA AI shopping assistant.",
+    )
     def post(self, request):
         message = request.data.get("message")
 

@@ -1,7 +1,10 @@
+
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from drf_spectacular.utils import extend_schema
 
 from accounts.serializers.user import UserSerializer
 
@@ -9,8 +12,12 @@ from accounts.serializers.user import UserSerializer
 class ProfileAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        responses={200: UserSerializer},
+        description="Retrieve the authenticated user's profile.",
+    )
     def get(self, request):
-        serializer = UserSerializer(request.user)    ###request.user is actually a User model instance representing that user.That's why we can simply write:UserSerializer(request.user).We don't need to query the database ourselves.
+        serializer = UserSerializer(request.user)
 
         return Response(
             serializer.data,

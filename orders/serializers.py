@@ -3,35 +3,28 @@ from rest_framework import serializers
 from accounts.models import Address
 from orders.models import Order, OrderItem
 from products.models import Product, ProductVariant
-
-
+from drf_spectacular.utils import extend_schema_field
 
 class OrderProductSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
-        fields = (
-            "id",
-            "name",
-            "slug",
-            "image",
-        )
-
+        fields = ("id", "name", "slug", "image")
+    @extend_schema_field(serializers.URLField(allow_null=True))
     def get_image(self, obj):
-        request = self.context.get("request")
         product_image = obj.images.first()
 
         if not product_image or not product_image.image:
             return None
 
         image_url = product_image.image.url
+        request = self.context.get("request")
 
         if request:
             return request.build_absolute_uri(image_url)
 
         return image_url
-
 
 class OrderVariantSerializer(serializers.ModelSerializer):
     class Meta:
